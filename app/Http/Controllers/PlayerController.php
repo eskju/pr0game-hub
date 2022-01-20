@@ -11,7 +11,6 @@ use App\Services\ResourceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PlayerController extends Controller
 {
@@ -122,6 +121,10 @@ class PlayerController extends Controller
                 ->get()
                 ->map(function (Planet $planet) {
                     $return = $planet->toArray();
+                    $return['last_spy_report'] = Carbon::parse($return['last_spy_report'])->subHour()->shortRelativeDiffForHumans();
+                    $return['last_spy_metal'] = number_format($return['last_spy_metal'], 0, ',', '.');
+                    $return['last_spy_crystal'] = number_format($return['last_spy_crystal'], 0, ',', '.');
+                    $return['last_spy_deuterium'] = number_format($return['last_spy_deuterium'], 0, ',', '.');
                     $return['player']['score'] = number_format($return['player']['score'], 0, ',', '.');
                     $return['player']['score_building'] = number_format($return['player']['score_building'], 0, ',', '.');
                     $return['player']['score_science'] = number_format($return['player']['score_science'], 0, ',', '.');
@@ -182,8 +185,9 @@ class PlayerController extends Controller
         $player->save();
     }
 
-    public function storePlanetId(Request $request) {
-        if(!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
+    public function storePlanetId(Request $request)
+    {
+        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
             $planet = new Planet();
             $planet->player_id = $request->get('player_id');
             $planet->coordinates = $request->get('coordinates');
