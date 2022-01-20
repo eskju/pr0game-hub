@@ -122,15 +122,6 @@ class PlayerController extends Controller
                 ->get()
                 ->map(function (Planet $planet) {
                     $return = $planet->toArray();
-                    $lastReport = $planet->spyReports()->first();
-
-                    if ($lastReport) {
-                        $return['last_spy_report'] = $lastReport ? $lastReport->toArray() : null;
-                        $return['last_spy_report']['time'] = $lastReport->created_at->subHour()->shortRelativeDiffForHumans();
-                        $return['last_spy_report']['metal'] = number_format($lastReport->metal, 0, ',', '.');
-                        $return['last_spy_report']['crystal'] = number_format($lastReport->crystal, 0, ',', '.');
-                        $return['last_spy_report']['deuterium'] = number_format($lastReport->deuterium, 0, ',', '.');
-                    }
                     $return['player']['score'] = number_format($return['player']['score'], 0, ',', '.');
                     $return['player']['score_building'] = number_format($return['player']['score_building'], 0, ',', '.');
                     $return['player']['score_science'] = number_format($return['player']['score_science'], 0, ',', '.');

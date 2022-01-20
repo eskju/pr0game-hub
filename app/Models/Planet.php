@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Planet extends Model
 {
@@ -15,11 +16,13 @@ class Planet extends Model
         return $this->belongsTo(Player::class, 'player_id', 'id');
     }
 
-    public function spyReports(): HasMany
+    public function spy(): HasMany
     {
-        return $this->hasMany(SpyReport::class, 'galaxy', 'galaxy')
-            ->where('spy_reports.system', '=', 'planets.system')
-            ->where('spy_reports.planet', '=', 'planets.planet')
-            ->orderBy('created_at', 'DESC');
+        return $this->hasMany(SpyReport::class, 'coordinates', 'coordinates')->orderBy('created_at', 'DESC');
+    }
+
+    public function lastSpyReport(): HasOne
+    {
+        return $this->hasOne(SpyReport::class, 'coordinates', 'coordinates')->orderBy('created_at', 'DESC');
     }
 }
