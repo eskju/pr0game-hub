@@ -121,7 +121,7 @@ class PlayerController extends Controller
                 ->get()
                 ->map(function (Planet $planet) {
                     $return = $planet->toArray();
-                    $return['last_spy_report'] = Carbon::parse($return['last_spy_report'])->subHour()->shortRelativeDiffForHumans();
+                    $return['last_spy_report'] = $return['last_spy_report'] ? Carbon::parse($return['last_spy_report'])->subHour()->shortRelativeDiffForHumans() : '';
                     $return['last_spy_metal'] = number_format($return['last_spy_metal'], 0, ',', '.');
                     $return['last_spy_crystal'] = number_format($return['last_spy_crystal'], 0, ',', '.');
                     $return['last_spy_deuterium'] = number_format($return['last_spy_deuterium'], 0, ',', '.');
