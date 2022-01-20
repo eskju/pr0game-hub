@@ -34,7 +34,7 @@ Planeten:
 Spielerstatistiken/-punkte:
 - werden beim Anzeigen der Spielerprofile aktualisiert
 
-Urlaubsmodus (blau hinterlegt) / Inaktiv (türkis hinterlegt):
+Urlaubsmodus / Inaktiv:
 - werden beim Ansehen der Statistikseiten aktualisiert
 
 Spionageberichte:
@@ -49,6 +49,7 @@ Können im Channel #pr0gameHub genannt werden
 
 ===== SONSTIGES =====
 
+- Legende: https://pr0game-hub.eskju.net/download/legend.png
 - Spalten in der Startseitenansicht können mit Klick auf die Überschrift sortiert werden
 - die Spaltentitel haben ein Mouseover, die eine Erklärung zeigen. Das Schild-Icon z.B.: "Verteidigungspunkte"
 - derzeit wird das Spiel nur in deutscher Sprache unterstützt

@@ -14,7 +14,7 @@
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
-// 0.1.1         fixed player highlighting for noob/superior users
+// 0.1.1         fixed player highlighting for noob/superior users (reported by Hyman)
 
 (function () {
     'use strict';
