@@ -15,7 +15,7 @@
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // API settings
@@ -41,10 +41,10 @@
     var playerCount = 1500;
     var playerUpdateQueue = [];
 
-    window.getJSON = function(url, callback) {
+    window.getJSON = function (url, callback) {
         url = apiUrl + url + '?api_key=' + apiKey;
 
-        if(debug) {
+        if (debug) {
             console.log('GET', url);
         }
 
@@ -52,7 +52,7 @@
             method: 'GET',
             url: url,
             onload: function (response) {
-                if(debug) {
+                if (debug) {
                     console.log(response.responseText);
                 }
 
@@ -61,10 +61,10 @@
         });
     };
 
-    window.postJSON = function(url, data, callback) {
+    window.postJSON = function (url, data, callback) {
         url = apiUrl + url + '?api_key=' + apiKey;
 
-        if(debug) {
+        if (debug) {
             console.log('POST', url, data);
         }
 
@@ -76,30 +76,30 @@
                 'Content-Type': 'application/json'
             },
             onload: function (response) {
-                if(debug) {
+                if (debug) {
                     console.log(response.status);
                 }
 
                 callback(response);
             },
-            onerror: function(response) {
-                if(debug) {
+            onerror: function (response) {
+                if (debug) {
                     console.log(response.status);
                 }
             }
         });
     };
 
-    window.parseUrl = function() {
+    window.parseUrl = function () {
         $('head').append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');
 
         // overview page
-        if(window.location.href === 'https://pr0game.com/game.php' || window.location.href === 'https://pr0game.com/game.php?page=overview') {
+        if (window.location.href === 'https://pr0game.com/game.php' || window.location.href === 'https://pr0game.com/game.php?page=overview') {
             parsePageOverview();
         }
 
         // stats page
-        else if(window.location.href === 'https://pr0game.com/game.php?page=statistics') {
+        else if (window.location.href === 'https://pr0game.com/game.php?page=statistics') {
             parsePageStatistics();
         }
 
@@ -119,13 +119,13 @@
         }
     };
 
-    window.parsePageOverview = function() {
+    window.parsePageOverview = function () {
         var updatableIds = [];
         var galaxyBox = $('.infos:last-child');
         var html = '<table width="100%" style="max-width: 100% !important" class="table519"><tr>';
         var showNoobs = GM_getValue('showNoobs');
         var showInactive = GM_getValue('showInactive');
-        var ownScore = parseInt($('.infos:nth-child(1)').html().match(/Punkte ([0-9]+) /)[1].replace(/\./, ''));
+        var ownScore = parseInt($('.infos:nth-child(1)').html().match(/Punkte ([.0-9]+) /)[1].replace(/\./, ''));
 
         $('.infos:nth-child(4)').hide();
         $('.infos:nth-child(5)').hide();
@@ -147,10 +147,17 @@
         html += '<th class="sortable" data-sort="last_spy_deuterium" data-direction="DESC" title="Deuterium (Letzte Spionage)" style="text-align: right;" id="sortBySpioDeu">DEU</th></tr>';
         var sortBy = GM_getValue('sortBy') || 'distance';
 
-        postJSON('players/overview', {galaxy: ownGalaxy, system: ownSystem, showInactive: showInactive, showNoobs: showNoobs, order_by: GM_getValue('orderBy'), order_direction: GM_getValue('orderDirection')}, function(response) {
+        postJSON('players/overview', {
+            galaxy: ownGalaxy,
+            system: ownSystem,
+            showInactive: showInactive,
+            showNoobs: showNoobs,
+            order_by: GM_getValue('orderBy'),
+            order_direction: GM_getValue('orderDirection')
+        }, function (response) {
             response = JSON.parse(response.responseText);
 
-            $(response.players).each(function(key, obj) {
+            $(response.players).each(function (key, obj) {
                 html += '<tr id="row' + obj.id + '">';
                 html += '<td>' + (key + 1) + '</td>';
                 html += '<td style="text-align: left"><a href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + '</a></td>';
@@ -166,10 +173,9 @@
                 html += '<td style="text-align: right">' + (obj.last_spy_report || '') + '</td>';
                 html += '<td>';
 
-                if(obj.external_id) {
+                if (obj.external_id) {
                     html += '[<a class="spio-link" data-id="' + obj.external_id + '" style="cursor: pointer">S</a>]';
-                }
-                else {
+                } else {
                     html += ' [<a style="color: #666" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=6" style="cursor: pointer">S</a>]';
                 }
 
@@ -184,7 +190,7 @@
 
             galaxyBox.html('<p>// todos: fetch battle reports, link battle reports, simulator link, alliance fleet/score/tech, tech stats, military stats, spy report history</p>' + html + '</table>');
 
-            $(response.players).each(function(key, obj) {
+            $(response.players).each(function (key, obj) {
                 $('#row' + obj.id).css(getPlayerRowStyle(obj.player, ownScore));
                 $('#row' + obj.id + 'Score').css(getPlayerScoreStyle(obj.player));
                 $('#row' + obj.id + 'ScoreBuilding').css(getPlayerScoreBuildingStyle(obj.player));
@@ -195,28 +201,27 @@
                 $('#row' + obj.id + ' td, #row' + obj.id + ' td a').css(getPlayerRowTdStyle(obj.player, ownScore));
             });
 
-            $('th.sortable').each(function(key, obj) {
+            $('th.sortable').each(function (key, obj) {
                 $(obj).css('cursor', 'pointer');
 
-                if($(obj).attr('data-sort') == (GM_getValue('orderBy') || 'distance') && $(obj).attr('data-direction') == (GM_getValue('orderDirection') || 'ASC')) {
+                if ($(obj).attr('data-sort') == (GM_getValue('orderBy') || 'distance') && $(obj).attr('data-direction') == (GM_getValue('orderDirection') || 'ASC')) {
                     $(obj).prepend('<i class="fa fa-caret-down"></i> ');
                 }
 
-                $(obj).click(function() {
+                $(obj).click(function () {
                     orderBy($(obj).attr('data-sort'), $(obj).attr('data-direction'));
                 });
             });
-            $('.spio-link').click(function() {
-                $.getJSON("game.php?page=fleetAjax&ajax=1&mission=6&planetID=" + $(this).attr('data-id'), function(data)
-                {
+            $('.spio-link').click(function () {
+                $.getJSON("game.php?page=fleetAjax&ajax=1&mission=6&planetID=" + $(this).attr('data-id'), function (data) {
                     alert(data.mess);
                 });
             });
 
             // updatable IDs
-            if(response.outdated_ids.length > 0 && false) {
+            if (response.outdated_ids.length > 0 && false) {
                 galaxyBox.prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
-                $('#fetchMissingIdsBtn').click(function() {
+                $('#fetchMissingIdsBtn').click(function () {
                     playerUpdateQueue = response.outdated_ids;
 
                     $('#fetchMissingIdsBtn').remove();
@@ -226,27 +231,26 @@
         });
     };
 
-    window.parsePageStatistics = function() {
+    window.parsePageStatistics = function () {
         var userIds = [];
         var inactiveIds = [];
         var vacationIds = [];
 
-        $('.table519:nth-child(2) tr').each(function(key, obj) {
-            if(key > 0) {
-                var userId = parseInt($(obj).find('td:nth-child(2) a').attr('onclick').replace(/return Dialog\.Playercard\((.*)\, (.*)\);/,'$1'));
+        $('.table519:nth-child(2) tr').each(function (key, obj) {
+            if (key > 0) {
+                var userId = parseInt($(obj).find('td:nth-child(2) a').attr('onclick').replace(/return Dialog\.Playercard\((.*)\, (.*)\);/, '$1'));
                 userIds.push(userId);
 
                 $(obj).attr('id', 'row' + userId);
 
-                if($(obj).find('td:nth-child(2) .galaxy-short-inactive').length > 0) {
+                if ($(obj).find('td:nth-child(2) .galaxy-short-inactive').length > 0) {
                     inactiveIds.push(userId);
                 }
 
-                if($(obj).find('td:nth-child(2) .galaxy-short-vacation').length > 0) {
+                if ($(obj).find('td:nth-child(2) .galaxy-short-vacation').length > 0) {
                     vacationIds.push(userId);
                 }
-            }
-            else {
+            } else {
                 $(obj).append('<th>Koords</th>');
                 $(obj).append('<th>B</th>');
                 $(obj).append('<th>S</th>');
@@ -260,10 +264,10 @@
             inactive_ids: inactiveIds,
             vacation_ids: vacationIds,
             order_by: GM_getValue('orderBy')
-        }, function(response) {
+        }, function (response) {
             response = JSON.parse(response.responseText);
 
-            $(response.players).each(function(key, obj) {
+            $(response.players).each(function (key, obj) {
                 $('#row' + obj.id).append('<td id="row' + obj.id + 'Coordinates">' + (obj.main_coordinates || '---') + '</td>');
                 $('#row' + obj.id).append('<td id="row' + obj.id + 'ScoreBuilding">' + (obj.score_building || '') + '</td>');
                 $('#row' + obj.id).append('<td id="row' + obj.id + 'ScoreScience">' + (obj.score_science || '') + '</td>');
@@ -278,9 +282,9 @@
                 $('#row' + obj.id + 'ScoreDefense').css(getPlayerScoreDefenseStyle(obj));
             });
 
-            if(response.missing_ids.length > 0 && false) {
+            if (response.missing_ids.length > 0 && false) {
                 $('content').prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.missing_ids.length + ' missing IDs</button>');
-                $('#fetchMissingIdsBtn').click(function() {
+                $('#fetchMissingIdsBtn').click(function () {
                     playerUpdateQueue = response.missing_ids;
 
                     $('#fetchMissingIdsBtn').remove();
@@ -296,11 +300,11 @@
         $('content').prepend('<span style="background: -webkit-linear-gradient(left, #fff, #00ff00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">' + buildingThreshold + '+ builing score</span> ');
     };
 
-    window.parsePageMessages = function() {
+    window.parsePageMessages = function () {
         var messages = $($('#messagestable tr').get().reverse());
-        messages.each(function(key, obj) {
+        messages.each(function (key, obj) {
             // spy report
-            if($(obj).find('.spyRaport').length > 0) {
+            if ($(obj).find('.spyRaport').length > 0) {
                 var dateTime = $(messages[key - 1]).find('td:nth-child(2)').html();
 
                 var headerText = $(obj).find('.spyRaportHead a').html();
@@ -315,7 +319,7 @@
                 var values = $(obj).find('.spyRaportContainerRow .spyRaportContainerCell:nth-child(2n)');
                 var resources = {};
 
-                labels.each(function(key, label) {
+                labels.each(function (key, label) {
                     resources[($(label).find('a').attr('onclick') || '').match(/\(([0-9]+)\)/)[1]] = parseInt($(values[key]).html().replace(/\./, ''));
                 });
 
@@ -326,11 +330,11 @@
                     planet: parseInt(parseResult[4]),
                     timestamp: parseResult[5],
                     resources: resources
-                }, function(response) {
+                }, function (response) {
                 });
             }
 
-            if($(obj).find('.raportMessage').length > 0) {
+            if ($(obj).find('.raportMessage').length > 0) {
                 var dateTime = $(messages[key - 1]).find('td:nth-child(2)').html();
                 var parseResult = $(obj).find('.raportMessage').html().match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/);
                 var galaxy = parseResult[1];
@@ -343,8 +347,8 @@
         });
     }
 
-    window.parsePageGalaxy = function() {
-        $('tr td:nth-child(2) a.tooltip_sticky').each(function(key, obj) {
+    window.parsePageGalaxy = function () {
+        $('tr td:nth-child(2) a.tooltip_sticky').each(function (key, obj) {
             var tooltipSrc = $(obj).attr('data-tooltip-content');
             var playerId = $(obj).parent().parent().find('td:nth-child(6) a').attr('data-tooltip-content').match(/Dialog\.Buddy\(([0-9]+)\)/);
             playerId = playerId ? parseInt(playerId[1]) : null;
@@ -353,21 +357,21 @@
             var planetId = tooltipSrc.match(/doit\(6\,([0-9]+)/, tooltipSrc);
             planetId = planetId ? parseInt(planetId[1]) : null;
 
-            if(coords && planetId) {
+            if (coords && planetId) {
                 postJSON('planets', {
                     coordinates: coords[0],
                     planet_id: planetId,
                     player_id: playerId
-                }, function(response) {
+                }, function (response) {
                 });
             }
         });
     };
 
-    window.parsePagePlayerCard = function() {
+    window.parsePagePlayerCard = function () {
         var allianceId = ($('#content tr:nth-child(4) a').attr('onclick') || '').match(/\&id\=([0-9]+)/);
 
-        postJSON('players/' + window.location.href.match (/[\?\&]id=([(0-9]+)/i)[1], {
+        postJSON('players/' + window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1], {
             name: $('#content tr:nth-child(2) td:nth-child(2)').html(),
             alliance_id: allianceId ? allianceId[1] : null,
             alliance_name: $('#content tr:nth-child(4) a').html() || null,
@@ -375,8 +379,8 @@
             score_building: $('#content tr:nth-child(6) td:nth-child(2)').html().replace(/\./, ''),
             score_science: $('#content tr:nth-child(7) td:nth-child(2)').html().replace(/\./, ''),
             score_military: $('#content tr:nth-child(8) td:nth-child(2)').html().replace(/\./, ''),
-            score_defense:  $('#content tr:nth-child(9) td:nth-child(2)').html().replace(/\./, ''),
-            score:  $('#content tr:nth-child(10) td:nth-child(2)').html().replace(/\./, ''),
+            score_defense: $('#content tr:nth-child(9) td:nth-child(2)').html().replace(/\./, ''),
+            score: $('#content tr:nth-child(10) td:nth-child(2)').html().replace(/\./, ''),
             combats_won: $('#content tr:nth-child(13) td:nth-child(2)').html().replace(/\./, ''),
             combats_draw: $('#content tr:nth-child(14) td:nth-child(2)').html().replace(/\./, ''),
             combats_lost: $('#content tr:nth-child(15) td:nth-child(2)').html().replace(/\./, ''),
@@ -385,52 +389,44 @@
             units_lost: $('#content tr:nth-child(19) td:nth-child(2)').html().replace(/\./, ''),
             rubble_metal: $('#content tr:nth-child(20) td:nth-child(2)').html().replace(/\./, ''),
             rubble_crystal: $('#content tr:nth-child(21) td:nth-child(2)').html().replace(/\./, ''),
-        }, function(response) {
+        }, function (response) {
 
         });
     }
 
-    window.getPlayerRowStyle = function(obj, ownScore) {
-        if(obj.on_vacation === 1) {
+    window.getPlayerRowStyle = function (obj, ownScore) {
+        if (obj.on_vacation === 1) {
             return {background: 'rgb(0, 0, 255)', opacity: 0.75};
-        }
-        else if(obj.is_inactive === 1) {
+        } else if (obj.is_inactive === 1) {
             return {background: 'rgb(0, 255, 255)', opacity: 0.75};
-        }
-        else if(obj.score < ownScore / 5) {
+        } else if (obj.score < ownScore / 5) {
             return {background: 'rgb(50, 50, 50)'};
-        }
-        else if(obj.score > ownScore * 5) {
+        } else if (obj.score > ownScore * 5) {
             return {background: 'rgb(255, 50, 0)', opacity: 0.75};
-        }
-        else if(obj.score_military === 0 && obj.score_defense === 0) {
+        } else if (obj.score_military === 0 && obj.score_defense === 0) {
             return {background: 'rgb(0, 255, 0)'};
         }
 
         return {};
     }
 
-    window.getPlayerRowTdStyle = function(obj, ownScore) {
-        if(obj.on_vacation === 1) {
+    window.getPlayerRowTdStyle = function (obj, ownScore) {
+        if (obj.on_vacation === 1) {
             return {color: 'rgb(100, 150, 200)'};
-        }
-        else if(obj.is_inactive === 1) {
+        } else if (obj.is_inactive === 1) {
             return {color: 'rgb(0, 255, 255)'};
-        }
-        else if(obj.score < ownScore / 5) {
+        } else if (obj.score < ownScore / 5) {
             return {color: 'rgb(50, 50, 50)'};
-        }
-        else if(obj.score > ownScore * 5) {
+        } else if (obj.score > ownScore * 5) {
             return {color: 'rgb(255, 50, 0)'};
-        }
-        else if(obj.score_military === 0 && obj.score_defense === 0) {
+        } else if (obj.score_military === 0 && obj.score_defense === 0) {
             return {color: 'rgb(0, 255, 0)'};
         }
 
         return {};
     }
 
-    window.getColorIntensity = function(value, threshold) {
+    window.getColorIntensity = function (value, threshold) {
         var intensity = value / threshold * 255;
         return intensity > 255 ? 255 : intensity;
     }
@@ -445,30 +441,30 @@
         return 'rgb(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2] + ')';
     };
 
-    window.getPlayerScoreStyle = function(obj) {
+    window.getPlayerScoreStyle = function (obj) {
         return {color: getColor([0, 0, 255], obj.score / scoreThreshold)};
     }
 
-    window.getPlayerScoreBuildingStyle = function(obj) {
+    window.getPlayerScoreBuildingStyle = function (obj) {
         return {color: getColor([0, 255, 0], obj.score_building / buildingThreshold)};
     }
 
-    window.getPlayerScoreScienceStyle = function(obj) {
+    window.getPlayerScoreScienceStyle = function (obj) {
         return {color: getColor([255, 0, 255], obj.score_science / scienceThreshold)};
     }
 
-    window.getPlayerScoreMilitaryStyle = function(obj) {
+    window.getPlayerScoreMilitaryStyle = function (obj) {
         return {color: getColor([255, 0, 0], obj.score_military / militaryThreshold)};
     }
 
-    window.getPlayerScoreDefenseStyle = function(obj) {
+    window.getPlayerScoreDefenseStyle = function (obj) {
         return {color: getColor([255, 255, 0], obj.score_defense / defenseThreshold)};
     }
 
-    window.getProgressBar = function() {
+    window.getProgressBar = function () {
         var progressBar = $('#progress-bar');
 
-        if(progressBar.length === 1) {
+        if (progressBar.length === 1) {
             return progressBar;
         }
 
@@ -476,22 +472,21 @@
         return $('#progress-bar');
     };
 
-    window.orderBy = function(orderBy, direction) {
+    window.orderBy = function (orderBy, direction) {
         GM_setValue('orderBy', orderBy);
         GM_setValue('orderDirection', direction);
         window.location.reload();
     };
 
-    window.processQueue = function() {
-        if(playerUpdateQueue.length > 0) {
+    window.processQueue = function () {
+        if (playerUpdateQueue.length > 0) {
             getProgressBar().html('Updating ' + playerUpdateQueue.length + ' items ...');
             var id = playerUpdateQueue.shift();
             $('content').append('<iframe class="player-iframe" id="iframe' + id + '" width="1" height="1" src="/game.php?page=playerCard&id=' + id + '"></iframe>');
             $('#iframe' + id).on('load', processQueue);
-        }
-        else {
+        } else {
             getProgressBar().html('Save & reload');
-            $('body').animate({ opacity: 0 }, 1000, function() {
+            $('body').animate({opacity: 0}, 1000, function () {
                 window.location.reload();
             });
         }

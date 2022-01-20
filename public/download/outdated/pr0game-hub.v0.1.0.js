@@ -125,7 +125,7 @@
         var html = '<table width="100%" style="max-width: 100% !important" class="table519"><tr>';
         var showNoobs = GM_getValue('showNoobs');
         var showInactive = GM_getValue('showInactive');
-        var ownScore = parseInt($('.infos:nth-child(1)').html().match(/Punkte ([0-9]+) /)[1].replace(/\./, ''));
+        var ownScore = parseInt($('.infos:nth-child(1)').html().match(/Punkte ([.0-9]+) /)[1].replace(/\./, ''));
 
         $('.infos:nth-child(4)').hide();
         $('.infos:nth-child(5)').hide();
