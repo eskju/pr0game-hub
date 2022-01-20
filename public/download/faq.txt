@@ -1,0 +1,48 @@
+===== INSTALL =====
+
+1. Script herunterladen: https://pr0game-hub.eskju.net/download/pr0game-hub.js
+2. Tampermonkey als Browser Plugins installieren
+3. Im Browser auf Tampermonkey klicken, das Menü öffnet sich > "Neues Userscript erstellen"
+4. Das heruntergeladene Script dort einfügen
+5. Die Variablen anpassen (siehe KONFIGURATION)
+6. Speichern
+7. Wenn beim Laden von pr0game.com die Frage kommt, ob der Zugriff auf eine externe Erlaubt werden soll auf "immer" klicken.
+
+
+===== KONFIGURATION =====
+
+Zur Individualisierung müssen folgende Variablen angepasst werden:
+- apiKey: Der eigene Benutzerzugang. Daten erhälst du per PM an @eichhorn#1526
+=> z.B.: var apiKey = 'abcdefgh-1234-ijkl-5678-mnopqrstuvwx';
+
+Außerdem können angepasst werden:
+- ownGalaxy: Die eigene Galaxie (Default: 1)
+- ownSystem: Das eigene System (Default: 1)
+- scoreThreshold: Farbliche Hervorhebung der Punkte von 0 (weiß) bis zur gewählten Obergrenze (blau)
+- buildingThreshold: Farbliche Hervorhebung der Gebäudepunkte von 0 (weiß) bis zur gewählten Obergrenze (grün)
+- scienceThreshold: Farbliche Hervorhebung der Forschungspunkte von 0 (weiß) bis zur gewählten Obergrenze (lila)
+- militaryThreshold: Farbliche Hervorhebung der Flottenpunkte von 0 (weiß) bis zur gewählten Obergrenze (rot)
+- defenseThreshold: Farbliche Hervorhebung der Verteidigungspunkte von 0 (weiß) bis zur gewählten Obergrenze (gelb)
+
+
+===== WIE KOMMEN MEINE DATEN DORT REIN? =====
+
+Planeten:
+- werden beim Durchklicken der Galaxie-Ansicht hinzugefügt
+- Hauptplanetenwerden beim Anzeigen der Spielerprofile hinzugefügt
+
+Spielerstatistiken/-punkte:
+- werden beim Anzeigen der Spielerprofile aktualisiert
+
+Urlaubsmodus (blau hinterlegt) / Inaktiv (türkis hinterlegt):
+- werden beim Ansehen der Statistikseiten aktualisiert
+
+Spionageberichte:
+- werden beim Ansehen der Nachrichten hinzugefügt
+- initial sollten alle Nachrichtenseiten 1x aufgerufen werden, um alle Spionageberichte rückwirkend hinzuzufügen
+
+
+===== BUGS / WÜNSCHE =====
+Können im Channel #pr0gameHub genannt werden
+
+HF & GL
