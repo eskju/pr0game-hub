@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Query\JoinClause;
 
 class Planet extends Model
 {
@@ -18,10 +17,9 @@ class Planet extends Model
 
     public function spyReports(): HasMany
     {
-        return $this->hasMany(SpyReport::class, function (JoinClause $q) {
-            $q->where('spy_reports.galaxy', '=', 'planets.galaxy');
-            $q->where('spy_reports.system', '=', 'planets.system');
-            $q->where('spy_reports.planet', '=', 'planets.planet');
-        })->orderBy('created_at', 'DESC');
+        return $this->hasMany(SpyReport::class, 'galaxy', 'galaxy')
+            ->where('spy_reports.system', '=', 'planets.system')
+            ->where('spy_reports.planet', '=', 'planets.planet')
+            ->orderBy('created_at', 'DESC');
     }
 }
