@@ -43,6 +43,15 @@ Spionageberichte:
 
 
 ===== BUGS / WÜNSCHE =====
+
 Können im Channel #pr0gameHub genannt werden
+
+
+===== SONSTIGES =====
+
+- Spalten in der Startseitenansicht können mit Klick auf die Überschrift sortiert werden
+- die Spaltentitel haben ein Mouseover, die eine Erklärung zeigen. Das Schild-Icon z.B.: "Verteidigungspunkte"
+- derzeit wird das Spiel nur in deutscher Sprache unterstützt
+- manchmal öffnet ein Klick auf [S] in der Übersicht das Flotten-Versand-Menü (wenn keine Planeten ID vorhanden ist), manchmal wird direkt eine Spionagesonde geschickt. Um die Planeten ID zu speichern, muss das Zielsystem einmalig in der Galaxieansicht geöffnet werden. Um mit einem Klick eine Sonde auf 1:50:7 schicken zu können, müsste z.B. ein Mal Galaxie 1 und System 50 in der Galaxieansicht geöffnet werden.
 
 HF & GL
