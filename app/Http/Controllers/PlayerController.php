@@ -122,9 +122,9 @@ class PlayerController extends Controller
                 ->map(function (Planet $planet) {
                     $return = $planet->toArray();
                     $return['last_spy_report'] = $return['last_spy_report'] ? Carbon::parse($return['last_spy_report'])->subHour()->shortRelativeDiffForHumans() : '';
-                    $return['last_spy_metal'] = $return['last_spy_metal'] ? number_format($return['last_spy_metal'], 0, ',', '.') : '---';
-                    $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '---';
-                    $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '---';
+                    $return['last_spy_metal'] = $return['last_spy_metal'] ? number_format($return['last_spy_metal'], 0, ',', '.') : '';
+                    $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '';
+                    $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
                     $return['player']['score'] = number_format($return['player']['score'], 0, ',', '.');
                     $return['player']['score_building'] = number_format($return['player']['score_building'], 0, ',', '.');
                     $return['player']['score_science'] = number_format($return['player']['score_science'], 0, ',', '.');
