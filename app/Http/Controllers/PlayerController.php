@@ -138,7 +138,8 @@ class PlayerController extends Controller
                 ->where('main_coordinates', 'LIKE', $request->get('galaxy') . ':%')
                 ->where('updated_at', '<', Carbon::now()->subHours(8))
                 ->get()
-                ->pluck('id')
+                ->pluck('id'),
+            'current_version' => '0.1.2'
         ];
     }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pr0game Hub
 // @namespace    http://tampermonkey.net/
-// @version      0.1.2
+// @version      0.1.3
 // @description  alliance hub using cloud
 // @author       You
 // @match        https://pr0game.com/game.php?page=statistics
@@ -16,6 +16,7 @@
 // ==/UserScript==
 // 0.1.1         fixed player highlighting for noob/superior users (reported by Hyman)
 // 0.1.2         added legend to overview page (requested by Hyman)
+// 0.1.3         version check & update notification
 
 (function () {
     'use strict';
@@ -23,7 +24,7 @@
     // API settings
     var apiUrl = 'https://pr0game-hub.esKju.net/';
     var apiKey = '';
-    var version = '0.1.2';
+    var version = '0.1.3';
     var debug = false;
 
     // display settings
@@ -44,7 +45,7 @@
     var playerUpdateQueue = [];
 
     window.getJSON = function (url, callback) {
-        url = apiUrl + url + '?api_key=' + apiKey;
+        url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
 
         if (debug) {
             console.log('GET', url);
@@ -64,7 +65,7 @@
     };
 
     window.postJSON = function (url, data, callback) {
-        url = apiUrl + url + '?api_key=' + apiKey;
+        url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
 
         if (debug) {
             console.log('POST', url, data);
@@ -158,6 +159,10 @@
             order_direction: GM_getValue('orderDirection')
         }, function (response) {
             response = JSON.parse(response.responseText);
+
+            if(response.version !== version) {
+                $('body').prepend('<div style="padding: 10px 15px; background: rgba(200, 50, 0); color: #ffddaa; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar">Eine neue Version <a href="https://pr0game-hub.eskju.net/download/releases/pr0game-hub.v' + response.version + '.js" target="_blank" download>' + response.version + '</a> ist verfügbar.</div>');
+            }
 
             $(response.players).each(function (key, obj) {
                 html += '<tr id="row' + obj.id + '">';
