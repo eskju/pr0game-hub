@@ -25,8 +25,6 @@
     // API settings
     var apiUrl = 'https://pr0game-hub.esKju.net/';
     var apiKey = '';
-    var version = '0.2.0';
-    var debug = false;
 
     // display settings
     var ownGalaxy = GM_getValue('ownGalaxy') || 1; // used for color highlighting
@@ -44,6 +42,8 @@
     var apiMessageError = false;
     var playerCount = 1600;
     var playerUpdateQueue = [];
+    var version = '0.2.0';
+    var debug = false;
 
     window.getJSON = function (url, callback) {
         url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
