@@ -5,11 +5,17 @@
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
+// @match        https://www.pr0game.com/game.php?page=statistics
 // @match        https://pr0game.com/game.php?page=playerCard&*
+// @match        https://www.pr0game.com/game.php?page=playerCard&*
 // @match        https://pr0game.com/game.php
+// @match        https://www.pr0game.com/game.php
 // @match        https://pr0game.com/game.php?page=overview
+// @match        https://www.pr0game.com/game.php?page=overview
 // @match        https://pr0game.com/game.php?page=messages&category=*
+// @match        https://www.pr0game.com/game.php?page=messages&category=*
 // @match        https://pr0game.com/game.php?page=galaxy
+// @match        https://www.pr0game.com/game.php?page=galaxy
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
@@ -24,7 +30,7 @@
 // 0.2.2         fixed JS bug at stats page (requested by Eberwurz)
 // 0.2.3         automatically set ownGalaxy/ownSystem by selected planet (requested by Klarname)
 // 0.2.4         refactoring, improved version check and special char fix (reported by Hyman)
-// 0.2.5         notifications when a user becomes inactive state
+// 0.2.5         notifications when a user becomes inactive state + fix for www. subdomain
 
 // == feature requests / ideas ==
 // Hyman         click at a system should link to the galaxy view
