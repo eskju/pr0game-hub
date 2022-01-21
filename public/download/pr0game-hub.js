@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pr0game Hub (aka hornyHub)
 // @namespace    http://tampermonkey.net/
-// @version      0.2.4
+// @version      0.2.5
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
@@ -24,6 +24,7 @@
 // 0.2.2         fixed JS bug at stats page (requested by Eberwurz)
 // 0.2.3         automatically set ownGalaxy/ownSystem by selected planet (requested by Klarname)
 // 0.2.4         refactoring, improved version check and special char fix (reported by Hyman)
+// 0.2.5         notifications when a user becomes inactive state
 
 // == feature requests / ideas ==
 // Hyman         click at a system should link to the galaxy view
@@ -31,10 +32,9 @@
 // ???           exploration counter
 // ???           exploration tracker/stats
 // eichhorn      green background for ally members
-// eichhorn      fyling times in overview
+// eichhorn      flying times in overview
 // eichhorn      mileage in overview
 // eichhorn      resource production in overview
-// eichhorn      notifications when a user becomes inactive state
 // eichhorn      dynamic config (input form for thresholds)
 // Hyman         crawl & show last attack
 // Klarname      show last spy, last attack, etc. in galaxy view
@@ -92,7 +92,7 @@
 
     // internal vars
     const playerUpdateQueue = [];
-    const version = '0.2.4';
+    const version = '0.2.5';
     const debug = false;
 
     // regex
@@ -466,8 +466,6 @@
     }
 
     window.getPlayerRowStyle = function (obj, ownScore) {
-        obj.score = (obj.score.toString().replace(/\./, '') || 0).toString();
-
         if (obj.on_vacation === 1) {
             return {background: 'rgb(0, 0, 255)', opacity: 0.75};
         } else if (obj.is_inactive === 1) {
@@ -483,8 +481,6 @@
         return {};
     }
     window.getPlayerRowTdStyle = function (obj, ownScore) {
-        obj.score = (obj.score.toString().replace(/\./, '') || 0).toString();
-
         if (obj.on_vacation === 1) {
             return {color: 'rgb(100, 150, 200)'};
         } else if (obj.is_inactive === 1) {

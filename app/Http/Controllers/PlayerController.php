@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alliance;
 use App\Models\LogPlayer;
+use App\Models\LogPlayerStatus;
 use App\Models\Planet;
 use App\Models\Player;
 use App\Models\SpyReport;
@@ -23,7 +24,7 @@ class PlayerController extends Controller
         return response([]);
     }
 
-    public function stats(Request $request)
+    public function stats(Request $request): array
     {
         foreach ($request->get('ids') as $id) {
             if (!Player::query()->find($id)) {
@@ -34,24 +35,8 @@ class PlayerController extends Controller
             }
         }
 
-        // inactive
-        Player::query()
-            ->where(function ($q) {
-                $q->where('is_inactive', '!=', 0);
-                $q->orWhereNull('is_inactive');
-            })
-            ->whereIn('id', $request->get('ids'))
-            ->whereNotIn('id', $request->get('inactive_ids'))
-            ->update(['is_inactive' => 0, 'updated_at' => DB::raw('updated_at')]);
-
-        Player::query()
-            ->where(function ($q) {
-                $q->where('is_inactive', '!=', 1);
-                $q->orWhereNull('is_inactive');
-            })
-            ->whereIn('id', $request->get('ids'))
-            ->whereIn('id', $request->get('inactive_ids'))
-            ->update(['is_inactive' => 1, 'updated_at' => DB::raw('updated_at')]);
+        $this->updatePlayerStates($request->get('ids'), $request->get('inactive_ids'), 'is_inactive');
+        $this->updatePlayerStates($request->get('ids'), $request->get('vacation_ids'), 'on_vacation');
 
         // vacation
         Player::query()
@@ -171,7 +156,7 @@ class PlayerController extends Controller
             return [];
         }
 
-        if (!$player = $planet->player) {
+        if (!$planet->player) {
             return [];
         }
 
@@ -298,9 +283,9 @@ class PlayerController extends Controller
                     'values' => $values,
                     'success' => ($values[0]['value'] ?? null) !== null,
                 ];
-            })->filter(function(array $item, $key) {
+            })->filter(function (array $item, $key) {
                 $sum = 0;
-                foreach($item['values'] as $value) {
+                foreach ($item['values'] as $value) {
                     $sum += abs($value['difference']);
                 }
 
@@ -308,5 +293,44 @@ class PlayerController extends Controller
             })->toArray()),
             'offsets' => array_unique($this->offsets),
         ];
+    }
+
+    private function updatePlayerStates(array $ids, array $stateIds, $column)
+    {
+        $reactivated = Player::query()
+            ->whereIn('id', $ids)
+            ->whereNotIn('id', $stateIds)
+            ->where(function ($q) use ($column) {
+                $q->where($column, '!=', 0);
+                $q->orWhereNull($column);
+            })->get();
+
+        foreach ($reactivated as $player) {
+            $player->{$column} = 0;
+            $player->save();
+
+            $log = new LogPlayerStatus();
+            $log->player_id = $player->id;
+            $log->{$column} = 0;
+            $log->save();
+        }
+
+        $inactive = Player::query()
+            ->whereIn('id', $ids)
+            ->whereIn('id', $stateIds)
+            ->where(function ($q) use ($column) {
+                $q->where($column, '=', 0);
+                $q->orWhereNull($column);
+            })->get();
+
+        foreach ($inactive as $player) {
+            $player->{$column} = 1;
+            $player->save();
+
+            $log = new LogPlayerStatus();
+            $log->player_id = $player->id;
+            $log->{$column} = 1;
+            $log->save();
+        }
     }
 }
