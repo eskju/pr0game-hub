@@ -143,7 +143,7 @@ class PlayerController extends Controller
                 ->where('updated_at', '<', Carbon::now()->subHours(8))
                 ->get()
                 ->pluck('id'),
-            'version' => '0.2.1'
+            'version' => '0.2.2'
         ];
     }
 
