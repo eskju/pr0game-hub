@@ -44,6 +44,7 @@
 // eichhorn      dynamic config (input form for thresholds)
 // Hyman         crawl & show last attack
 // Klarname      show last spy, last attack, etc. in galaxy view
+// Redstar       filters for score (hide players below ... points)
 
 (function () {
     'use strict';

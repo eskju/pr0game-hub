@@ -101,7 +101,7 @@ class PlayerController extends Controller
 
             case 'distance':
             default:
-                $query->orderBy(DB::raw('ABS(planets.system - ' . (int)$request->get('system') . ')'));
+                $query->orderBy(DB::raw('ABS(planets.system - ' . (int)$request->get('system') . ') * 100 + ABS(planets.planet - ' . (int)$request->get('planet') . ')'));
                 break;
         }
 
@@ -130,7 +130,7 @@ class PlayerController extends Controller
                 ->pluck('id'),
             'version' => '0.2.2',
             'player' => Player::query()
-                ->where('main_coordinates', $request->get('galaxy') . ':' . $request->get('system') . ':' . $request->get('system'))
+                ->where('main_coordinates', $request->get('galaxy') . ':' . $request->get('system') . ':' . $request->get('planet'))
                 ->first()
         ];
     }
