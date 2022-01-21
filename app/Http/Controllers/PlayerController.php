@@ -77,9 +77,7 @@ class PlayerController extends Controller
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->where('galaxy', $request->get('galaxy'))
-            ->with('player', Player::query()
-                ->where('main_coordinates', $request->get('galaxy') . ':' . $request->get('system') . ':' . $request->get('system'))
-                ->first());
+            ->first();
 
         switch ($request->get('order_by')) {
             case 'name':
@@ -130,7 +128,9 @@ class PlayerController extends Controller
                 ->where('updated_at', '<', Carbon::now()->subHours(8))
                 ->get()
                 ->pluck('id'),
-            'version' => '0.2.2'
+            'version' => '0.2.2',
+            'player' => Player::query()
+                ->where('main_coordinates', $request->get('galaxy') . ':' . $request->get('system') . ':' . $request->get('system'))
         ];
     }
 
