@@ -131,6 +131,7 @@ class PlayerController extends Controller
             'version' => '0.2.2',
             'player' => Player::query()
                 ->where('main_coordinates', $request->get('galaxy') . ':' . $request->get('system') . ':' . $request->get('system'))
+                ->first()
         ];
     }
 
