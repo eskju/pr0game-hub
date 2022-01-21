@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         pr0game Hub
+// @name         pr0game Hub (aka hornyHub)
 // @namespace    http://tampermonkey.net/
-// @version      0.2.2
+// @version      0.2.4
 // @description  alliance hub using cloud
-// @author       You
+// @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
 // @match        https://pr0game.com/game.php?page=playerCard&*
 // @match        https://pr0game.com/game.php
@@ -14,38 +14,90 @@
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
+
+// == changelog ==
 // 0.1.1         fixed player highlighting for noob/superior users (reported by Hyman)
 // 0.1.2         added legend to overview page (requested by Hyman)
 // 0.1.3         version check & update notification
 // 0.2.0         spy report history and minor bugfixes
 // 0.2.1         fixed bugs for player scores above 1k and overview not displayed when receiving messages
-// 0.2.2         fixed JS bug at stats page
+// 0.2.2         fixed JS bug at stats page (requested by Eberwurz)
+// 0.2.3         automatically set ownGalaxy/ownSystem by selected planet (requested by Klarname)
+// 0.2.4         refactoring, improved version check and special char fix (reported by Hyman)
+
+// == feature requests / ideas ==
+// Hyman         click at a system should link to the galaxy view
+// Klarname      add a simulator link to spy report history
+// ???           exploration counter
+// ???           exploration tracker/stats
+// eichhorn      green background for ally members
+// eichhorn      fyling times in overview
+// eichhorn      mileage in overview
+// eichhorn      resource production in overview
+// eichhorn      notifications when a user becomes inactive state
+// eichhorn      dynamic config (input form for thresholds)
+// Hyman         crawl & show last attack
+// Klarname      show last spy, last attack, etc. in galaxy view
 
 (function () {
     'use strict';
 
     // API settings
-    var apiUrl = 'https://pr0game-hub.esKju.net/';
-    var apiKey = '';
+    const apiUrl = 'https://pr0game-hub.esKju.net/';
+    const apiKey = '';
 
     // display settings
-    var ownGalaxy = GM_getValue('ownGalaxy') || 1; // used for color highlighting
-    var ownSystem = GM_getValue('ownSystem') || 1; // used for sorting
-    var scoreThreshold = GM_getValue('scoreThreshold') || 1000; // limit for maximum blue color highlighting (total score)
-    var buildingThreshold = GM_getValue('buildingThreshold') || 500; // limit for maximum green color highlighting (building score)
-    var scienceThreshold = GM_getValue('scienceThreshold') || 250; // limit for maximum yellow color highlighting (science score)
-    var militaryThreshold = GM_getValue('militaryThreshold') || 250; // limit for maximum red color highlighting (fleet score)
-    var defenseThreshold = GM_getValue('defenseThreshold') || 50; // limit for maximum yellow color highlighting (defense score)
-    var updateThreshold = 3600 * 6; // time in seconds before fetched data is classified as outdated
+    const scoreThreshold = GM_getValue('scoreThreshold') || 1000; // limit for maximum blue color highlighting (total score)
+    const buildingThreshold = GM_getValue('buildingThreshold') || 500; // limit for maximum green color highlighting (building score)
+    const scienceThreshold = GM_getValue('scienceThreshold') || 250; // limit for maximum yellow color highlighting (science score)
+    const militaryThreshold = GM_getValue('militaryThreshold') || 250; // limit for maximum red color highlighting (fleet score)
+    const defenseThreshold = GM_getValue('defenseThreshold') || 50; // limit for maximum yellow color highlighting (defense score)
+
+    window.getCoordinates = function (string) {
+        return string.match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/);
+    }
+
+    window.isNewerVersionAvailable = function (apiVersion) {
+        const currentVersion = version.split('.');
+        const latestVersion = apiVersion.split('.');
+
+        // new major
+        if (getInt(latestVersion[0]) > getInt(currentVersion[0])) {
+            return true;
+        }
+
+        // major version is newer than server's version
+        if (getInt(latestVersion[0]) < getInt(currentVersion[0])) {
+            return false;
+        }
+
+        // new minor
+        if (getInt(latestVersion[1]) > getInt(currentVersion[1])) {
+            return true;
+        }
+
+        // minor version is newer than server's version
+        if (getInt(latestVersion[1]) < getInt(currentVersion[1])) {
+            return false;
+        }
+
+        // new fix
+        return getInt(latestVersion[2]) > getInt(currentVersion[2]);
+    }
+
+    // identify own coords by selected planet
+    const ownCoords = getCoordinates($('#planetSelector option:selected').html());
+    const ownGalaxy = ownCoords[1];
+    const ownSystem = ownCoords[2];
 
     // internal vars
-    var authError = false;
-    var apiMessage = {text: null, status: null};
-    var apiMessageError = false;
-    var playerCount = 1600;
-    var playerUpdateQueue = [];
-    var version = '0.2.2';
-    var debug = false;
+    const playerUpdateQueue = [];
+    const version = '0.2.4';
+    const debug = false;
+
+    // regex
+    const rxNumber = '([.0-9]+)';
+
 
     window.getJSON = function (url, callback) {
         url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
@@ -66,7 +118,6 @@
             }
         });
     };
-
     window.postJSON = function (url, data, callback) {
         url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
 
@@ -95,7 +146,6 @@
             }
         });
     };
-
     window.parseUrl = function () {
         $('head').append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');
 
@@ -126,12 +176,11 @@
     };
 
     window.parsePageOverview = function () {
-        var updatableIds = [];
         var galaxyBox = $('.infos:last-child');
         var html = '<table width="100%" style="max-width: 100% !important" class="table519"><tr>';
         var showNoobs = GM_getValue('showNoobs');
         var showInactive = GM_getValue('showInactive');
-        var ownScore = parseInt($($('.infos')[0]).html().match(/Punkte ([.0-9]+) /)[1].replace(/\./, ''));
+        var ownScore = getInt($($('.infos')[0]).html().match(new RegExp('Punkte ' + rxNumber))[1]);
 
         $('.infos:nth-child(4)').hide();
         $('.infos:nth-child(5)').hide();
@@ -151,7 +200,6 @@
         html += '<th class="sortable" data-sort="last_spy_metal" data-direction="DESC" title="Metall (Letzte Spionage)" style="text-align: right;" id="sortBySpioMet">MET</th>';
         html += '<th class="sortable" data-sort="last_spy_crystal" data-direction="DESC" title="Kristall (Letzte Spionage)" style="text-align: right;" id="sortBySpioCry">CRY</th>';
         html += '<th class="sortable" data-sort="last_spy_deuterium" data-direction="DESC" title="Deuterium (Letzte Spionage)" style="text-align: right;" id="sortBySpioDeu">DEU</th></tr>';
-        var sortBy = GM_getValue('sortBy') || 'distance';
 
         postJSON('players/overview', {
             galaxy: ownGalaxy,
@@ -163,8 +211,8 @@
         }, function (response) {
             response = JSON.parse(response.responseText);
 
-            if(response.version !== version) {
-                $('body').prepend('<div style="padding: 10px 15px; background: rgba(200, 50, 0); color: #ffddaa; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"><i class="fa fa-exclamation-triangle"></i>  Eine neue Plugin-Version v<a href="https://pr0game-hub.eskju.net/download/releases/pr0game-hub.v' + response.version + '.js" target="_blank" download>' + response.version + '</a> ist verfÃ¼gbar.</div>');
+            if (isNewerVersionAvailable(response.version)) {
+                $('body').prepend('<div style="padding: 10px 15px; background: rgba(200, 50, 0); color: #ffddaa; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"><i class="fa fa-exclamation-triangle"></i>  Eine neue Plugin-Version v<a href="https://pr0game-hub.eskju.net/download/releases/pr0game-hub.v' + response.version + '.js" target="_blank" download>' + response.version + '</a> ist verf&uuml;gbar.</div>');
             }
 
             $(response.players).each(function (key, obj) {
@@ -209,7 +257,7 @@
                 $('#row' + obj.id + 'ScoreDefense').css(getPlayerScoreDefenseStyle(obj.player));
                 $('#row' + obj.id + ' td, #row' + obj.id + ' td a').css(getPlayerRowTdStyle(obj.player));
                 $('#row' + obj.id + ' td, #row' + obj.id + ' td a').css(getPlayerRowTdStyle(obj.player, ownScore));
-                $('#lastSpyReport' + obj.id).click(function() {
+                $('#lastSpyReport' + obj.id).click(function () {
                     getJSON('spy-reports/' + obj.galaxy + '/' + obj.system + '/' + obj.planet, function (spyReports) {
                         spyReports = JSON.parse(spyReports.responseText);
                         showSpyReportHistory(spyReports);
@@ -246,7 +294,6 @@
             }
         });
     };
-
     window.parsePageStatistics = function () {
         var userIds = [];
         var inactiveIds = [];
@@ -325,7 +372,6 @@
         $('content').prepend('<span style="background: -webkit-linear-gradient(left, #fff, #ffff00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">' + defenseThreshold + '+ defense score</span> ');
         $('content').prepend('<span style="background: -webkit-linear-gradient(left, #fff, #00ff00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">' + buildingThreshold + '+ builing score</span> ');
     };
-
     window.parsePageMessages = function () {
         var messages = $($('#messagestable tr').get().reverse());
         messages.each(function (key, obj) {
@@ -346,7 +392,7 @@
                 var resources = {};
 
                 labels.each(function (key, label) {
-                    resources[($(label).find('a').attr('onclick') || '').match(/\(([0-9]+)\)/)[1]] = parseInt($(values[key]).html().replace(/\./, ''));
+                    resources[($(label).find('a').attr('onclick') || '').match(/\(([0-9]+)\)/)[1]] = getInt($(values[key]).html());
                 });
 
                 postJSON('spy-reports', {
@@ -362,7 +408,7 @@
 
             if ($(obj).find('.raportMessage').length > 0) {
                 var dateTime = $(messages[key - 1]).find('td:nth-child(2)').html();
-                var parseResult = $(obj).find('.raportMessage').html().match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/);
+                var parseResult = getCoors($(obj).find('.raportMessage').html());
                 var galaxy = parseResult[1];
                 var system = parseResult[2];
                 var planet = parseResult[3];
@@ -372,7 +418,6 @@
             }
         });
     }
-
     window.parsePageGalaxy = function () {
         $('tr td:nth-child(2) a.tooltip_sticky').each(function (key, obj) {
             var tooltipSrc = $(obj).attr('data-tooltip-content');
@@ -393,28 +438,28 @@
             }
         });
     };
-
     window.parsePagePlayerCard = function () {
         var allianceId = ($('#content tr:nth-child(4) a').attr('onclick') || '').match(/\&id\=([0-9]+)/);
 
+        console.log($('#content tr:nth-child(3) a').html());
         postJSON('players/' + window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1], {
             name: $('#content tr:nth-child(2) td:nth-child(2)').html(),
             alliance_id: allianceId ? allianceId[1] : null,
             alliance_name: $('#content tr:nth-child(4) a').html() || null,
             main_coordinates: $('#content tr:nth-child(3) a').html().replace(/\[(.*)\]/, '$1'),
-            score_building: $('#content tr:nth-child(6) td:nth-child(2)').html().replace(/\./, ''),
-            score_science: $('#content tr:nth-child(7) td:nth-child(2)').html().replace(/\./, ''),
-            score_military: $('#content tr:nth-child(8) td:nth-child(2)').html().replace(/\./, ''),
-            score_defense: $('#content tr:nth-child(9) td:nth-child(2)').html().replace(/\./, ''),
-            score: $('#content tr:nth-child(10) td:nth-child(2)').html().replace(/\./, ''),
-            combats_won: $('#content tr:nth-child(13) td:nth-child(2)').html().replace(/\./, ''),
-            combats_draw: $('#content tr:nth-child(14) td:nth-child(2)').html().replace(/\./, ''),
-            combats_lost: $('#content tr:nth-child(15) td:nth-child(2)').html().replace(/\./, ''),
-            combats_total: $('#content tr:nth-child(16) td:nth-child(2)').html().replace(/\./, ''),
-            units_shot: $('#content tr:nth-child(18) td:nth-child(2)').html().replace(/\./, ''),
-            units_lost: $('#content tr:nth-child(19) td:nth-child(2)').html().replace(/\./, ''),
-            rubble_metal: $('#content tr:nth-child(20) td:nth-child(2)').html().replace(/\./, ''),
-            rubble_crystal: $('#content tr:nth-child(21) td:nth-child(2)').html().replace(/\./, ''),
+            score_building: getInt($('#content tr:nth-child(6) td:nth-child(2)').html()),
+            score_science: getInt($('#content tr:nth-child(7) td:nth-child(2)').html()),
+            score_military: getInt($('#content tr:nth-child(8) td:nth-child(2)').html()),
+            score_defense: getInt($('#content tr:nth-child(9) td:nth-child(2)').html()),
+            score: getInt($('#content tr:nth-child(10) td:nth-child(2)').html()),
+            combats_won: getInt($('#content tr:nth-child(13) td:nth-child(2)').html()),
+            combats_draw: getInt($('#content tr:nth-child(14) td:nth-child(2)').html()),
+            combats_lost: getInt($('#content tr:nth-child(15) td:nth-child(2)').html()),
+            combats_total: getInt($('#content tr:nth-child(16) td:nth-child(2)').html()),
+            units_shot: getInt($('#content tr:nth-child(18) td:nth-child(2)').html()),
+            units_lost: getInt($('#content tr:nth-child(19) td:nth-child(2)').html()),
+            rubble_metal: getInt($('#content tr:nth-child(20) td:nth-child(2)').html()),
+            rubble_crystal: getInt($('#content tr:nth-child(21) td:nth-child(2)').html()),
         }, function (response) {
 
         });
@@ -427,9 +472,9 @@
             return {background: 'rgb(0, 0, 255)', opacity: 0.75};
         } else if (obj.is_inactive === 1) {
             return {background: 'rgb(0, 255, 255)', opacity: 0.75};
-        } else if (parseInt(obj.score.replace(/\./,'')) < ownScore / 5) {
+        } else if (getInt(obj.score) < ownScore / 5) {
             return {background: 'rgb(50, 50, 50)'};
-        } else if (parseInt(obj.score.replace(/\./,'')) > ownScore * 5) {
+        } else if (getInt(obj.score) > ownScore * 5) {
             return {background: 'rgb(255, 50, 0)', opacity: 0.75};
         } else if (obj.score_military === 0 && obj.score_defense === 0) {
             return {background: 'rgb(0, 255, 0)'};
@@ -437,7 +482,6 @@
 
         return {};
     }
-
     window.getPlayerRowTdStyle = function (obj, ownScore) {
         obj.score = (obj.score.toString().replace(/\./, '') || 0).toString();
 
@@ -445,9 +489,9 @@
             return {color: 'rgb(100, 150, 200)'};
         } else if (obj.is_inactive === 1) {
             return {color: 'rgb(0, 255, 255)'};
-        } else if (parseInt(obj.score.replace(/\./,'')) < ownScore / 5) {
+        } else if (getInt(obj.score) < ownScore / 5) {
             return {color: 'rgb(50, 50, 50)'};
-        } else if (parseInt(obj.score.replace(/\./,'')) > ownScore * 5) {
+        } else if (getInt(obj.score) > ownScore * 5) {
             return {color: 'rgb(255, 50, 0)'};
         } else if (obj.score_military === 0 && obj.score_defense === 0) {
             return {color: 'rgb(0, 255, 0)'};
@@ -455,12 +499,10 @@
 
         return {};
     }
-
     window.getColorIntensity = function (value, threshold) {
         var intensity = value / threshold * 255;
         return intensity > 255 ? 255 : intensity;
     }
-
     window.getColor = function pickHex(color1, weight) {
         var color = [255, 255, 255];
         var w1 = weight;
@@ -470,29 +512,24 @@
             Math.round(color1[2] * w1 + color[2] * w2)];
         return 'rgb(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2] + ')';
     };
-
     window.getPlayerScoreStyle = function (obj) {
-        return {color: getColor([0, 0, 255], parseInt(obj.score.toString().replace(/\./,'')) / scoreThreshold)};
+        return {color: getColor([0, 0, 255], getInt(obj.score) / scoreThreshold)};
     }
-
     window.getPlayerScoreBuildingStyle = function (obj) {
-        return {color: getColor([0, 255, 0], parseInt(obj.score_building.toString().replace(/\./,'')) / buildingThreshold)};
+        return {color: getColor([0, 255, 0], getInt(obj.score_building) / buildingThreshold)};
     }
-
     window.getPlayerScoreScienceStyle = function (obj) {
-        return {color: getColor([255, 0, 255], parseInt(obj.score_science.toString().replace(/\./,'')) / scienceThreshold)};
+        return {color: getColor([255, 0, 255], getInt(obj.score_science) / scienceThreshold)};
     }
-
     window.getPlayerScoreMilitaryStyle = function (obj) {
-        return {color: getColor([255, 0, 0], parseInt(obj.score_military.toString().replace(/\./,'')) / militaryThreshold)};
+        return {color: getColor([255, 0, 0], getInt(obj.score_military) / militaryThreshold)};
     }
-
     window.getPlayerScoreDefenseStyle = function (obj) {
-        return {color: getColor([255, 255, 0], parseInt(obj.score_defense.toString().replace(/\./,'')) / defenseThreshold)};
+        return {color: getColor([255, 255, 0], getInt(obj.score_defense) / defenseThreshold)};
     }
 
     window.getProgressBar = function () {
-        var progressBar = $('#progress-bar');
+        const progressBar = $('#progress-bar');
 
         if (progressBar.length === 1) {
             return progressBar;
@@ -501,13 +538,6 @@
         $('body').prepend('<div style="padding: 10px 15px; background: rgba(0, 200, 200); color: #fff; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"></div>');
         return $('#progress-bar');
     };
-
-    window.orderBy = function (orderBy, direction) {
-        GM_setValue('orderBy', orderBy);
-        GM_setValue('orderDirection', direction);
-        window.location.reload();
-    };
-
     window.processQueue = function () {
         if (playerUpdateQueue.length > 0) {
             getProgressBar().html('Updating ' + playerUpdateQueue.length + ' items ...');
@@ -522,7 +552,13 @@
         }
     };
 
-    window.showSpyReportHistory = function(spyReportHistory) {
+    window.orderBy = function (orderBy, direction) {
+        GM_setValue('orderBy', orderBy);
+        GM_setValue('orderDirection', direction);
+        window.location.reload();
+    };
+
+    window.showSpyReportHistory = function (spyReportHistory) {
         $('body').append('<div id="spyReportBackdrop" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.95); z-index: 10000"></div>');
         $('body').append('<div id="spyReportOverlay" style="position: fixed; top: 25px; left: 25px; right: 25px; max-height: 95%; z-index: 10000; background: #161618; overflow-y: auto"></div>');
         var container = $('#spyReportOverlay');
@@ -536,44 +572,42 @@
         $(container).html(html);
 
         // close by ESC or backdrop click
-        $(window).keydown(function(event) {
-            if(event.key === 'Escape') {
+        $(window).keydown(function (event) {
+            if (event.key === 'Escape') {
                 $('#spyReportOverlay').remove();
                 $('#spyReportBackdrop').remove();
             }
         });
 
-        $('#spyReportBackdrop').click(function() {
+        $('#spyReportBackdrop').click(function () {
             $('#spyReportOverlay').remove();
             $('#spyReportBackdrop').remove();
         });
     };
-
-    window.showSpyReportHistoryBox = function(spyReportHistory, offset) {
+    window.showSpyReportHistoryBox = function (spyReportHistory, offset) {
         var html = '<table width="100%" style="max-width: 100% !important" class="table519"><tr>';
         html += '<th style="text-align: left; width: 250px" width="200">Zeit</th>';
 
-        $(spyReportHistory[offset].data[0].values).each(function(key, obj) {
+        $(spyReportHistory[offset].data[0].values).each(function (key, obj) {
             html += '<th style="text-align: center;">' + obj.name + '</th>';
         });
 
         html += '</tr>';
 
-        $(spyReportHistory[offset].data).each(function(key, obj) {
+        $(spyReportHistory[offset].data).each(function (key, obj) {
             html += '<tr>';
             html += '<td style="text-align: left;">' + obj.timestamp + '</td>';
 
-            $(obj.values).each(function(key, value) {
+            $(obj.values).each(function (key, value) {
                 value.value = value.value === null ? '---' : value.value;
-                html += '<td style="position: relative; ' + (value.value.toString() !== '0' && value.value.toString() !== '---' ? 'color: #fff' : 'color: #444' ) + '">';
+                html += '<td style="position: relative; ' + (value.value.toString() !== '0' && value.value.toString() !== '---' ? 'color: #fff' : 'color: #444') + '">';
                 html += value.value;
 
-                if(value.difference === null || value.difference === 0 || value.valueBefore == value.value) {
-                }
-                else if(value.valueBefore && value.valueBefore > value.value) {
+                if (value.difference === null || value.difference === 0 || value.valueBefore === value.value) {
+                    // nothing to show
+                } else if (value.valueBefore && value.valueBefore > value.value) {
                     html += ' <span style="color: red; position: absolute; right: 15px">' + value.difference + '</span>';
-                }
-                else {
+                } else {
                     html += ' <span style="color: green; position: absolute; right: 15px">+' + value.difference + '</span>';
                 }
 
@@ -587,6 +621,9 @@
 
         return html;
     };
+    window.getInt = function (intOrString) {
+        return parseInt(intOrString.toString().replace(/\./, ''));
+    }
 
     parseUrl();
 })();

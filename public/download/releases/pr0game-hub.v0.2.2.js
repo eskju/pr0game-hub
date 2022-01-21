@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.2.2
 // @description  alliance hub using cloud
-// @author       You
+// @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
 // @match        https://pr0game.com/game.php?page=playerCard&*
 // @match        https://pr0game.com/game.php
@@ -19,7 +19,7 @@
 // 0.1.3         version check & update notification
 // 0.2.0         spy report history and minor bugfixes
 // 0.2.1         fixed bugs for player scores above 1k and overview not displayed when receiving messages
-// 0.2.2         fixed JS bug at stats page
+// 0.2.2         fixed JS bug at stats page (requested by Eberwurz)
 
 (function () {
     'use strict';

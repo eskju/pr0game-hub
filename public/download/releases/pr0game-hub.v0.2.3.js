@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pr0game Hub
 // @namespace    http://tampermonkey.net/
-// @version      0.1.3
+// @version      0.2.3
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
@@ -17,6 +17,10 @@
 // 0.1.1         fixed player highlighting for noob/superior users (reported by Hyman)
 // 0.1.2         added legend to overview page (requested by Hyman)
 // 0.1.3         version check & update notification
+// 0.2.0         spy report history and minor bugfixes
+// 0.2.1         fixed bugs for player scores above 1k and overview not displayed when receiving messages
+// 0.2.2         fixed JS bug at stats page (requested by Eberwurz)
+// 0.2.3         automatically set ownGalaxy/ownSystem by selected planet (requested by Klarname)
 
 (function () {
     'use strict';
@@ -24,25 +28,24 @@
     // API settings
     var apiUrl = 'https://pr0game-hub.esKju.net/';
     var apiKey = '';
-    var version = '0.1.3';
-    var debug = false;
 
     // display settings
-    var ownGalaxy = GM_getValue('ownGalaxy') || 1; // used for color highlighting
-    var ownSystem = GM_getValue('ownSystem') || 1; // used for sorting
     var scoreThreshold = GM_getValue('scoreThreshold') || 1000; // limit for maximum blue color highlighting (total score)
     var buildingThreshold = GM_getValue('buildingThreshold') || 500; // limit for maximum green color highlighting (building score)
     var scienceThreshold = GM_getValue('scienceThreshold') || 250; // limit for maximum yellow color highlighting (science score)
     var militaryThreshold = GM_getValue('militaryThreshold') || 250; // limit for maximum red color highlighting (fleet score)
     var defenseThreshold = GM_getValue('defenseThreshold') || 50; // limit for maximum yellow color highlighting (defense score)
-    var updateThreshold = 3600 * 6; // time in seconds before fetched data is classified as outdated
+
+    // identify own coords by selected planet
+    var ownCoords = $('#planetSelector option:selected').html().match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/);
+    var ownGalaxy = ownCoords[1];
+    var ownSystem = ownCoords[2];
 
     // internal vars
-    var authError = false;
-    var apiMessage = {text: null, status: null};
-    var apiMessageError = false;
-    var playerCount = 1500;
     var playerUpdateQueue = [];
+    var version = '0.2.3';
+    var debug = false;
+
 
     window.getJSON = function (url, callback) {
         url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
@@ -128,7 +131,7 @@
         var html = '<table width="100%" style="max-width: 100% !important" class="table519"><tr>';
         var showNoobs = GM_getValue('showNoobs');
         var showInactive = GM_getValue('showInactive');
-        var ownScore = parseInt($('.infos:nth-child(1)').html().match(/Punkte ([.0-9]+) /)[1].replace(/\./, ''));
+        var ownScore = parseInt($($('.infos')[0]).html().match(/Punkte ([.0-9]+) /)[1].replace(/\./, ''));
 
         $('.infos:nth-child(4)').hide();
         $('.infos:nth-child(5)').hide();
@@ -138,9 +141,9 @@
         html += '<th class="sortable" data-sort="name" data-direction="ASC">Spieler</th>';
         html += '<th class="sortable" data-sort="distance" title="Distanz" data-direction="ASC" style="text-align: center;" id="sortByDistance" colspan="3"><i class="fa fa-map-marker-alt"></i></th>';
         html += '<th class="sortable" data-sort="score" title="Punkte" data-direction="DESC" style="text-align: center; color: #aaaaff" id="sortByScore"><i class="fa fa-chart-line"></i></th>';
-        html += '<th class="sortable" data-sort="score_building" title="Gebäudepunkte" data-direction="DESC" style="text-align: center; color: #aaffaa" id="sortByScoreBuilding"><i class="fa fa-home"></i></th>';
+        html += '<th class="sortable" data-sort="score_building" title="GebÃ¤udepunkte" data-direction="DESC" style="text-align: center; color: #aaffaa" id="sortByScoreBuilding"><i class="fa fa-home"></i></th>';
         html += '<th class="sortable" data-sort="score_science" title="Forschungspunkte" data-direction="DESC" style="text-align: center; color: #ffaaff" id="sortByScoreScience"><i class="fa fa-flask"></i></th>';
-        html += '<th class="sortable" data-sort="score_military" title="Militärpunkte" data-direction="DESC" style="text-align: center; color: #ffaaaa" id="sortByScoreMilitary"><i class="fa fa-fighter-jet"></i></th>';
+        html += '<th class="sortable" data-sort="score_military" title="MilitÃ¤rpunkte" data-direction="DESC" style="text-align: center; color: #ffaaaa" id="sortByScoreMilitary"><i class="fa fa-fighter-jet"></i></th>';
         html += '<th class="sortable" data-sort="score_defense" title="Verteidigungspunkte" data-direction="DESC" style="text-align: center; color: #ffffaa" id="sortByScoreDefense"><i class="fa fa-shield"></i></th>';
         html += '<th class="sortable" data-sort="last_attack" title="Letzter Angriff" data-direction="ASC" style="text-align: right;">Attack <i class="fa fa-crosshairs"></i></th>';
         html += '<th class="sortable" data-sort="last_spy_report" title="Letze Spionage" data-direction="DESC" style="text-align: right;">Spy <i class="fa fa-user-secret"></i></th>';
@@ -161,7 +164,7 @@
             response = JSON.parse(response.responseText);
 
             if(response.version !== version) {
-                $('body').prepend('<div style="padding: 10px 15px; background: rgba(200, 50, 0); color: #ffddaa; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"><i class="fa fa-exclamation-triangle"></i> Eine neue Plugin-Version v<a href="https://pr0game-hub.eskju.net/download/releases/pr0game-hub.v' + response.version + '.js" target="_blank" download>' + response.version + '</a> ist verfügbar.</div>');
+                $('body').prepend('<div style="padding: 10px 15px; background: rgba(200, 50, 0); color: #ffddaa; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"><i class="fa fa-exclamation-triangle"></i>  Eine neue Plugin-Version v<a href="https://pr0game-hub.eskju.net/download/releases/pr0game-hub.v' + response.version + '.js" target="_blank" download>' + response.version + '</a> ist verfügbar.</div>');
             }
 
             $(response.players).each(function (key, obj) {
@@ -177,7 +180,7 @@
                 html += '<td id="row' + obj.id + 'ScoreMilitary">' + (obj.player.score_military || '') + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreDefense">' + (obj.player.score_defense || '') + '</td>';
                 html += '<td style="text-align: right">' + (obj.last_attack || '') + ' </td>';
-                html += '<td style="text-align: right">' + (obj.last_spy_report || '') + '</td>';
+                html += '<td style="text-align: right; cursor: pointer" id="lastSpyReport' + obj.id + '">' + (obj.last_spy_report || '') + '</td>';
                 html += '<td>';
 
                 if (obj.external_id) {
@@ -206,6 +209,12 @@
                 $('#row' + obj.id + 'ScoreDefense').css(getPlayerScoreDefenseStyle(obj.player));
                 $('#row' + obj.id + ' td, #row' + obj.id + ' td a').css(getPlayerRowTdStyle(obj.player));
                 $('#row' + obj.id + ' td, #row' + obj.id + ' td a').css(getPlayerRowTdStyle(obj.player, ownScore));
+                $('#lastSpyReport' + obj.id).click(function() {
+                    getJSON('spy-reports/' + obj.galaxy + '/' + obj.system + '/' + obj.planet, function (spyReports) {
+                        spyReports = JSON.parse(spyReports.responseText);
+                        showSpyReportHistory(spyReports);
+                    });
+                });
             });
 
             $('th.sortable').each(function (key, obj) {
@@ -289,10 +298,20 @@
                 $('#row' + obj.id + 'ScoreDefense').css(getPlayerScoreDefenseStyle(obj));
             });
 
-            if (response.missing_ids.length > 0 && false) {
+            if (response.missing_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227) {
                 $('content').prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.missing_ids.length + ' missing IDs</button>');
                 $('#fetchMissingIdsBtn').click(function () {
                     playerUpdateQueue = response.missing_ids;
+
+                    $('#fetchMissingIdsBtn').remove();
+                    processQueue();
+                });
+            }
+
+            if (response.outdated_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227) {
+                $('content').prepend('<button id="fetchUpdatableIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
+                $('#fetchUpdatableIdsBtn').click(function () {
+                    playerUpdateQueue = response.outdated_ids;
 
                     $('#fetchMissingIdsBtn').remove();
                     processQueue();
@@ -402,6 +421,8 @@
     }
 
     window.getPlayerRowStyle = function (obj, ownScore) {
+        obj.score = (obj.score.toString().replace(/\./, '') || 0).toString();
+
         if (obj.on_vacation === 1) {
             return {background: 'rgb(0, 0, 255)', opacity: 0.75};
         } else if (obj.is_inactive === 1) {
@@ -418,6 +439,8 @@
     }
 
     window.getPlayerRowTdStyle = function (obj, ownScore) {
+        obj.score = (obj.score.toString().replace(/\./, '') || 0).toString();
+
         if (obj.on_vacation === 1) {
             return {color: 'rgb(100, 150, 200)'};
         } else if (obj.is_inactive === 1) {
@@ -449,23 +472,23 @@
     };
 
     window.getPlayerScoreStyle = function (obj) {
-        return {color: getColor([0, 0, 255], obj.score / scoreThreshold)};
+        return {color: getColor([0, 0, 255], parseInt(obj.score.toString().replace(/\./,'')) / scoreThreshold)};
     }
 
     window.getPlayerScoreBuildingStyle = function (obj) {
-        return {color: getColor([0, 255, 0], obj.score_building / buildingThreshold)};
+        return {color: getColor([0, 255, 0], parseInt(obj.score_building.toString().replace(/\./,'')) / buildingThreshold)};
     }
 
     window.getPlayerScoreScienceStyle = function (obj) {
-        return {color: getColor([255, 0, 255], obj.score_science / scienceThreshold)};
+        return {color: getColor([255, 0, 255], parseInt(obj.score_science.toString().replace(/\./,'')) / scienceThreshold)};
     }
 
     window.getPlayerScoreMilitaryStyle = function (obj) {
-        return {color: getColor([255, 0, 0], obj.score_military / militaryThreshold)};
+        return {color: getColor([255, 0, 0], parseInt(obj.score_military.toString().replace(/\./,'')) / militaryThreshold)};
     }
 
     window.getPlayerScoreDefenseStyle = function (obj) {
-        return {color: getColor([255, 255, 0], obj.score_defense / defenseThreshold)};
+        return {color: getColor([255, 255, 0], parseInt(obj.score_defense.toString().replace(/\./,'')) / defenseThreshold)};
     }
 
     window.getProgressBar = function () {
@@ -499,28 +522,71 @@
         }
     };
 
-    // check api token
-    /*
-    getJSON('login', function(response) {
-        switch(response.status) {
-            case 200:
-                console.log('api key valid');
-                parseUrl();
-                break;
+    window.showSpyReportHistory = function(spyReportHistory) {
+        $('body').append('<div id="spyReportBackdrop" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.95); z-index: 10000"></div>');
+        $('body').append('<div id="spyReportOverlay" style="position: fixed; top: 25px; left: 25px; right: 25px; max-height: 95%; z-index: 10000; background: #161618; overflow-y: auto"></div>');
+        var container = $('#spyReportOverlay');
+        var html = '';
+        html += showSpyReportHistoryBox(spyReportHistory, 'resources');
+        html += showSpyReportHistoryBox(spyReportHistory, 'fleet');
+        html += showSpyReportHistoryBox(spyReportHistory, 'defense');
+        html += showSpyReportHistoryBox(spyReportHistory, 'science');
+        html += showSpyReportHistoryBox(spyReportHistory, 'buildings');
 
-            case 422:
-                console.log('login 422');
-                apiMessage.text = 'Der API Key ist ungültig, bitte passe die Variable "apiKey" an.';
-                apiMessage.status = 'error';
-                break;
+        $(container).html(html);
 
-            default:
-                console.log('login ' + response.status);
-                apiMessage.text = 'Die API ist derzeit nicht verfügbar, Plugin inaktiv.';
-                apiMessage.status = 'error';
-        }
-    });
-    */
+        // close by ESC or backdrop click
+        $(window).keydown(function(event) {
+            if(event.key === 'Escape') {
+                $('#spyReportOverlay').remove();
+                $('#spyReportBackdrop').remove();
+            }
+        });
+
+        $('#spyReportBackdrop').click(function() {
+            $('#spyReportOverlay').remove();
+            $('#spyReportBackdrop').remove();
+        });
+    };
+
+    window.showSpyReportHistoryBox = function(spyReportHistory, offset) {
+        var html = '<table width="100%" style="max-width: 100% !important" class="table519"><tr>';
+        html += '<th style="text-align: left; width: 250px" width="200">Zeit</th>';
+
+        $(spyReportHistory[offset].data[0].values).each(function(key, obj) {
+            html += '<th style="text-align: center;">' + obj.name + '</th>';
+        });
+
+        html += '</tr>';
+
+        $(spyReportHistory[offset].data).each(function(key, obj) {
+            html += '<tr>';
+            html += '<td style="text-align: left;">' + obj.timestamp + '</td>';
+
+            $(obj.values).each(function(key, value) {
+                value.value = value.value === null ? '---' : value.value;
+                html += '<td style="position: relative; ' + (value.value.toString() !== '0' && value.value.toString() !== '---' ? 'color: #fff' : 'color: #444' ) + '">';
+                html += value.value;
+
+                if(value.difference === null || value.difference === 0 || value.valueBefore == value.value) {
+                }
+                else if(value.valueBefore && value.valueBefore > value.value) {
+                    html += ' <span style="color: red; position: absolute; right: 15px">' + value.difference + '</span>';
+                }
+                else {
+                    html += ' <span style="color: green; position: absolute; right: 15px">+' + value.difference + '</span>';
+                }
+
+                html += '</td>';
+            });
+
+            html += '</tr>';
+        });
+
+        html += '</table>';
+
+        return html;
+    };
 
     parseUrl();
 })();

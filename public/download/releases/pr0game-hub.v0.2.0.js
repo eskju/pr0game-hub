@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.2.0
 // @description  alliance hub using cloud
-// @author       You
+// @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
 // @match        https://pr0game.com/game.php?page=playerCard&*
 // @match        https://pr0game.com/game.php
