@@ -77,7 +77,7 @@ class PlayerController extends Controller
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->where('galaxy', $request->get('galaxy'))
-            ->first();
+            ->with('player');
 
         switch ($request->get('order_by')) {
             case 'name':
