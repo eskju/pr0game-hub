@@ -19,4 +19,5 @@ Route::post('/players/stats', PlayerController::class . '@stats');
 Route::post('/players/overview', PlayerController::class . '@overview');
 Route::post('/players/{playerId}', PlayerController::class . '@store');
 Route::post('/spy-reports', PlayerController::class . '@storeSpyReport');
+Route::get('/spy-reports/{galaxy}/{system}/{planet}', PlayerController::class . '@getSpyReportHistory');
 Route::post('/planets', PlayerController::class . '@storePlanetId');

@@ -4,9 +4,28 @@ namespace App\Services;
 
 class ResourceService
 {
-    public static function getAliasById($id)
+    public static function getAliasById($id): string
     {
-        $mapping = [
+        $mapping = self::getMapping();
+
+        return $mapping[$id];
+    }
+
+    public static function getNameById($id): string
+    {
+        $mapping = self::getMappingAbbreviations();
+
+        return $mapping[$id];
+    }
+
+    public static function getReverseMapping(): array
+    {
+        return array_flip(self::getMapping());
+    }
+
+    public static function getMapping(): array
+    {
+        return [
             '1' => 'metal_mine',
             '2' => 'crystal_mine',
             '3' => 'deuterium_mine',
@@ -61,6 +80,7 @@ class ResourceService
             '213' => 'destroyers',
             '214' => 'death_stars',
             '215' => 'battle_cruisers',
+
             '401' => 'rocket_launchers',
             '402' => 'light_laser_turrets',
             '403' => 'heavy_laser_turrets',
@@ -69,6 +89,7 @@ class ResourceService
             '406' => 'plasma_turrets',
             '407' => 'small_shields',
             '408' => 'large_shields',
+
             '502' => 'interceptor_missiles',
             '503' => 'interplanetary_missiles',
 
@@ -77,7 +98,82 @@ class ResourceService
             '903' => 'deuterium',
             '911' => 'energy'
         ];
+    }
 
-        return $mapping[$id];
+    public static function getMappingAbbreviations(): array
+    {
+        return [
+            '1' => 'Metal',
+            '2' => 'Crys',
+            '3' => 'Deut',
+            '4' => 'Solar',
+            '6' => 'TD',
+            '12' => 'Fusion',
+            '14' => 'Robot',
+            '15' => 'Nano',
+            '21' => 'Hangar',
+            '22' => 'MetS',
+            '23' => 'CrysS',
+            '24' => 'DeutS',
+            '31' => 'Labor',
+            '33' => 'T',
+            '34' => 'D',
+            '41' => 'B',
+            '42' => 'P',
+            '43' => 'Po',
+            '44' => 'S',
+
+            '106' => 'Spio',
+            '108' => 'Compu',
+            '109' => 'Att',
+            '110' => 'Def',
+            '111' => 'Shield',
+            '113' => 'Energie',
+            '114' => 'HyS',
+            '115' => 'Verbr.',
+            '117' => 'Impuls',
+            '118' => 'HyS Tr.',
+            '120' => 'Laser',
+            '121' => 'Ionen',
+            '122' => 'Plasma',
+            '123' => 'Inter',
+            '124' => 'Astro',
+            '131' => 'Metal',
+            '132' => 'Crystal',
+            '133' => 'Deut',
+            '199' => 'Graviton',
+
+            '202' => 'KT',
+            '203' => 'GT',
+            '204' => 'LJ',
+            '205' => 'SJ',
+            '206' => 'Xer',
+            '207' => 'SS',
+            '208' => 'KS',
+            '209' => 'Rec',
+            '210' => 'Spio',
+            '211' => 'B',
+            '212' => 'Solar',
+            '213' => 'ZS',
+            '214' => 'DS',
+            '215' => 'SK',
+
+            '401' => 'RW',
+            '402' => 'LL',
+            '403' => 'SL',
+            '404' => 'Gauss',
+            '405' => 'Ionen',
+            '406' => 'Plasma',
+            '407' => 'Kl. Schild',
+            '408' => 'Gr. Schild',
+
+            '502' => 'Abfangr.',
+            '503' => 'Interpl. R.',
+
+            '901' => 'Metall',
+            '902' => 'Kristall',
+            '903' => 'Deuterium',
+            '911' => 'Energie'
+        ];
     }
 }
