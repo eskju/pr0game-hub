@@ -199,6 +199,7 @@ class PlayerController extends Controller
         }
 
         $player->fill($request->toArray());
+        $player->touch();
         $player->save();
 
         if (!Planet::query()->where('coordinates', $request->get('main_coordinates'))->first()) {
