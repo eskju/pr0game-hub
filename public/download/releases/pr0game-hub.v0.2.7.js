@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pr0game Hub (aka hornyHub)
 // @namespace    http://tampermonkey.net/
-// @version      0.2.5
+// @version      0.2.7
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
@@ -103,7 +103,7 @@
 
     // internal vars
     let playerUpdateQueue = [];
-    const version = '0.2.4';
+    const version = '0.2.7';
     const debug = true;
 
     // regex

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pr0game Hub (aka hornyHub)
 // @namespace    http://tampermonkey.net/
-// @version      0.2.5
+// @version      0.2.6
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
@@ -32,7 +32,6 @@
 // 0.2.4         refactoring, improved version check and special char fix (reported by Hyman)
 // 0.2.5         highlight alliance members (green)
 // 0.2.6         hightlight when a user becomes inactive state + fix for www. subdomain
-// 0.2.7         added loading indicator for overview page
 
 // == feature requests / ideas ==
 // Hyman         click at a system should link to the galaxy view
@@ -103,7 +102,7 @@
 
     // internal vars
     let playerUpdateQueue = [];
-    const version = '0.2.4';
+    const version = '0.2.6';
     const debug = true;
 
     // regex
@@ -212,7 +211,6 @@
         html += '<th class="sortable" data-sort="last_spy_crystal" data-direction="DESC" title="Kristall (Letzte Spionage)" style="text-align: right;" id="sortBySpioCry">CRY</th>';
         html += '<th class="sortable" data-sort="last_spy_deuterium" data-direction="DESC" title="Deuterium (Letzte Spionage)" style="text-align: right;" id="sortBySpioDeu">DEU</th></tr>';
 
-        $(galaxyBox).html('<div style="padding: 15px"><i class="fa fa-spinner fa-spin"></i> Loading overview...</div>');
         postJSON('players/overview', {
             galaxy: ownGalaxy,
             system: ownSystem,

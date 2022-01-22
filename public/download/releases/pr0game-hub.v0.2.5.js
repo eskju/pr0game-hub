@@ -31,8 +31,6 @@
 // 0.2.3         automatically set ownGalaxy/ownSystem by selected planet (requested by Klarname)
 // 0.2.4         refactoring, improved version check and special char fix (reported by Hyman)
 // 0.2.5         highlight alliance members (green)
-// 0.2.6         hightlight when a user becomes inactive state + fix for www. subdomain
-// 0.2.7         added loading indicator for overview page
 
 // == feature requests / ideas ==
 // Hyman         click at a system should link to the galaxy view
@@ -103,7 +101,7 @@
 
     // internal vars
     let playerUpdateQueue = [];
-    const version = '0.2.4';
+    const version = '0.2.5';
     const debug = true;
 
     // regex
@@ -212,7 +210,6 @@
         html += '<th class="sortable" data-sort="last_spy_crystal" data-direction="DESC" title="Kristall (Letzte Spionage)" style="text-align: right;" id="sortBySpioCry">CRY</th>';
         html += '<th class="sortable" data-sort="last_spy_deuterium" data-direction="DESC" title="Deuterium (Letzte Spionage)" style="text-align: right;" id="sortBySpioDeu">DEU</th></tr>';
 
-        $(galaxyBox).html('<div style="padding: 15px"><i class="fa fa-spinner fa-spin"></i> Loading overview...</div>');
         postJSON('players/overview', {
             galaxy: ownGalaxy,
             system: ownSystem,
@@ -235,14 +232,7 @@
             $(response.players).each(function (key, obj) {
                 html += '<tr id="row' + obj.id + '">';
                 html += '<td>' + (key + 1) + '</td>';
-                html += '<td style="text-align: left">';
-
-                if(obj.inactive_since !== null && obj.inactive_since < 48) {
-                    html += '<span style="padding: 0 3px; background: rgb(255, 0, 0); color: #fff; border-radius: 2px; margin-right: 5px">' + obj.inactive_since + ' STD</span>';
-                }
-
-                html += '<a href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + '</a>';
-                html += '</td>';
+                html += '<td style="text-align: left"><a href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + '</a></td>';
                 html += '<td id="row' + obj.id + 'Galaxy">' + (obj.galaxy || '---') + '</td>';
                 html += '<td id="row' + obj.id + 'System">' + (obj.system || '---') + '</td>';
                 html += '<td id="row' + obj.id + 'Planet">' + (obj.planet || '---') + '</td>';
