@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pr0game Hub (aka hornyHub)
 // @namespace    http://tampermonkey.net/
-// @version      0.2.9
+// @version      0.2.8
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
@@ -34,7 +34,6 @@
 // 0.2.6         hightlight when a user becomes inactive state + fix for www. subdomain
 // 0.2.7         added loading indicator for overview page
 // 0.2.8         fixed a bug that overview is not displayed after planet switch
-// 0.2.9         use forms for user vars/customization
 
 // == feature requests / ideas ==
 // Hyman         click at a system should link to the galaxy view
@@ -106,7 +105,7 @@
 
     // internal vars
     let playerUpdateQueue = [];
-    const version = '0.2.9';
+    const version = '0.2.8';
     const debug = true;
 
     // regex
