@@ -191,7 +191,7 @@ class PlayerController extends Controller
             $player->id = $playerId;
         }
 
-        if($request->get('main_coordinates') === '::') {
+        if($request->get('main_coordinates') == '::') {
             Log::info('DELETE');
         }
 
