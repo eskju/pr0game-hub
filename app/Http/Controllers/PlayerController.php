@@ -112,7 +112,7 @@ class PlayerController extends Controller
                 ->get()
                 ->map(function (Planet $planet) {
                     $return = $planet->toArray();
-                    $return['last_spy_report_hours'] = $return['last_spy_report'] ? Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now()) : '';
+                    $return['last_spy_report_hours'] = $return['last_spy_report'] ? Carbon::now()->diffInHours(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()) : '';
                     $return['last_spy_report'] = $return['last_spy_report'] ? Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->shortRelativeDiffForHumans() : '';
                     $return['last_battle_report'] = '';
                     $return['last_battle_report'] = 0;
