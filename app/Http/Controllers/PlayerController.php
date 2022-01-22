@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PlayerController extends Controller
 {
@@ -196,10 +197,11 @@ class PlayerController extends Controller
         if (!Planet::query()->where('coordinates', $request->get('main_coordinates'))->first()) {
             $planet = new Planet();
             $planet->coordinates = $request->get('main_coordinates');
+            Log::info($request->get('main_coordinates'));
             $coords = explode(':', $planet->coordinates);
-            $planet->galaxy = $coords[0] ?? null;
-            $planet->system = $coords[1] ?? null;
-            $planet->planet = $coords[2] ?? null;
+            $planet->galaxy = $coords[0];
+            $planet->system = $coords[1];
+            $planet->planet = $coords[2];
             $planet->player_id = $playerId;
             $planet->save();
         }
