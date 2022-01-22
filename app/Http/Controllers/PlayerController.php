@@ -191,13 +191,15 @@ class PlayerController extends Controller
             $player->id = $playerId;
         }
 
+        if($player->main_coordinates !== '::' && $request->get('main_coordinates') === '::') {
+            Log::info('DELETE');
+        }
         $player->fill($request->toArray());
         $player->save();
 
         if (!Planet::query()->where('coordinates', $request->get('main_coordinates'))->first()) {
             $planet = new Planet();
             $planet->coordinates = $request->get('main_coordinates');
-            Log::info($request->get('main_coordinates'));
             $coords = explode(':', $planet->coordinates);
             $planet->galaxy = $coords[0];
             $planet->system = $coords[1];
