@@ -128,7 +128,7 @@ class PlayerController extends Controller
                 ->select('id')
                 ->where('main_coordinates', 'LIKE', $request->get('galaxy') . ':%')
                 ->where('updated_at', '<', Carbon::now()->subHours(8))
-                ->whereNotIn('player_id', Player::query()->where('is_deleted',1)->get()->pluck('id'))
+                ->where('is_deleted', 0)
                 ->get()
                 ->pluck('id'),
             'version' => '0.2.7',
