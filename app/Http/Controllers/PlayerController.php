@@ -193,6 +193,7 @@ class PlayerController extends Controller
 
         if($request->get('main_coordinates') == '::') {
             Log::info('DELETE');
+            return;
         }
 
         $player->fill($request->toArray());
