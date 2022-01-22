@@ -197,9 +197,9 @@ class PlayerController extends Controller
             $planet = new Planet();
             $planet->coordinates = $request->get('main_coordinates');
             $coords = explode(':', $planet->coordinates);
-            $planet->galaxy = $coords[0];
-            $planet->system = $coords[1];
-            $planet->planet = $coords[2];
+            $planet->galaxy = $coords[0] ?? null;
+            $planet->system = $coords[1] ?? null;
+            $planet->planet = $coords[2] ?? null;
             $planet->player_id = $playerId;
             $planet->save();
         }
