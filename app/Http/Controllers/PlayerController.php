@@ -126,7 +126,6 @@ class PlayerController extends Controller
                 }),
             'outdated_ids' => Player::query()
                 ->select('id')
-                ->where('main_coordinates', 'LIKE', $request->get('galaxy') . ':%')
                 ->where('updated_at', '<', Carbon::now()->subHours(8))
                 ->where('is_deleted', 0)
                 ->get()
