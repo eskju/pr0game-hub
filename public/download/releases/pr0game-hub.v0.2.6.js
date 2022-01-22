@@ -31,7 +31,7 @@
 // 0.2.3         automatically set ownGalaxy/ownSystem by selected planet (requested by Klarname)
 // 0.2.4         refactoring, improved version check and special char fix (reported by Hyman)
 // 0.2.5         highlight alliance members (green)
-// 0.2.6         hightlight when a user becomes inactive state + fix for www. subdomain
+// 0.2.6         highlight when a user becomes inactive state + fix for www. subdomain
 
 // == feature requests / ideas ==
 // Hyman         click at a system should link to the galaxy view
