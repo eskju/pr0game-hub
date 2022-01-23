@@ -72,6 +72,7 @@ class PlayerController extends Controller
             ->select(
                 DB::raw('planets.*'),
                 DB::raw('alliances.name AS alliance_name'),
+                DB::raw('(SELECT created_at FROM battle_reports WHERE battle_reports.galaxy = planets.galaxy AND battle_reports.system = planets.system AND battle_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) as `last_battle_report`'),
                 DB::raw('(SELECT created_at FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) as `last_spy_report`'),
                 DB::raw('(SELECT metal FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_metal`'),
                 DB::raw('(SELECT crystal FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_crystal`'),
@@ -127,8 +128,8 @@ class PlayerController extends Controller
                     $return = $planet->toArray();
                     $return['last_spy_report_hours'] = $return['last_spy_report'] ? abs(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
                     $return['last_spy_report'] = $return['last_spy_report'] ? Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->shortRelativeDiffForHumans() : '';
-                    $return['last_battle_report'] = '';
-                    $return['last_battle_report'] = 0;
+                    $return['last_battle_report_hours'] = $return['last_battle_report'] ? abs(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
+                    $return['last_battle_report'] = $return['last_battle_report'] ? Carbon::parse($return['last_battle_report'])->subMinute()->subHour()->shortRelativeDiffForHumans() : '';
                     $return['last_spy_metal'] = $return['last_spy_metal'] ? number_format($return['last_spy_metal'], 0, ',', '.') : '';
                     $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '';
                     $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
