@@ -51,7 +51,7 @@
     'use strict';
 
     // API settings
-    const version = '0.3.0';
+    const version = '0.3.1';
     let apiKey = GM_getValue('api_key');
     let apiKeyValid = GM_getValue('api_key_valid') === '1';
     let debugMode = GM_getValue('debug_mode') === '1';
@@ -540,7 +540,7 @@
 
                     html += '<a href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + '</a></td>';
                     html += '<td id="row' + obj.id + 'Galaxy">' + (obj.galaxy || '---') + '</td>';
-                    html += '<td id="row' + obj.id + 'System"><a href="/game.php?page=galaxy&galaxy=' + (obj.galaxy || '') + '&system=' + (obj.system || '') + '"></a>' + (obj.system || '---') + '</a></td>';
+                    html += '<td id="row' + obj.id + 'System"><a href="/game.php?page=galaxy&galaxy=' + (obj.galaxy || '') + '&system=' + (obj.system || '') + '">' + (obj.system || '---') + '</a></td>';
                     html += '<td id="row' + obj.id + 'Planet">' + (obj.planet || '---') + '</td>';
                     html += '<td id="row' + obj.id + 'Score">' + (obj.player.score || '') + '</td>';
                     html += '<td id="row' + obj.id + 'ScoreBuilding">' + (obj.player.score_building || '') + '</td>';
