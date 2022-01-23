@@ -79,7 +79,7 @@ class PlayerController extends Controller
                 DB::raw('(SELECT TIMESTAMPDIFF(HOUR, MAX(log_player_status.created_at), NOW()) FROM log_player_status WHERE log_player_status.player_id = planets.player_id AND is_inactive = 1) AS `inactive_since`'),
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
-            ->join('alliances','alliances.id', '=', 'player.alliance_id', 'left outer')
+            ->join('alliances','alliances.id', '=', 'players.alliance_id', 'left outer')
             ->where('galaxy', $request->get('galaxy'))
             ->with('player');
 
