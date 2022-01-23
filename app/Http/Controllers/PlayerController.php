@@ -71,6 +71,7 @@ class PlayerController extends Controller
         $query = Planet::query()
             ->select(
                 DB::raw('planets.*'),
+                DB::raw('alliances.tag'),
                 DB::raw('(SELECT created_at FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) as `last_spy_report`'),
                 DB::raw('(SELECT metal FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_metal`'),
                 DB::raw('(SELECT crystal FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_crystal`'),
@@ -78,6 +79,7 @@ class PlayerController extends Controller
                 DB::raw('(SELECT TIMESTAMPDIFF(HOUR, MAX(log_player_status.created_at), NOW()) FROM log_player_status WHERE log_player_status.player_id = planets.player_id AND is_inactive = 1) AS `inactive_since`'),
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
+            ->join('alliances','alliances.id', '=', 'player.alliance_id', 'left outer')
             ->where('galaxy', $request->get('galaxy'))
             ->with('player');
 
