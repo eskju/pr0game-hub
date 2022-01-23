@@ -114,6 +114,12 @@ class PlayerController extends Controller
                 break;
         }
 
+        $planet = Planet::query()
+            ->where('galaxy', $request->get('galaxy'))
+            ->where('system', $request->get('system'))
+            ->where('planet', $request->get('planet'))
+            ->first();
+
         return [
             'players' => $query
                 ->get()
@@ -141,12 +147,7 @@ class PlayerController extends Controller
                 ->get()
                 ->pluck('id'),
             'version' => '0.3.0',
-            'player' => Planet::query()
-                ->where('galaxy', $request->get('galaxy'))
-                ->where('system', $request->get('system'))
-                ->where('planet', $request->get('planet'))
-                ->first()
-                ->player
+            'player' => $planet ? $planet->player : []
         ];
     }
 
