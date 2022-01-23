@@ -140,7 +140,7 @@ class PlayerController extends Controller
                 ->where('is_deleted', 0)
                 ->get()
                 ->pluck('id'),
-            'version' => '0.2.7',
+            'version' => '0.3.0',
             'player' => Planet::query()
                 ->where('galaxy', $request->get('galaxy'))
                 ->where('system', $request->get('system'))
