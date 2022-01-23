@@ -10,8 +10,8 @@
 // @match        https://www.pr0game.com/game.php?page=playerCard&*
 // @match        https://pr0game.com/game.php
 // @match        https://www.pr0game.com/game.php
-// @match        https://pr0game.com/game.php?page=overview
-// @match        https://www.pr0game.com/game.php?page=overview
+// @match        https://pr0game.com/game.php?page=overview*
+// @match        https://www.pr0game.com/game.php?page=overview*
 // @match        https://pr0game.com/game.php?page=messages&category=*
 // @match        https://www.pr0game.com/game.php?page=messages&category=*
 // @match        https://pr0game.com/game.php?page=galaxy
