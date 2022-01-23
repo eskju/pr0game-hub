@@ -146,7 +146,7 @@ class PlayerController extends Controller
                 ->where('is_deleted', 0)
                 ->get()
                 ->pluck('id'),
-            'version' => '0.3.0',
+            'version' => '0.3.2',
             'player' => $planet ? $planet->player : []
         ];
     }
