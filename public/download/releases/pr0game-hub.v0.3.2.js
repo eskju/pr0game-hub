@@ -414,7 +414,7 @@
         }
 
         this.sortData = function(a, b) {
-            let property = GM_getValue('orderBy');
+            let property = GM_getValue('orderBy') || 'distance';
             const invertSort = GM_getValue('orderDirection') !== 'DESC' ? 1 : -1;
 
             const offsets = property.split('.');
@@ -516,7 +516,7 @@
             html += '<th class="sortable" data-sort="player.score_military" title="Militaerpunkte" data-direction="DESC" style="text-align: center; color:' + getRgb(cRed) + '" id="sortByScoreMilitary"><i class="fa fa-fighter-jet"></i></th>';
             html += '<th class="sortable" data-sort="player.score_defense" title="Verteidigungspunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cYellow) + '" id="sortByScoreDefense"><i class="fa fa-shield"></i></th>';
             html += '<th class="sortable" data-sort="last_attack" title="Letzter Angriff" data-direction="ASC" style="text-align: right;">Attack <i class="fa fa-crosshairs"></i></th>';
-            html += '<th class="sortable" data-sort="last_spy_report" title="Letze Spionage" data-direction="DESC" style="text-align: right;">Spy <i class="fa fa-user-secret"></i></th>';
+            html += '<th class="sortable" data-sort="last_spy_report_hours" title="Letze Spionage" data-direction="DESC" style="text-align: right;">Spy <i class="fa fa-user-secret"></i></th>';
             html += '<th style="text-align: center;">Actions</th>';
             html += '<th class="sortable" data-sort="last_spy_metal" data-direction="DESC" title="Metall (Letzte Spionage)" style="text-align: right;" id="sortBySpioMet">MET</th>';
             html += '<th class="sortable" data-sort="last_spy_crystal" data-direction="DESC" title="Kristall (Letzte Spionage)" style="text-align: right;" id="sortBySpioCry">CRY</th>';
@@ -678,7 +678,7 @@
         });
     };
     window.parsePageMessages = function () {
-        var messages = $($('#messagestable tr').get().reverse());
+        var messages = $($('#messagestable > tbody > tr').get().reverse());
         messages.each(function (key, obj) {
             // spy report
             if ($(obj).find('.spyRaport').length > 0) {
@@ -696,8 +696,8 @@
                 var values = $(obj).find('.spyRaportContainerRow .spyRaportContainerCell:nth-child(2n)');
                 var resources = {};
 
-                labels.each(function (key, label) {
-                    resources[($(label).find('a').attr('onclick') || '').match(/\(([0-9]+)\)/)[1]] = getInt($(values[key]).html());
+                labels.each(function (labelKey, label) {
+                    resources[($(label).find('a').attr('onclick') || '').match(/\(([0-9]+)\)/)[1]] = getInt($(values[labelKey]).html());
                 });
 
                 postJSON('spy-reports', {
@@ -712,14 +712,24 @@
             }
 
             if ($(obj).find('.raportMessage').length > 0) {
-                var dateTime = $(messages[key - 1]).find('td:nth-child(2)').html();
+                var dateTime = $(messages[key + 1]).find('td:nth-child(2)').html();
                 var parseResult = getCoordinates($(obj).find('.raportMessage').html());
                 var galaxy = parseResult[1];
                 var system = parseResult[2];
                 var planet = parseResult[3];
                 var coords = galaxy + ':' + system + ':' + planet;
+                var html = $(obj).html();
+                console.log(html);
+                var reportId = html.match(/raport\=([^"]{32})/)[1];
+                var attackerLost = getInt(html.match(/Angreifer\: ([\.0-9]+)\</)[1]);
+                var defenderLost = getInt(html.match(/Verteidiger\: ([\.0-9]+)\</)[1]);
+                var metal = getInt(html.match(/(reportSteal|raportSteal) element901\"\>([\.0-9]+)\</)[2]);
+                var crystal = getInt(html.match(/(reportSteal|raportSteal) element902\"\>([\.0-9]+)\</)[2]);
+                var deuterium = getInt(html.match(/(reportSteal|raportSteal) element903\"\>([\.0-9]+)\</)[2]);
+                var debrisMetal = getInt(html.match(/(reportDebris|raportDebris) element901\"\>([\.0-9]+)\</)[2]);
+                var debrisCrystal = getInt(html.match(/(reportDebris|raportDebris) element902\"\>([\.0-9]+)\</)[2]);
 
-                GM_setValue('attack_' + coords, dateTime);
+                console.log(dateTime,galaxy,system,planet,coords,reportId,attackerLost,defenderLost,metal,crystal,deuterium,debrisMetal,debrisCrystal);
             }
         });
     }
