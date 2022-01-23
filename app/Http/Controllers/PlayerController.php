@@ -88,6 +88,10 @@ class PlayerController extends Controller
                 $query->orderBy('players.name');
                 break;
 
+            case 'alliance':
+                $query->orderBy('alliance_name');
+                break;
+
             case 'score':
             case 'score_building':
             case 'score_science':
