@@ -203,6 +203,7 @@ class PlayerController extends Controller
         }
 
         $player->fill($request->toArray());
+        $player->alliance_id = $alliance ? $alliance->id : null;
         $player->touch();
         $player->save();
 
