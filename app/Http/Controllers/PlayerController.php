@@ -141,9 +141,12 @@ class PlayerController extends Controller
                 ->get()
                 ->pluck('id'),
             'version' => '0.2.7',
-            'player' => Player::query()
-                ->where('main_coordinates', $request->get('galaxy') . ':' . $request->get('system') . ':' . $request->get('planet'))
+            'player' => Planet::query()
+                ->where('galaxy', $request->get('galaxy'))
+                ->where('system', $request->get('system'))
+                ->where('planet', $request->get('planet'))
                 ->first()
+                ->player
         ];
     }
 
