@@ -182,11 +182,15 @@ class PlayerController extends Controller
     public function store(int $playerId, Request $request)
     {
         if ($request->get('alliance_id')) {
-            if (!Alliance::query()->find($request->get('alliance_id'))) {
+            if (!$alliance = Alliance::query()->find($request->get('alliance_id'))) {
                 $alliance = new Alliance();
                 $alliance->id = $request->get('alliance_id');
                 $alliance->name = $request->get('alliance_name') ?: '---';
                 $alliance->tag = $request->get('alliance_tag') ?: '---';
+                $alliance->save();
+            }
+            else {
+                $alliance->name = $request->get('alliance_name') ?: '---';
                 $alliance->save();
             }
         }
