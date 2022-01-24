@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AllianceController;
 use App\Http\Controllers\BattleReportController;
 use App\Http\Controllers\PlanetController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\SpyReportController;
+use App\Models\Alliance;
 use App\Models\Player;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::model('{alliance}', Alliance::class);
 Route::model('{player}', Player::class);
 
 Route::get('/login', PlayerController::class . '@login');
@@ -25,6 +28,8 @@ Route::post('/players/stats', PlayerController::class . '@stats');
 Route::post('/players/overview', PlayerController::class . '@overview');
 Route::post('/players/{playerId}', PlayerController::class . '@store');
 Route::get('/players/{player}/planets', PlayerController::class . '@getPlanets');
+
+Route::get('/alliances/{alliance}/planets', AllianceController::class . '@getPlanets');
 
 Route::post('/spy-reports', SpyReportController::class . '@store');
 Route::get('/spy-reports/{galaxy}/{system}/{planet}', SpyReportController::class . '@history');
