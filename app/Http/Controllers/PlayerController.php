@@ -245,4 +245,14 @@ class PlayerController extends Controller
             $log->save();
         }
     }
+
+    public function getPlanets(Player $player): Collection
+    {
+        return $player
+            ->planets()
+            ->orderBy('galaxy')
+            ->orderBy('system')
+            ->orderBy('planet')
+            ->get();
+    }
 }

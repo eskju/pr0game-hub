@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Player extends Model
 {
@@ -26,4 +27,9 @@ class Player extends Model
         'rubble_metal',
         'rubble_crystal',
     ];
+
+    public function planets(): HasMany
+    {
+        return $this->hasMany(Planet::class, 'player_id', 'id');
+    }
 }
