@@ -4,6 +4,7 @@ use App\Http\Controllers\BattleReportController;
 use App\Http\Controllers\PlanetController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\SpyReportController;
+use App\Models\Player;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::model('{player}', Player::class);
 
 Route::get('/login', PlayerController::class . '@login');
 Route::post('/players/stats', PlayerController::class . '@stats');
