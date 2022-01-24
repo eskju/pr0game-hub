@@ -15,7 +15,7 @@ class AllianceController extends Controller
                 'players.name',
                 'planets.coordinates'
             ])
-            ->join('planets', 'planets.player_id', '=', 'player.id')
+            ->join('planets', 'planets.player_id', '=', 'players.id')
             ->where('players.alliance_id', $alliance->id)
             ->orderBy('planets.galaxy')
             ->orderBy('planets.system')
