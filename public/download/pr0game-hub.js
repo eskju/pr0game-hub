@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pr0game Hub (aka hornyHub)
 // @namespace    http://tampermonkey.net/
-// @version      0.3.3
+// @version      0.3.4
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?page=statistics
@@ -40,6 +40,7 @@
 // 0.3.1         click at a system should link to the galaxy view (requested by Hyman)
 // 0.3.2         added text truncate for player names (reported by Hyman)
 // 0.3.3         crawl and show last attack
+// 0.3.4         show all planets at user/alliance profile card (requested by Wile E. Coyote)
 
 // == feature requests / ideas ==
 // Klarname      add a simulator link to spy report history
@@ -59,7 +60,7 @@
     'use strict';
 
     // API settings
-    const version = '0.3.3';
+    const version = '0.3.4';
     let apiKey = GM_getValue('api_key');
     let apiKeyValid = GM_getValue('api_key_valid') === '1';
     let debugMode = GM_getValue('debug_mode') === '1';
