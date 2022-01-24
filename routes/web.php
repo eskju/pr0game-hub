@@ -24,7 +24,7 @@ Route::get('/login', PlayerController::class . '@login');
 Route::post('/players/stats', PlayerController::class . '@stats');
 Route::post('/players/overview', PlayerController::class . '@overview');
 Route::post('/players/{playerId}', PlayerController::class . '@store');
-Route::post('/players/{player}/planets', PlayerController::class . '@getPlanets');
+Route::get('/players/{player}/planets', PlayerController::class . '@getPlanets');
 
 Route::post('/spy-reports', SpyReportController::class . '@store');
 Route::get('/spy-reports/{galaxy}/{system}/{planet}', SpyReportController::class . '@history');
