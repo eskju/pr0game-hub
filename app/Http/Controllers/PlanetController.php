@@ -40,5 +40,9 @@ class PlanetController extends Controller
         }
 
         $planet->save();
+
+        return response([
+
+        ]);
     }
 }
