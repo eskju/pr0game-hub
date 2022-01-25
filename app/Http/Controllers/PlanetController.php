@@ -67,4 +67,29 @@ class PlanetController extends Controller
 
         return response($items);
     }
+
+    public function storeFleet(Request $request) {
+        if(!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
+            $coordinates = explode(':',$request->get('coordinates'));
+            $planet = new Planet();
+            $planet->player_id = auth()->user()->player_id;
+            $planet->coordinates = $request->get('coordinates');
+            $planet->galaxy = $coordinates[0];
+            $planet->system = $coordinates[1];
+            $planet->planet = $coordinates[2];
+        }
+
+        foreach($request->get('fleet') ?? [] as $ship) {
+            if(is_numeric($ship['ship_id'])) {
+                $planet->{ResourceService::getAliasById($ship['ship_id'])} = (int)$ship['amount'];
+            }
+            else {
+                $planet->{ResourceService::getAliasByName($ship['ship_id'])} += (int)$ship['amount'];
+            }
+        }
+
+        $planet->save();
+
+        return response([]);
+    }
 }

@@ -11,6 +11,28 @@ class ResourceService
         return $mapping[$id] ?? null;
     }
 
+    public static function getAliasByName($name): ?int
+    {
+        $mapping = [
+            'Kleiner Transporter' => 202,
+            'Großer Transporter' => 203,
+            'Leichter Jäger' => 204,
+            'Schwerer Jäger' => 205,
+            'Kreuzer' => 206,
+            'Schlachtschiff' => 207,
+            'Kolonieschiff' => 208,
+            'Recycler' => 209,
+            'Spionagesonde' => 210,
+            'Bomber' => 211,
+            'Solarsatellit' => 212,
+            'Zerstörer' => 213,
+            'Todesstern' => 214,
+            'Schlachtkreuzer' => 215
+        ];
+
+        return $mapping[$name] ?? null;
+    }
+
     public static function getNameById($id): ?string
     {
         $mapping = self::getMappingAbbreviations();

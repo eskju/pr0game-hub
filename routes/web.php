@@ -39,3 +39,4 @@ Route::post('/battle-reports', BattleReportController::class . '@store');
 
 Route::post('/planets', PlanetController::class . '@storePlanetId');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');
+Route::post('/planets/fleet', PlanetController::class . '@storeFleet');
