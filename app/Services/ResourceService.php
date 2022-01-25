@@ -8,14 +8,14 @@ class ResourceService
     {
         $mapping = self::getMapping();
 
-        return $mapping[$id];
+        return $mapping[$id] ?? null;
     }
 
     public static function getNameById($id): string
     {
         $mapping = self::getMappingAbbreviations();
 
-        return $mapping[$id];
+        return $mapping[$id] ?? null;
     }
 
     public static function getReverseMapping(): array

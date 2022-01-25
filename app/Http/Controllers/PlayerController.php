@@ -7,6 +7,7 @@ use App\Models\LogPlayer;
 use App\Models\LogPlayerStatus;
 use App\Models\Planet;
 use App\Models\Player;
+use App\Models\User;
 use App\Services\ResourceService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -261,6 +262,29 @@ class PlayerController extends Controller
         foreach ($request->get('research') ?? [] as $research) {
             $player->{ResourceService::getAliasById($research['research_id'])} = (int)$research['level'];
         }
+
+        $items = [];
+        for ($i = 100; $i < 200; $i++) {
+            if ($alias = ResourceService::getAliasById($i)) {
+                $result = User::query()
+                    ->select([
+                        DB::raw('CONCAT_WS(`players`.`name`) AS `player_names`'),
+                        $alias
+                    ])
+                    ->join('players', 'players.id', '=', 'users.player_id')
+                    ->groupBy($alias)
+                    ->orderBy($alias, 'DESC')
+                    ->first();
+
+                $items[] = [
+                    'id' => $i,
+                    'alias' => $alias,
+                    'max_level' => $result->{$alias},
+                    'player_names' => $result->player_names
+                ];
+            }
+        }
+
 
         $player->save();
 
