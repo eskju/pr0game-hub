@@ -268,7 +268,7 @@ class PlayerController extends Controller
             if ($alias = ResourceService::getAliasById($i)) {
                 $result = User::query()
                     ->select([
-                        DB::raw('CONCAT_WS(`players`.`name`) AS `player_names`'),
+                        DB::raw('CONCAT_WS(\', \',`players`.`name`) AS `player_names`'),
                         $alias
                     ])
                     ->join('players', 'players.id', '=', 'users.player_id')
