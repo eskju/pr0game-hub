@@ -26,9 +26,9 @@ Route::model('{player}', Player::class);
 Route::get('/login', PlayerController::class . '@login');
 Route::post('/players/stats', PlayerController::class . '@stats');
 Route::post('/players/overview', PlayerController::class . '@overview');
-Route::post('/players/{playerId}', PlayerController::class . '@store');
-Route::get('/players/{player}/planets', PlayerController::class . '@getPlanets');
 Route::post('/planets/research', PlayerController::class . '@storeResearch');
+Route::get('/players/{player}/planets', PlayerController::class . '@getPlanets');
+Route::post('/players/{playerId}', PlayerController::class . '@store');
 
 Route::get('/alliances/{alliance}/planets', AllianceController::class . '@getPlanets');
 
