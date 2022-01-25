@@ -269,7 +269,7 @@ class PlayerController extends Controller
                 $result = User::query()
                     ->select([
                         DB::raw('CONCAT_WS(\', \',`players`.`name`) AS `player_names`'),
-                        $alias
+                        DB::raw('MAX(' . $alias . ') AS `max_level`')
                     ])
                     ->join('players', 'players.id', '=', 'users.player_id')
                     ->groupBy($alias)
@@ -279,7 +279,7 @@ class PlayerController extends Controller
                 $items[] = [
                     'id' => $i,
                     'alias' => $alias,
-                    'max_level' => $result->{$alias},
+                    'max_level' => $result->max_level,
                     'player_names' => $result->player_names
                 ];
             }
