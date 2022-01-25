@@ -7,13 +7,11 @@ use App\Models\LogPlayer;
 use App\Models\LogPlayerStatus;
 use App\Models\Planet;
 use App\Models\Player;
-use App\Models\SpyReport;
 use App\Services\ResourceService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PlayerController extends Controller
 {
@@ -81,7 +79,7 @@ class PlayerController extends Controller
                 DB::raw('ABS(planets.system - ' . (int)$request->get('system') . ') * 100 + ABS(planets.planet - ' . (int)$request->get('planet') . ') AS `distance`')
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
-            ->join('alliances','alliances.id', '=', 'players.alliance_id', 'left outer')
+            ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
             ->where('galaxy', $request->get('galaxy'))
             ->with('player');
 
@@ -161,8 +159,7 @@ class PlayerController extends Controller
                 $alliance->name = $request->get('alliance_name') ?: '---';
                 $alliance->tag = $request->get('alliance_tag') ?: '---';
                 $alliance->save();
-            }
-            else {
+            } else {
                 $alliance->name = $request->get('alliance_name') ?: '---';
                 $alliance->save();
             }
@@ -173,7 +170,7 @@ class PlayerController extends Controller
             $player->id = $playerId;
         }
 
-        if($request->get('main_coordinates') == '::') {
+        if ($request->get('main_coordinates') == '::') {
             $player->is_deleted = 1;
             $player->save();
             return;
@@ -254,5 +251,20 @@ class PlayerController extends Controller
             ->orderBy('system')
             ->orderBy('planet')
             ->get();
+    }
+
+    public function storeResearch(Request $request)
+    {
+        $user = auth()->user();
+
+        foreach ($request->get('research') ?? [] as $research) {
+            $user->{ResourceService::getAliasById($research['research_id'])} = (int)$research['level'];
+        }
+
+        $user->save();
+
+        return response([
+
+        ]);
     }
 }
