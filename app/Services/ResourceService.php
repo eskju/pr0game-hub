@@ -11,7 +11,7 @@ class ResourceService
         return $mapping[$id] ?? null;
     }
 
-    public static function getAliasByName($name): ?int
+    public static function getAliasByName($name): ?string
     {
         $mapping = [
             'Kleiner Transporter' => 202,
