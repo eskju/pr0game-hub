@@ -26,9 +26,10 @@ class PlanetController extends Controller
         $planet->save();
     }
 
-    public function storeBuildings(Request $request) {
-        if(!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
-            $coordinates = explode(':',$request->get('coordinates'));
+    public function storeBuildings(Request $request)
+    {
+        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
+            $coordinates = explode(':', $request->get('coordinates'));
             $planet = new Planet();
             $planet->player_id = auth()->user()->player_id;
             $planet->coordinates = $request->get('coordinates');
@@ -37,7 +38,7 @@ class PlanetController extends Controller
             $planet->planet = $coordinates[2];
         }
 
-        foreach($request->get('buildings') ?? [] as $building) {
+        foreach ($request->get('buildings') ?? [] as $building) {
             $planet->{ResourceService::getAliasById($building['building_id'])} = (int)$building['level'];
         }
 
@@ -68,9 +69,10 @@ class PlanetController extends Controller
         return response($items);
     }
 
-    public function storeFleet(Request $request) {
-        if(!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
-            $coordinates = explode(':',$request->get('coordinates'));
+    public function storeFleet(Request $request)
+    {
+        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
+            $coordinates = explode(':', $request->get('coordinates'));
             $planet = new Planet();
             $planet->player_id = auth()->user()->player_id;
             $planet->coordinates = $request->get('coordinates');
@@ -79,17 +81,31 @@ class PlanetController extends Controller
             $planet->planet = $coordinates[2];
         }
 
-        foreach($request->get('fleet') ?? [] as $ship) {
-            if(is_numeric($ship['ship_id'])) {
+        foreach ($request->get('fleet') ?? [] as $ship) {
+            if (is_numeric($ship['ship_id'])) {
                 $planet->{ResourceService::getAliasById($ship['ship_id'])} = (int)$ship['amount'];
-            }
-            else {
+            } else {
                 $planet->{ResourceService::getAliasByName($ship['ship_id'])} += (int)$ship['amount'];
             }
         }
 
         $planet->save();
 
-        return response([]);
+        $items = [];
+        for ($i = 200; $i < 300; $i++) {
+            if ($alias = ResourceService::getAliasById($i)) {
+                $sum = Planet::query()
+                    ->where('player_id', auth()->user()->player_id)
+                    ->sum($alias);
+
+                $items[$i] = [
+                    'id' => $i,
+                    'name' => ResourceService::getFullNameById($i),
+                    'sum' => $sum
+                ];
+            }
+        }
+
+        return response($items);
     }
 }

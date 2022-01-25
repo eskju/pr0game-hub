@@ -4,6 +4,23 @@ namespace App\Services;
 
 class ResourceService
 {
+    const MAPPING_NAMES = [
+        'Kleiner Transporter' => 202,
+        'Großer Transporter' => 203,
+        'Leichter Jäger' => 204,
+        'Schwerer Jäger' => 205,
+        'Kreuzer' => 206,
+        'Schlachtschiff' => 207,
+        'Kolonieschiff' => 208,
+        'Recycler' => 209,
+        'Spionagesonde' => 210,
+        'Bomber' => 211,
+        'Solarsatellit' => 212,
+        'Zerstörer' => 213,
+        'Todesstern' => 214,
+        'Schlachtkreuzer' => 215
+    ];
+
     public static function getAliasById($id): ?string
     {
         $mapping = self::getMapping();
@@ -13,29 +30,19 @@ class ResourceService
 
     public static function getAliasByName($name): ?string
     {
-        $mapping = [
-            'Kleiner Transporter' => 202,
-            'Großer Transporter' => 203,
-            'Leichter Jäger' => 204,
-            'Schwerer Jäger' => 205,
-            'Kreuzer' => 206,
-            'Schlachtschiff' => 207,
-            'Kolonieschiff' => 208,
-            'Recycler' => 209,
-            'Spionagesonde' => 210,
-            'Bomber' => 211,
-            'Solarsatellit' => 212,
-            'Zerstörer' => 213,
-            'Todesstern' => 214,
-            'Schlachtkreuzer' => 215
-        ];
-
-        return self::getAliasById($mapping[$name]);
+        return self::getAliasById(self::MAPPING_NAMES[$name]);
     }
 
     public static function getNameById($id): ?string
     {
         $mapping = self::getMappingAbbreviations();
+
+        return $mapping[$id] ?? null;
+    }
+
+    public static function getFullNameById($id): ?string
+    {
+        $mapping = array_flip(self::MAPPING_NAMES);
 
         return $mapping[$id] ?? null;
     }
