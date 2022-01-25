@@ -288,8 +288,6 @@ class PlayerController extends Controller
 
         $player->save();
 
-        return response([
-
-        ]);
+        return response($items);
     }
 }
