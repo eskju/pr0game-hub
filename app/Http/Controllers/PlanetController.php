@@ -97,7 +97,7 @@ class PlanetController extends Controller
         }
 
         foreach ($tmp as $alias => $amount) {
-            $planet->{$tmp} = $amount;
+            $planet->{$alias} = $amount;
         }
 
         $planet->save();
