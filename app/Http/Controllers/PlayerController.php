@@ -256,12 +256,13 @@ class PlayerController extends Controller
     public function storeResearch(Request $request)
     {
         $user = auth()->user();
+        $player = Player::query()->findOrFail($user->player_id);
 
         foreach ($request->get('research') ?? [] as $research) {
-            $user->{ResourceService::getAliasById($research['research_id'])} = (int)$research['level'];
+            $player->{ResourceService::getAliasById($research['research_id'])} = (int)$research['level'];
         }
 
-        $user->save();
+        $player->save();
 
         return response([
 
