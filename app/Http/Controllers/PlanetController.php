@@ -82,13 +82,22 @@ class PlanetController extends Controller
         }
 
         $tmp = [];
+        for ($i = 200; $i < 300; $i++) {
+            if ($alias = ResourceService::getAliasById($i)) {
+                $tmp[$alias] = 0;
+            }
+        }
+
         foreach ($request->get('fleet') ?? [] as $ship) {
             if (is_numeric($ship['ship_id'])) {
-                $planet->{ResourceService::getAliasById($ship['ship_id'])} = (int)$ship['amount'];
-                $tmp[$planet->{ResourceService::getAliasById($ship['ship_id'])}] = (int)$ship['amount'];
+                $tmp[ResourceService::getAliasById($ship['ship_id'])] += (int)$ship['amount'];
             } else {
-                $planet->{ResourceService::getAliasByName($ship['ship_id'])} = ($tmp[ResourceService::getAliasByName($ship['ship_id'])] ?? 0) + (int)$ship['amount'];
+                $tmp[ResourceService::getAliasByName($ship['ship_id'])] += (int)$ship['amount'];
             }
+        }
+
+        foreach ($tmp as $alias => $amount) {
+            $planet->{$tmp} = $amount;
         }
 
         $planet->save();
