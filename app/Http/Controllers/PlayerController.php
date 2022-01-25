@@ -276,7 +276,7 @@ class PlayerController extends Controller
                     ->orderBy($alias, 'DESC')
                     ->first();
 
-                $items[] = [
+                $items[$i] = [
                     'id' => $i,
                     'alias' => $alias,
                     'max_level' => $result->max_level,
