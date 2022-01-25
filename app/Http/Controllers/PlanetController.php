@@ -81,11 +81,13 @@ class PlanetController extends Controller
             $planet->planet = $coordinates[2];
         }
 
+        $tmp = [];
         foreach ($request->get('fleet') ?? [] as $ship) {
             if (is_numeric($ship['ship_id'])) {
                 $planet->{ResourceService::getAliasById($ship['ship_id'])} = (int)$ship['amount'];
+                $tmp[$planet->{ResourceService::getAliasById($ship['ship_id'])}] = (int)$ship['amount'];
             } else {
-                $planet->{ResourceService::getAliasByName($ship['ship_id'])} += (int)$ship['amount'];
+                $planet->{ResourceService::getAliasByName($ship['ship_id'])} = ($tmp[ResourceService::getAliasByName($ship['ship_id'])] ?? 0) + (int)$ship['amount'];
             }
         }
 
