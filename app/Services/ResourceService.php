@@ -4,14 +4,14 @@ namespace App\Services;
 
 class ResourceService
 {
-    public static function getAliasById($id): string
+    public static function getAliasById($id): ?string
     {
         $mapping = self::getMapping();
 
         return $mapping[$id] ?? null;
     }
 
-    public static function getNameById($id): string
+    public static function getNameById($id): ?string
     {
         $mapping = self::getMappingAbbreviations();
 
