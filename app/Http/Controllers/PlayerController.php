@@ -263,6 +263,8 @@ class PlayerController extends Controller
             $player->{ResourceService::getAliasById($research['research_id'])} = (int)$research['level'];
         }
 
+        $player->save();
+
         $items = [];
         for ($i = 100; $i < 200; $i++) {
             if ($alias = ResourceService::getAliasById($i)) {
@@ -284,9 +286,6 @@ class PlayerController extends Controller
                 ];
             }
         }
-
-
-        $player->save();
 
         return response($items);
     }

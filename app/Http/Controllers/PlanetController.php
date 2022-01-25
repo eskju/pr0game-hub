@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Planet;
+use App\Models\User;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PlanetController extends Controller
 {
@@ -41,8 +43,28 @@ class PlanetController extends Controller
 
         $planet->save();
 
-        return response([
+        $items = [];
+        for ($i = 1; $i < 100; $i++) {
+            if ($alias = ResourceService::getAliasById($i)) {
+                $result = User::query()
+                    ->select([
+                        DB::raw('GROUP_CONCAT(`users`.`name`) AS `player_names`'),
+                        DB::raw('MAX(' . $alias . ') AS `max_level`')
+                    ])
+                    ->join('planets', 'planets.player_id', '=', 'users.player_id')
+                    ->groupBy($alias)
+                    ->orderBy($alias, 'DESC')
+                    ->first();
 
-        ]);
+                $items[$i] = [
+                    'id' => $i,
+                    'alias' => $alias,
+                    'max_level' => $result->max_level,
+                    'player_names' => $result->player_names
+                ];
+            }
+        }
+
+        return response($items);
     }
 }
