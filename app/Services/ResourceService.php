@@ -30,7 +30,7 @@ class ResourceService
             'Schlachtkreuzer' => 215
         ];
 
-        return $mapping[$name] ?? null;
+        return self::getAliasById($mapping[$name]);
     }
 
     public static function getNameById($id): ?string
