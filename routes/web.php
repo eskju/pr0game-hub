@@ -37,3 +37,4 @@ Route::get('/spy-reports/{galaxy}/{system}/{planet}', SpyReportController::class
 Route::post('/battle-reports', BattleReportController::class . '@store');
 
 Route::post('/planets', PlanetController::class . '@storePlanetId');
+Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');
