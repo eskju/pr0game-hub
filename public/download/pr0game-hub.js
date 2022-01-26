@@ -4,26 +4,8 @@
 // @version      0.3.7
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
-// @match        https://pr0game.com/game.php?page=statistics
-// @match        https://www.pr0game.com/game.php?page=statistics
-// @match        https://pr0game.com/game.php?page=playerCard&*
-// @match        https://www.pr0game.com/game.php?page=playerCard&*
-// @match        https://pr0game.com/game.php?page=alliance&*
-// @match        https://www.pr0game.com/game.php?page=alliance&*
-// @match        https://pr0game.com/game.php
-// @match        https://www.pr0game.com/game.php
-// @match        https://pr0game.com/game.php?page=overview*
-// @match        https://www.pr0game.com/game.php?page=overview*
-// @match        https://pr0game.com/game.php?page=messages&category=*
-// @match        https://www.pr0game.com/game.php?page=messages&category=*
-// @match        https://pr0game.com/game.php?page=galaxy*
-// @match        https://www.pr0game.com/game.php?page=galaxy*
-// @match        https://pr0game.com/game.php?page=buildings*
-// @match        https://www.pr0game.com/game.php?page=buildings*
-// @match        https://pr0game.com/game.php?page=research*
-// @match        https://www.pr0game.com/game.php?page=research*
-// @match        https://pr0game.com/game.php?page=fleetTable*
-// @match        https://www.pr0game.com/game.php?page=fleetTable*
+// @match        https://pr0game.com/game.php*
+// @match        https://www.pr0game.com/game.php*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
