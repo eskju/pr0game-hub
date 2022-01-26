@@ -70,6 +70,20 @@ class HubController extends Controller
         $sumRow = [
             'name' => 'Gesamt',
             'score_military' => $return->sum('score_military'),
+            'small_transporters' => $return->sum('small_transporters'),
+            'large_transporters' => $return->sum('large_transporters'),
+            'light_hunters' => $return->sum('light_hunters'),
+            'heavy_hunters' => $return->sum('heavy_hunters'),
+            'cruisers' => $return->sum('cruisers'),
+            'battleships' => $return->sum('battleships'),
+            'colony_ships' => $return->sum('colony_ships'),
+            'recyclers' => $return->sum('recyclers'),
+            'spy_drones' => $return->sum('spy_drones'),
+            'bombers' => $return->sum('bombers'),
+            'solar_satellites' => $return->sum('solar_satellites'),
+            'destroyers' => $return->sum('destroyers'),
+            'death_stars' => $return->sum('death_stars'),
+            'battle_cruisers' => $return->sum('battle_cruisers'),
         ];
 
         $return = $return->toArray();
