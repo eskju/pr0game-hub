@@ -14,6 +14,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $allianceIds = [12, 95];
+    protected $allowedAllianceId = 12;
 
     public function __construct()
     {
