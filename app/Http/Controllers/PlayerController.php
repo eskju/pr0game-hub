@@ -18,6 +18,7 @@ class PlayerController extends Controller
 {
     protected $lastValue = [];
     protected $offsets = [];
+    private $dateFormatForHumans = false;
 
     public function login()
     {
@@ -67,6 +68,8 @@ class PlayerController extends Controller
 
     public function overview(Request $request): array
     {
+        $this->dateFormatForHumans = $request->get('date_for_humans') ?? false;
+
         $query = Planet::query()
             ->select(
                 DB::raw('planets.*'),
@@ -126,9 +129,9 @@ class PlayerController extends Controller
                 ->map(function (Planet $planet) {
                     $return = $planet->toArray();
                     $return['last_spy_report_hours'] = $return['last_spy_report'] ? abs(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
-                    $return['last_spy_report'] = $return['last_spy_report'] ? Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->format('d.m. H:i') : '';
+                    $return['last_spy_report'] = $return['last_spy_report'] ? $this->getDateTime(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()) : '';
                     $return['last_battle_report_hours'] = $return['last_battle_report'] ? abs(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
-                    $return['last_battle_report'] = $return['last_battle_report'] ? Carbon::parse($return['last_battle_report'])->subMinute()->subHour()->format('d.m. H:i') : '';
+                    $return['last_battle_report'] = $return['last_battle_report'] ? $this->getDateTime(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()) : '';
                     $return['last_spy_metal'] = $return['last_spy_metal'] ? number_format($return['last_spy_metal'], 0, ',', '.') : '';
                     $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '';
                     $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
@@ -288,5 +291,14 @@ class PlayerController extends Controller
         }
 
         return response($items);
+    }
+
+    private function getDateTime(Carbon $dateTime): string
+    {
+        if($this->dateFormatForHumans) {
+            return $dateTime->shortAbsoluteDiffForHumans();
+        }
+
+        return $dateTime->format('d.m. H:i');
     }
 }
