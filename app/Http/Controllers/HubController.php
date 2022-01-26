@@ -42,11 +42,11 @@ class HubController extends Controller
 
         return Player::query()
             ->select([
-                'players.name',
-                'players.score_military',
-                'planets.galaxy',
-                'planets.system',
-                'planets.planet',
+                DB::raw('MIN(players.name) AS `name`'),
+                DB::raw('MIN(players.score_military) AS `score_military`'),
+                DB::raw('MIN(planets.galaxy) AS `galaxy`'),
+                DB::raw('MIN(planets.system) AS `system`'),
+                DB::raw('MIN(planets.planet) AS `planet`'),
                 DB::raw('SUM(`small_transporters`) AS `small_transporters`'),
                 DB::raw('SUM(`large_transporters`) AS `large_transporters`'),
                 DB::raw('SUM(`light_hunters`) AS `light_hunters`'),
