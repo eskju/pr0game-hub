@@ -1,0 +1,205 @@
+@borderRadius: 4px;
+@colorBackground: #161618;
+@colorBackgroundLight: #1b1e1f;
+@colorText: #f2f5f4;
+@colorLink: #ee4d2e;
+@colorLinkHover: #75c0c7;
+
+html {
+    background-image: url('https://pr0game-hub.local/background.jpg');
+    background-size: cover;
+}
+
+.wrapper {
+    .fixed {
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    .highlight {
+        color: @colorLink !important;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .player_names {
+        font-size: 10px;
+        color: #888;
+    }
+
+    table {
+        width: 100% !important;
+        max-width: inherit !important;
+    }
+
+    ul#menu {
+        background: @colorBackground;
+        border-radius: @borderRadius;
+        padding: 10px 0;
+        margin: 10px 0;
+
+        li, li a {
+            border: none !important;
+            background: none !important;
+            text-align: left !important;
+            font-size: 12px;
+            color: @colorText;
+
+            i {
+                display: inline-block;
+                width: 20px;
+                opacity: 0.75;
+            }
+
+            &:hover {
+                color: @colorLinkHover !important;
+                font-weight: normal !important;
+            }
+        }
+
+        .menu-separator {
+            height: 1px !important;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.25) !important;
+            padding: 0 !important;
+            min-height: auto !important;
+            margin: 10px;
+        }
+    }
+
+    content {
+        #buildlist {
+            border: none !important;
+            background: @colorBackground !important;
+            border-radius: @borderRadius;
+            margin: 0 0 15px 0;
+            overflow: inherit;
+            display: flex;
+
+            & > div:nth-child(2) {
+                flex-basis: 250px;
+            }
+
+            & > div {
+                border: none;
+            }
+
+            button {
+                margin: 10px 0;
+            }
+
+            .bulida, .bulidb, .buildb {
+                float: none !important;
+                width: 100% !important;
+                height: auto !important;
+
+                span[style] {
+                    color: @colorLink !important;
+                }
+            }
+        }
+
+        .building {
+            height: auto;
+            display: flex;
+
+            & > div:nth-child(1) {
+                flex-basis: 25%;
+                text-align: left;
+                background: @colorBackground;
+            }
+
+            a:hover {
+                color: @colorLinkHover !important;
+                font-weight: normal;
+            }
+
+            .building-left {
+                height: auto;
+                text-align: left;
+
+                img {
+                    height: 75px;
+                    width: auto;
+                    margin-right: 30px !important;
+                    border-radius: @borderRadius;
+                }
+
+                span[style] {
+                    color: @colorLink !important;
+                }
+            }
+
+            .building-right {
+                height: auto;
+                padding: 15px;
+                text-align: right;
+
+                form button {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+
+    .ui-progressbar {
+        background: @colorBackgroundLight !important;
+        border-radius: 1px;
+
+        .ui-progressbar-value {
+            background: @colorLink;
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+            border: none;
+            border-radius: 1px;
+        }
+    }
+
+    button {
+        padding: 5px 15px;
+        border: 1px solid #222;
+        border-radius: 2px;
+        background: @colorBackgroundLight;
+    }
+
+    .planeto, .infos, .infoso, .buildl {
+        background: @colorBackground !important;
+        border-radius: @borderRadius;
+
+        .buildn {
+            background: @colorBackgroundLight;
+            border-radius: @borderRadius;
+        }
+    }
+}
+
+#resources_mobile {
+    img {
+        margin-bottom: 5px;
+    }
+
+    .resource_name {
+        color: @colorLink;
+    }
+
+    .res_current {
+        color: @colorText;
+        display: inline;
+
+        &:after {
+            content: ' / ';
+        }
+    }
+
+    .res_max {
+        color: #addc8d;
+        display: inline;
+    }
+
+    #resource_mobile:last-child span[style] {
+        color: @colorLink !important;
+    }
+
+    a:hover {
+        font-weight: normal;
+        color: @colorLinkHover !important;
+    }
+}
+

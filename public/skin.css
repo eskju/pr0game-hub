@@ -1,0 +1,170 @@
+html {
+  background-image: url('https://pr0game-hub.local/background.jpg');
+  background-size: cover;
+}
+.wrapper .fixed {
+  background: rgba(0, 0, 0, 0.9);
+}
+.wrapper .highlight {
+  color: #ee4d2e !important;
+  margin-top: 5px;
+  display: block;
+}
+.wrapper .player_names {
+  font-size: 10px;
+  color: #888;
+}
+.wrapper table {
+  width: 100% !important;
+  max-width: inherit !important;
+}
+.wrapper ul#menu {
+  background: #161618;
+  border-radius: 4px;
+  padding: 10px 0;
+  margin: 10px 0;
+}
+.wrapper ul#menu li,
+.wrapper ul#menu li a {
+  border: none !important;
+  background: none !important;
+  text-align: left !important;
+  font-size: 12px;
+  color: #f2f5f4;
+}
+.wrapper ul#menu li i,
+.wrapper ul#menu li a i {
+  display: inline-block;
+  width: 20px;
+  opacity: 0.75;
+}
+.wrapper ul#menu li:hover,
+.wrapper ul#menu li a:hover {
+  color: #75c0c7 !important;
+  font-weight: normal !important;
+}
+.wrapper ul#menu .menu-separator {
+  height: 1px !important;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.25) !important;
+  padding: 0 !important;
+  min-height: auto !important;
+  margin: 10px;
+}
+.wrapper content #buildlist {
+  border: none !important;
+  background: #161618 !important;
+  border-radius: 4px;
+  margin: 0 0 15px 0;
+  overflow: inherit;
+  display: flex;
+}
+.wrapper content #buildlist > div:nth-child(2) {
+  flex-basis: 250px;
+}
+.wrapper content #buildlist > div {
+  border: none;
+}
+.wrapper content #buildlist button {
+  margin: 10px 0;
+}
+.wrapper content #buildlist .bulida,
+.wrapper content #buildlist .bulidb,
+.wrapper content #buildlist .buildb {
+  float: none !important;
+  width: 100% !important;
+  height: auto !important;
+}
+.wrapper content #buildlist .bulida span[style],
+.wrapper content #buildlist .bulidb span[style],
+.wrapper content #buildlist .buildb span[style] {
+  color: #ee4d2e !important;
+}
+.wrapper content .building {
+  height: auto;
+  display: flex;
+}
+.wrapper content .building > div:nth-child(1) {
+  flex-basis: 25%;
+  text-align: left;
+  background: #161618;
+}
+.wrapper content .building a:hover {
+  color: #75c0c7 !important;
+  font-weight: normal;
+}
+.wrapper content .building .building-left {
+  height: auto;
+  text-align: left;
+}
+.wrapper content .building .building-left img {
+  height: 75px;
+  width: auto;
+  margin-right: 30px !important;
+  border-radius: 4px;
+}
+.wrapper content .building .building-left span[style] {
+  color: #ee4d2e !important;
+}
+.wrapper content .building .building-right {
+  height: auto;
+  padding: 15px;
+  text-align: right;
+}
+.wrapper content .building .building-right form button {
+  max-width: 100%;
+}
+.wrapper .ui-progressbar {
+  background: #1b1e1f !important;
+  border-radius: 1px;
+}
+.wrapper .ui-progressbar .ui-progressbar-value {
+  background: #ee4d2e;
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  border: none;
+  border-radius: 1px;
+}
+.wrapper button {
+  padding: 5px 15px;
+  border: 1px solid #222;
+  border-radius: 2px;
+  background: #1b1e1f;
+}
+.wrapper .planeto,
+.wrapper .infos,
+.wrapper .infoso,
+.wrapper .buildl {
+  background: #161618 !important;
+  border-radius: 4px;
+}
+.wrapper .planeto .buildn,
+.wrapper .infos .buildn,
+.wrapper .infoso .buildn,
+.wrapper .buildl .buildn {
+  background: #1b1e1f;
+  border-radius: 4px;
+}
+#resources_mobile img {
+  margin-bottom: 5px;
+}
+#resources_mobile .resource_name {
+  color: #ee4d2e;
+}
+#resources_mobile .res_current {
+  color: #f2f5f4;
+  display: inline;
+}
+#resources_mobile .res_current:after {
+  content: ' / ';
+}
+#resources_mobile .res_max {
+  color: #addc8d;
+  display: inline;
+}
+#resources_mobile #resource_mobile:last-child span[style] {
+  color: #ee4d2e !important;
+}
+#resources_mobile a:hover {
+  font-weight: normal;
+  color: #75c0c7 !important;
+}
+/*# sourceMappingURL=skin.css.map */

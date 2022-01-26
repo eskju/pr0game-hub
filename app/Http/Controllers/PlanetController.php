@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Planet;
+use App\Models\Player;
 use App\Models\User;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
@@ -10,6 +11,21 @@ use Illuminate\Support\Facades\DB;
 
 class PlanetController extends Controller
 {
+    public function get()
+    {
+        return Player::query()
+            ->select([
+                DB::raw('players.name'),
+                DB::raw('planets.*')
+            ])
+            ->join('planets', 'planets.player_id', '=', 'players.id')
+            ->whereIn('alliance_id', $this->allianceIds)
+            ->orderBy('galaxy')
+            ->orderBy('system')
+            ->orderBy('planet')
+            ->get();
+    }
+
     public function storePlanetId(Request $request)
     {
         if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {

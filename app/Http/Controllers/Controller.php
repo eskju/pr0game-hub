@@ -13,6 +13,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected $allianceIds = [12, 95];
+
     public function __construct()
     {
         $apiKey = request()->get('api_key');
