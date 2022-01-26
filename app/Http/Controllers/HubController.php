@@ -38,7 +38,7 @@ class HubController extends Controller
 
     private function checkPermission(string $string)
     {
-        if(auth()->user()->alliance_id !== $this->allowedAllianceId) {
+        if(auth()->user()->player->alliance_id !== $this->allowedAllianceId) {
             throw new Exception('PermissionException');
         }
     }
