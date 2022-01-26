@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AllianceController;
 use App\Http\Controllers\BattleReportController;
+use App\Http\Controllers\HubController;
 use App\Http\Controllers\PlanetController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\SpyReportController;
@@ -37,7 +38,9 @@ Route::get('/spy-reports/{galaxy}/{system}/{planet}', SpyReportController::class
 
 Route::post('/battle-reports', BattleReportController::class . '@store');
 
-Route::get('/planets', PlanetController::class . '@get');
+Route::get('/hub/planets', HubController::class . '@getBuildings');
+Route::get('/hub/research', HubController::class . '@getResearch');
+
 Route::post('/planets', PlanetController::class . '@storePlanetId');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');
 Route::post('/planets/fleet', PlanetController::class . '@storeFleet');

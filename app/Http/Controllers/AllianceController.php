@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alliance;
 use App\Models\Player;
+use Illuminate\Support\Facades\DB;
 
 class AllianceController extends Controller
 {

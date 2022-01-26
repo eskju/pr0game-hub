@@ -18,6 +18,10 @@ html {
   width: 100% !important;
   max-width: inherit !important;
 }
+.wrapper table th,
+.wrapper table td {
+  padding: 3px 10px;
+}
 .wrapper ul#menu {
   background: #161618;
   border-radius: 4px;
@@ -142,6 +146,7 @@ html {
 .wrapper .buildl .buildn {
   background: #1b1e1f;
   border-radius: 4px;
+  padding: 15px;
 }
 #resources_mobile img {
   margin-bottom: 5px;
