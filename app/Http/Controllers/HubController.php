@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Alliance;
 use App\Models\Player;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +39,7 @@ class HubController extends Controller
     {
         $this->checkPermission('getFleet');
 
-        return Player::query()
+        $return = Player::query()
             ->select([
                 DB::raw('MIN(players.name) AS `name`'),
                 DB::raw('MIN(players.score_military) AS `score_military`'),
@@ -67,11 +66,21 @@ class HubController extends Controller
             ->groupBy('players.name')
             ->orderBy('players.name')
             ->get();
+
+        $sumRow = [
+            'name' => 'Gesamt',
+            'score_military' => $return->sum('score_military'),
+        ];
+
+        $return = $return->toArray();
+        $return[] = $sumRow;
+
+        return $return;
     }
 
     private function checkPermission(string $string)
     {
-        if(auth()->user()->player->alliance_id !== $this->allowedAllianceId) {
+        if (auth()->user()->player->alliance_id !== $this->allowedAllianceId) {
             throw new Exception('PermissionException');
         }
     }
