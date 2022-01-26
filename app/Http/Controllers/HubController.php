@@ -43,6 +43,7 @@ class HubController extends Controller
         return Player::query()
             ->select([
                 'players.name',
+                'players.score_military',
                 'planets.galaxy',
                 'planets.system',
                 'planets.planet',
