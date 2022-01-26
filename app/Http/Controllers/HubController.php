@@ -36,6 +36,38 @@ class HubController extends Controller
             ->get();
     }
 
+    public function getFleet()
+    {
+        $this->checkPermission('getFleet');
+
+        return Player::query()
+            ->select([
+                'players.name',
+                'planets.galaxy',
+                'planets.system',
+                'planets.planet',
+                DB::raw('SUM(`small_transporters`) AS `small_transporters`'),
+                DB::raw('SUM(`large_transporters`) AS `large_transporters`'),
+                DB::raw('SUM(`light_hunters`) AS `light_hunters`'),
+                DB::raw('SUM(`heavy_hunters`) AS `heavy_hunters`'),
+                DB::raw('SUM(`cruisers`) AS `cruisers`'),
+                DB::raw('SUM(`battleships`) AS `battleships`'),
+                DB::raw('SUM(`colony_ships`) AS `colony_ships`'),
+                DB::raw('SUM(`recyclers`) AS `recyclers`'),
+                DB::raw('SUM(`spy_drones`) AS `spy_drones`'),
+                DB::raw('SUM(`bombers`) AS `bombers`'),
+                DB::raw('SUM(`solar_satellites`) AS `solar_satellites`'),
+                DB::raw('SUM(`destroyers`) AS `destroyers`'),
+                DB::raw('SUM(`death_stars`) AS `death_stars`'),
+                DB::raw('SUM(`battle_cruisers`) AS `battle_cruisers`'),
+            ])
+            ->join('planets', 'planets.player_id', '=', 'players.id')
+            ->whereIn('alliance_id', $this->allianceIds)
+            ->groupBy('players.name')
+            ->orderBy('players.name')
+            ->get();
+    }
+
     private function checkPermission(string $string)
     {
         if(auth()->user()->player->alliance_id !== $this->allowedAllianceId) {

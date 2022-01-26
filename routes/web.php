@@ -40,6 +40,7 @@ Route::post('/battle-reports', BattleReportController::class . '@store');
 
 Route::get('/hub/planets', HubController::class . '@getBuildings');
 Route::get('/hub/research', HubController::class . '@getResearch');
+Route::get('/hub/fleet', HubController::class . '@getFleet');
 
 Route::post('/planets', PlanetController::class . '@storePlanetId');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');
