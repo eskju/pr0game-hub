@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         pr0game Hub (aka hornyHub)
 // @namespace    http://tampermonkey.net/
-// @version      0.3.7
+// @version      0.4.0
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
-// @match        https://pr0game.com/game.php*
-// @match        https://www.pr0game.com/game.php*
+// @match        https://pr0game.com/game.php?*
+// @match        https://www.pr0game.com/game.php?*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
@@ -32,7 +32,7 @@
 // 0.3.5         track building and research levels
 // 0.3.6         track ships and display an overview at start page
 // 0.3.7         option for localized relative dateTime (requested by Strik3r)
-// 0.4.0         added alliance feature & skin
+// 0.4.0
 
 // == feature requests / ideas ==
 // Klarname      add a simulator link to spy report history
@@ -47,4 +47,1773 @@
 // Redstar       colorize players from buddylist
 // Redstar       option to switch galaxies dynamically
 
-!function(){"use strict";$("head").append('<link rel="stylesheet" href="https://pr0game-hub.esKju.net/skin.css">');let t=GM_getValue("api_key"),e=(GM_getValue("api_key_valid"),"1"===GM_getValue("debug_mode")),i="1"===GM_getValue("developer_mode")?"http://pr0game-hub.local/":"https://pr0game-hub.esKju.net/";const a=[22,22,24],l=[242,245,244],n=[238,77,46],r=[136,136,136],s=[255,0,130],o=[92,184,92],d=[0,143,255],c=[247,197,22],g=[0,255,255];window.getCoordinates=function(t){return!!t&&t.match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/)},window.isNewerVersionAvailable=function(t){const e="0.4.0".split("."),i=t.split(".");return getInt(i[0])>getInt(e[0])||!(getInt(i[0])<getInt(e[0]))&&(getInt(i[1])>getInt(e[1])||!(getInt(i[1])<getInt(e[1]))&&getInt(i[2])>getInt(e[2]))};const h=getCoordinates($("#planetSelector option:selected").html()),p=h[1],u=h[2],_=h[3];let y=null,f=[],m=null,b=null,x=null,v=null,w=null,S=null;window.getJSON=function(a,l){return a=i+a+"?api_key="+t+"&version=0.4.0",e&&console.log("GET",a),GM_xmlhttpRequest({method:"GET",url:a,onload:function(t){e&&console.log(t.responseText),l(t)}})},window.postJSON=function(a,l,n){return a=i+a+"?api_key="+t+"&version=0.4.0",e&&console.log("POST",a,l),GM_xmlhttpRequest({method:"POST",data:JSON.stringify(l),url:a,headers:{"Content-Type":"application/json"},onload:function(t){e&&console.log(t.status),n(t)},onerror:function(t){e&&console.log(t.status)}})},window.parseUrl=function(){$("head").append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');const t=window.location.href.replace("www.","");"https://pr0game.com/game.php"===t||0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=overview/)?($("span.fleets").each(function(t,e){$(e).parent().html($(e).parent().html().replace(/Eine deiner /,""))}),$("span.fleets").each(function(t,e){$(e).parent().html($(e).parent().html().replace(/Flotten/,"Flotte"))}),$("span.fleets").each(function(t,e){$(e).parent().html($(e).parent().html().replace(/\. Mission\: /,"</span><span>"))}),$("span.fleets").each(function(t,e){var i=new Date(1e3*$(e).attr("data-fleet-end-time"));$(e).parent().append(" <span>"+i.toLocaleTimeString("de-DE")+"</span>")}),(x=new PageOverview).init()):0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=statistics/)?parsePageStatistics():0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=messages/)?parsePageMessages():0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=galaxy/)?parsePageGalaxy():0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=playerCard/)?parsePagePlayerCard():0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=alliance/)?parsePageAlliance():0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=buildings/)?(v=new PageBuildings).init():0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=research/)?(w=new PageResearch).init():0===t.search(/https\:\/\/pr0game\.com\/game\.php\?page\=fleetTable/)&&(S=new PageFleet).init(),(b=new PageHub).init(),(m=new Menu).init()},window.PageHub=function(){this.container=$("content"),this.init=function(){},this.loadPage=function(t){switch(t){case"planets":this.clearPage(),this.loadPagePlanets();break;case"research":this.clearPage(),this.loadPageResearch();break;case"fleet":this.clearPage(),this.loadPageFleet();break;default:alert("unknown page "+t)}},this.clearPage=function(){this.container.html("")},this.loadPagePlanets=function(){const t=this;getJSON("hub/planets",function(e){200!==e.status&&t.container.html('<p style="color: '+getRgb(n)+';">Du bist nicht berechtigt, diese Informationen zu sehen</p>');const i=JSON.parse(e.responseText);let a="";a+='<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Gebäudenamen zu sehen.</i></p>',a+='<table class="table519">',a+="<tr>",a+='<th colspan="3">Koordinaten</th>',a+='<th style="text-align: left;">Spieler</th>',a+='<th style="text-align: right; color: '+getRgb(o)+'" title="Metallmine">M</th>',a+='<th style="text-align: right; color: '+getRgb(o)+'" title="Kristallmine">K</th>',a+='<th style="text-align: right; color: '+getRgb(o)+'" title="Deuteriumsynthetisierer">D</th>',a+='<th style="text-align: right; color: '+getRgb(o)+'" title="Solarkraftwerk">S</th>',a+='<th style="text-align: right; color: '+getRgb(s)+'" title="Technodom">T</th>',a+='<th style="text-align: right; color: '+getRgb(o)+'" title="Fusionskraftwerk">F</th>',a+='<th style="text-align: right; color: '+getRgb(d)+'" title="Roboterfabrik">R</th>',a+='<th style="text-align: right; color: '+getRgb(d)+'" title="Nanofabrik">N</th>',a+='<th style="text-align: right; color: '+getRgb(n)+'" title="Raumschiffwerft">R</th>',a+='<th style="text-align: right; color: '+getRgb(o)+'" title="Metallspeicher">M</th>',a+='<th style="text-align: right; color: '+getRgb(o)+'" title="Kristallspeicher">K</th>',a+='<th style="text-align: right; color: '+getRgb(o)+'" title="Deuteriumtank">D</th>',a+='<th style="text-align: right; color: '+getRgb(s)+'" title="Forschungslabor">F</th>',a+='<th style="text-align: right; color: '+getRgb(d)+'" title="Terraformer">T</th>',a+='<th style="text-align: right; color: '+getRgb(n)+'" title="Allianzdepot">A</th>',a+='<th style="text-align: right; color: '+getRgb(c)+'" title="Mondbasis">M</th>',a+='<th style="text-align: right; color: '+getRgb(c)+'" title="Phalanx">P</th>',a+='<th style="text-align: right; color: '+getRgb(c)+'" title="Sprungtor">S</th>',a+='<th style="text-align: right; color: '+getRgb(n)+'" title="Raketensilo">R</th>',a+="</tr>",$.each(i,function(t,e){a+="<tr>",a+='<td style="text-align: right; width: 35px">'+e.galaxy+"</td>",a+='<td style="text-align: right; width: 35px">'+e.system+"</td>",a+='<td style="text-align: right; width: 35px">'+e.planet+"</td>",a+='<td style="text-align: left;">'+e.name+"</td>",a+='<td style="text-align: right;">'+(e.metal_mine||"")+"</td>",a+='<td style="text-align: right;">'+(e.crystal_mine||"")+"</td>",a+='<td style="text-align: right;">'+(e.deuterium_mine||"")+"</td>",a+='<td style="text-align: right;">'+(e.solar_plant||"")+"</td>",a+='<td style="text-align: right;">'+(e.techno_dome||"")+"</td>",a+='<td style="text-align: right;">'+(e.fusion_plant||"")+"</td>",a+='<td style="text-align: right;">'+(e.robot_factory||"")+"</td>",a+='<td style="text-align: right;">'+(e.nano_factory||"")+"</td>",a+='<td style="text-align: right;">'+(e.hangar||"")+"</td>",a+='<td style="text-align: right;">'+(e.metal_storage||"")+"</td>",a+='<td style="text-align: right;">'+(e.crystal_storage||"")+"</td>",a+='<td style="text-align: right;">'+(e.deuterium_storage||"")+"</td>",a+='<td style="text-align: right;">'+(e.laboratory||"")+"</td>",a+='<td style="text-align: right;">'+(e.terra_former||"")+"</td>",a+='<td style="text-align: right;">'+(e.alliance_depot||"")+"</td>",a+='<td style="text-align: right;">'+(e.base||"")+"</td>",a+='<td style="text-align: right;">'+(e.phalanx||"")+"</td>",a+='<td style="text-align: right;">'+(e.portal||"")+"</td>",a+='<td style="text-align: right;">'+(e.missile_silo||"")+"</td>",a+="</tr>"}),a+="</table>",t.container.html(a)})},this.loadPageResearch=function(){const t=this;getJSON("hub/research",function(e){const i=JSON.parse(e.responseText);let a="";a+='<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Technologienamen zu sehen.</i></p>',a+='<table class="table519">',a+="<tr>",a+="<td></td>",a+="<td></td>",a+='<td colspan="2"></td>',a+='<td colspan="3">Flottenwert</td>',a+='<td colspan="2">Technik</td>',a+='<td colspan="3">Triebwerk</td>',a+='<td colspan="3">Bewaffnung</td>',a+='<td colspan="2"></td>',a+='<td colspan="3">Produktion</td>',a+="<td></td>",a+="</tr>",a+="<tr>",a+='<th style="text-align: left;">Spieler</th>',a+='<th style="text-align: right;">Punkte</th>',a+='<th style="text-align: right;" title="Spionagetechnik">S</th>',a+='<th style="text-align: right;" title="Computertechnik">C</th>',a+='<th style="text-align: right;" title="Waffentechnik">W</th>',a+='<th style="text-align: right;" title="Schildtechnik">S</th>',a+='<th style="text-align: right;" title="Raumschiffpanzerung">R</th>',a+='<th style="text-align: right;" title="Energietechnik">E</th>',a+='<th style="text-align: right;" title="Hyperraumtechnik">H</th>',a+='<th style="text-align: right;" title="Verbrennungstriebwerk">V</th>',a+='<th style="text-align: right;" title="Impulstriebwerk">I</th>',a+='<th style="text-align: right;" title="Hyperraumantrieb">H</th>',a+='<th style="text-align: right;" title="Lasertechnik">L</th>',a+='<th style="text-align: right;" title="Ionentechnik">I</th>',a+='<th style="text-align: right;" title="Plasmatechnik">P</th>',a+='<th style="text-align: right;" title="Intergalaktisches Forschungsnetzwerk">I</th>',a+='<th style="text-align: right;" title="Astrophysik">A</th>',a+='<th style="text-align: right;" title="Produktionsmaximierung Metall">M</th>',a+='<th style="text-align: right;" title="Produktionsmaximierung Kristall">K</th>',a+='<th style="text-align: right;" title="Produktionsmaximierung Deuterium">D</th>',a+='<th style="text-align: right;" title="Gravitonforschung">G</th>',a+="</tr>",$.each(i,function(t,e){a+="<tr>",a+='<td style="text-align: left;">'+e.name+"</td>",a+='<td style="text-align: right;">'+e.score_science+"</td>",a+='<td style="text-align: right;">'+(e.spy_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.computer_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.military_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.defense_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.shield_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.energy_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.hyperspace_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.combustion_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.impulse_motor_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.hyperspace_motor_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.laser_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.ion_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.buster_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.intergalactic_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.expedition_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.metal_proc_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.crystal_proc_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.deuterium_proc_tech||"")+"</td>",a+='<td style="text-align: right;">'+(e.graviton_tech||"")+"</td>",a+="</tr>"}),a+="</table>",t.container.html(a)})},this.loadPageFleet=function(){const t=this;getJSON("hub/fleet",function(e){const i=JSON.parse(e.responseText);let a,l="";l+='<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Schiffsnamen zu sehen.</i></p>',l+='<table class="table519">',l+="<tr>",l+='<th style="text-align: left;">Spieler</th>',l+='<th style="text-align: right">Punkte</th>',l+='<th style="text-align: right; color: '+getRgb(o)+'" title="Kleiner Transporter">KT</th>',l+='<th style="text-align: right; color: '+getRgb(o)+'" title="Großer Transporter">GT</th>',l+='<th style="text-align: right; color: '+getRgb(o)+'" title="Kolonieschiff">KS</th>',l+='<th style="text-align: right; color: '+getRgb(o)+'" title="Recycler">Rec</th>',l+='<th style="text-align: right; color: '+getRgb(o)+'" title="Spionagesonden">Spy</th>',l+='<th style="text-align: right; color: '+getRgb(o)+'" title="Solar Satellit">Sat</th>',l+='<th style="text-align: right; color: '+getRgb(n)+'" title="Leichter Jäger">LJ</th>',l+='<th style="text-align: right; color: '+getRgb(n)+'" title="Schwerer Jäger">SJ</th>',l+='<th style="text-align: right; color: '+getRgb(n)+'" title="Kreuzer">Xer</th>',l+='<th style="text-align: right; color: '+getRgb(n)+'" title="Schlachtschiff">SS</th>',l+='<th style="text-align: right; color: '+getRgb(n)+'" title="Bomber">B</th>',l+='<th style="text-align: right; color: '+getRgb(n)+'" title="Zerstörer">Z</th>',l+='<th style="text-align: right; color: '+getRgb(n)+'" title="Todesstern">DS</th>',l+='<th style="text-align: right; color: '+getRgb(n)+'" title="Schlachtkreuzer">SXer</th>',l+="</tr>",$.each(i,function(t,e){a="Gesamt"===e.name?"font-weight: bold; padding-top: 5px; border-top: 1px solid "+getRgb(n)+"; color: "+getRgb(n):"",l+="<tr>",l+='<td style="text-align: left; '+a+'">'+e.name+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.score_military||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.small_transporters||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.large_transporters||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.coloy_ships||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.recyclers||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.spy_drones||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.solar_satellites||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.light_hunters||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.heavy_hunters||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.cruisers||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.battleships||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.bombers||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.destroyers||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.death_stars||"")+"</td>",l+='<td style="text-align: right; '+a+'">'+(e.battle_cruisers||"")+"</td>",l+="</tr>"}),l+="</table>",t.container.html(l)})}},window.Menu=function(){this.init=function(){let t,e="";e+='<li><a style="color: #ee4d2e !important">pr0game Hub v0.4.0</a></li>',e+='<li data-hub-page="planets"><a href="javascript:void(0)"><i class="fa fa-globe-asia"></i> Planeten</a></li>',e+='<li data-hub-page="research"><a href="javascript:void(0)"><i class="fa fa-flask"></i> Forschung</a></li>',e+='<li data-hub-page="fleet"><a href="javascript:void(0)"><i class="fa fa-fighter-jet"></i> Flotte</a></li>',$("ul#menu").prepend('<li><a style="color: #ee4d2e !important">pr0game Hub v0.4.0</a></li><li data-hub-page="planets"><a href="javascript:void(0)"><i class="fa fa-globe-asia"></i> Planeten</a></li><li data-hub-page="research"><a href="javascript:void(0)"><i class="fa fa-flask"></i> Forschung</a></li><li data-hub-page="fleet"><a href="javascript:void(0)"><i class="fa fa-fighter-jet"></i> Flotte</a></li>'),$("*[data-hub-page]").each(function(t,e){$(e).click(function(){b.loadPage($(e).attr("data-hub-page"))})}),$(".res_max").each(function(e,i){t=$(i).html(),$(i).html(t.replace(".000","K"))})}},window.PageFleet=function(){this.data=[],this.init=function(){const t=this,e=[];let i,a,l,n;$(".table519 tr").each(function(t,a){(i=$(a).html().replace(/\n/,"").match(/id\=\"ship([0-9]+)\_value\"\>([\.0-9]+)\</))&&e.push({ship_id:getInt(i[1]),amount:getInt(i[2])})}),$("content > table:first-child > tbody > tr").each(function(t,r){$(r).find("td").length>1&&(a=$(r).find("td:nth-child(3)").html(),l=$(r).find("td:nth-child(4)").html().match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/),(n=a.match(/\'\>([^<]+)\:\<\/td\>\<td class\=\'transparent\'\>([\.0-9]+)\</g))&&l[1]==p&&l[2]==u&&l[3]==_&&$.each(n,function(t,a){(i=a.match(/\'\>([^<]+)\:\<\/td\>\<td class\=\'transparent\'\>([\.0-9]+)\</))&&e.push({ship_id:i[1],amount:getInt(i[2])})}))}),postJSON("planets/fleet",{coordinates:p+":"+u+":"+_,fleet:e},function(e){t.data=JSON.parse(e.responseText);let i='<br><table class="table 519" style="max-width: 519px !important"><tr><th style="text-align: left">Schiffstyp</th><th style="text-align: right">Anzahl (planetübergreifend)</th></tr>';$.each(t.data,function(t,e){i+='<tr><td style="text-align: left">'+e.name+'</td><td style="text-align: right">'+e.sum+"</td></tr>"}),$("content").append(i+'</table><p style="max-width: 519px !important; margin: 10px auto"><i>Diese Anzahl der stationierten und in der Luft befindlichen Schiffe (Aktiver Planet = Startplanet) wird aktualisiert, sobald die entsprechende Flottenseite des Planeten geöffnet wird.<br><br>Nach Kampf mit Verlust, werden die verlorenen Schiffe also erst nach Aufruf der Flottenansicht am Startplaneten aktualisiert. Nach Schiffsbau v.v.<br><br>Nach erfolgreicher Stationierung müssen somit die Flottenseiten von Start- und Zielplanet zur Aktualisierung geöffnet werden.</i></p>')})}},window.PageBuildings=function(){this.data=[],this.convertHtml=function(){$(".infos, .infoso").each(function(t,e){$(e).addClass("building"),$($(e).find("div:nth-child(2)")).addClass("building-left"),$($(e).find("div:nth-child(3)")).addClass("building-right")}),$("content").html($("content").html().replace(/\(Stufe ([0-9]+)\)/g,'<br><span class="highlight">Stufe $1</span><br>'))},this.init=function(){const t=this,e=[];let i,a;this.convertHtml(),$(".buildn").each(function(t,l){i=$(l).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/),a=$(l).html().match(/\(Stufe ([0-9]+)\)/),e.push({building_id:getInt(i[1]),level:a?getInt(a[1]):0})}),postJSON("planets/buildings",{coordinates:p+":"+u+":"+_,buildings:e},function(e){t.data=JSON.parse(e.responseText),$(".buildn").each(function(e,a){i=$(a).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/),$(a).append("Max Stufe: "+t.data[i[1]].max_level),t.data[i[1]].max_level>0&&$(a).append('<div class="player_names">'+t.data[i[1]].player_names.replace(/,/g,", ")+"</div>")})})}},window.PageResearch=function(){this.data=[],this.convertHtml=function(){$(".infos, .infoso").each(function(t,e){$(e).addClass("building"),$($(e).find("div:nth-child(2)")).addClass("building-left"),$($(e).find("div:nth-child(3)")).addClass("building-right")}),$("content").html($("content").html().replace(/\(Stufe ([0-9]+)\)/g,'<br><span class="highlight">Stufe $1</span><br>'))},this.init=function(){const t=this,e=[];let i,a;this.convertHtml(),$(".buildn").each(function(t,l){i=$(l).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/),a=$(l).html().match(/\(Stufe ([0-9]+)\)/),e.push({research_id:getInt(i[1]),level:a?getInt(a[1]):0})}),postJSON("players/research",{research:e},function(e){t.data=JSON.parse(e.responseText),$(".buildn").each(function(e,a){i=$(a).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/),$(a).append("Max: "+t.data[i[1]].max_level),t.data[i[1]].max_level>0&&$(a).append('<div class="player_names">'+t.data[i[1]].player_names.replace(/,/g,", ")+"</div>")})})}},window.PageOverview=function(){this.isLoading=!1,this.cacheKey="overviewData",this.container=null,this.request=null,this.fleetQueue=[],this.init=function(){this.parseOwnAttacks(),this.prepareHtml(),this.renderHtml(),this.loadData(),this.bindHotkeys()},this.bindHotkeys=function(){const t=this,e={i:"filter_inactive",n:"filter_noobs",u:"filter_vacation",a:"filter_alliance",s:"filter_spy_report",k:"filter_battle_report"},i={p:"filter_score_enable",g:"filter_score_building_enable",f:"filter_score_science_enable",m:"filter_score_fleet_enable",v:"filter_score_defense_enable",i:"filter_inactive_since_enable",k:"filter_last_battle_report_enable",s:"filter_last_spy_report_enable",q:"filter_metal_enable",w:"filter_crystal_enable",e:"filter_deuterium_enable"};$(window).keypress(function(a){const l=a.key.toLowerCase();let n=null;if(0===$("*:focus").length){if(a.shiftKey){if(i[l]){switch(GM_getValue(i[l])){case"0":n="1";break;default:n="0"}GM_setValue(i[l],n)}}else if(e[l]){switch(GM_getValue(e[l])){case"HIDE":n="ONLY";break;case"ONLY":n="ALL";break;default:n="HIDE"}GM_setValue(e[l],n)}t.renderHtml()}})},this.setLoading=function(t){this.isLoading=t},this.prepareHtml=function(){$(".infos:last-child").css("margin-top","-17px"),this.container=$(".infos:last-child"),this.container.html('<div style="padding: 15px"><i class="fa fa-spinner fa-spin"></i> Loading overview...</div>')},this.checkVersion=function(){var t=this.getData();t&&isNewerVersionAvailable(t.version)&&$("body").prepend('<div style="padding: 10px 15px; background: '+getRgb(n)+"; color: "+getRgb(l)+'; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"><i class="fa fa-exclamation-triangle"></i>  Eine neue Plugin-Version v<a href="https://pr0game-hub.eskju.net/download/releases/pr0game-hub.v'+t.version+'.js" target="_blank" download>'+t.version+"</a> ist verf&uuml;gbar.</div>")},this.parseOwnAttacks=function(){var t=this;let e=null;$("#hidden-div2 > li > span:last-child").each(function(i,a){(a=$(a)).hasClass("ownattack")&&(e=$(a).find(".ownattack"),t.fleetQueue.push({from:$(e[1]).html().replace(/\[(.*)\]/,"$1"),to:$(e[2]).html().replace(/\[(.*)\]/,"$1"),type:a.attr("class"),time:$(a).parent().find("span.fleets")})),a.hasClass("ownespionage")&&(e=$(a).find(".ownespionage"),t.fleetQueue.push({from:$(e[1]).html().replace(/\[(.*)\]/,"$1"),to:$(e[2]).html().replace(/\[(.*)\]/,"$1"),type:a.attr("class"),time:$(a).parent().find("span.fleets")}))})},this.loadData=function(){var t=this;null!==this.request&&this.request.abort(),this.setLoading(!0),this.request=postJSON("players/overview",{galaxy:p,system:u,planet:_,order_by:GM_getValue("orderBy"),order_direction:GM_getValue("orderDirection"),date_for_humans:"1"===(GM_getValue("date_for_humans")||"0")},function(e){GM_setValue(t.cacheKey,e.responseText),t.setLoading(!1),t.checkVersion(),t.renderHtml()})},this.getData=function(){var t=GM_getValue(this.cacheKey);try{var e=this.sortData,i=JSON.parse(t);return i.players=i.players.sort(e),i}catch(t){return{players:[],outdated_ids:[],version:"0.4.0",player:null}}},this.bindFilters=function(){$(".phFilter").each(function(t,e){$(e).on("change",function(){"checkbox"===$(this).attr("type")?savePhOption($(this).attr("data-alias"),$(this)[0].checked?"1":"0"):savePhOption($(this).attr("data-alias"),$(this).val())})})},this.bindHeadlineSort=function(){var t=this;$("th.sortable").each(function(e,i){$(i).css("cursor","pointer"),$(i).attr("data-sort")==(GM_getValue("orderBy")||"distance")&&$(i).attr("data-direction")==(GM_getValue("orderDirection")||"ASC")&&$(i).prepend(t.isLoading?'<i class="fa fa-spin fa-spinner fa"></i> ':'<i class="fa fa-caret-down"></i> '),$(i).click(function(){t.orderBy($(i).attr("data-sort"),$(i).attr("data-direction")),t.renderHtml()})})},this.orderBy=function(t,e){GM_setValue("orderBy",t),GM_setValue("orderDirection",e)},this.sortData=function(t,e){let i=GM_getValue("orderBy")||"distance";const a="DESC"!==GM_getValue("orderDirection")?1:-1,l=i.split(".");2===l.length&&(t=t[l[0]],e=e[l[0]],i=l[1]);let n=t[i]||"",r=e[i]||"";return"alliance_name"!==i&&"name"!==i&&(n=getInt(n),r=getInt(r)),(n<r?-1:n>r?1:0)*a},this.applyRowStyles=function(t){$(t.players).each(function(e,i){var a=$("#row"+i.id),l=$(a).find("td"),n=a.find("td a");t.player&&a.css(getPlayerRowStyle(i.player,t.player.score)),$(l[6]).css(getPlayerScoreStyle(i.player,t.player)),$(l[7]).css(getPlayerScoreBuildingStyle(i.player,t.player)),$(l[8]).css(getPlayerScoreScienceStyle(i.player,t.player)),$(l[9]).css(getPlayerScoreMilitaryStyle(i.player,t.player)),$(l[10]).css(getPlayerScoreDefenseStyle(i.player,t.player)),t.player&&n.css(getPlayerRowTdStyle(i.player,t.player.score,t.player)),t.player&&n.css(getPlayerRowTdStyle(i.player,t.player.score,t.player)),$("#lastSpyReport"+i.id).click(function(){getJSON("spy-reports/"+i.galaxy+"/"+i.system+"/"+i.planet,function(t){t=JSON.parse(t.responseText),showSpyReportHistory(t)})})})},this.bindSettingsLink=function(){var t=this;$("#showSettings").click(function(){GM_setValue("hideSettings","0"),$("#phSettings").show(),t.renderHtml()}),$("#hideSettings").click(function(){GM_setValue("hideSettings","1"),$("#phSettings").show(),t.renderHtml()})},this.bindSpyLinks=function(){$(".spio-link").click(function(){$.getJSON("game.php?page=fleetAjax&ajax=1&mission=6&planetID="+$(this).attr("data-id"),function(t){showMessage(t.mess,600===t.code?"success":"danger")})})},this.checkUpdatableIds=function(t){t.outdated_ids.length>0&&3==p&&227==u&&10==_&&(this.container.prepend('<button id="fetchMissingIdsBtn">Fetch '+t.outdated_ids.length+" outdated IDs</button>"),$("#fetchMissingIdsBtn").click(function(){f=t.outdated_ids,$("#fetchMissingIdsBtn").remove(),processQueue()}))},this.renderHtml=function(){var t=this,e='<table id="hubOverview" width="100%" style="max-width: 100% !important" class="table519"><tr>',i=this.getData();if(updateConfigVars(),!i)return;e+='<th style="text-align: center;">#</th>',e+='<th class="sortable" data-sort="alliance_name" data-direction="ASC">Ally</th>',e+='<th class="sortable" data-sort="player.name" data-direction="ASC">Spieler</th>',e+='<th class="sortable" data-sort="distance" title="Distanz" data-direction="ASC" style="text-align: center;" id="sortByDistance" colspan="3"><i class="fa fa-map-marker-alt"></i></th>',e+='<th class="sortable" data-sort="player.score" title="Punkte" data-direction="DESC" style="text-align: center; color: '+getRgb(d)+'" id="sortByScore"><i class="fa fa-chart-line"></i></th>',e+='<th class="sortable" data-sort="player.score_building" title="Gebaeudepunkte" data-direction="DESC" style="text-align: center; color: '+getRgb(o)+'" id="sortByScoreBuilding"><i class="fa fa-industry"></i></th>',e+='<th class="sortable" data-sort="player.score_science" title="Forschungspunkte" data-direction="DESC" style="text-align: center; color: '+getRgb(s)+'" id="sortByScoreScience"><i class="fa fa-flask"></i></th>',e+='<th class="sortable" data-sort="player.score_military" title="Militaerpunkte" data-direction="DESC" style="text-align: center; color:'+getRgb(n)+'" id="sortByScoreMilitary"><i class="fa fa-fighter-jet"></i></th>',e+='<th class="sortable" data-sort="player.score_defense" title="Verteidigungspunkte" data-direction="DESC" style="text-align: center; color: '+getRgb(c)+'" id="sortByScoreDefense"><i class="fa fa-shield"></i></th>',e+='<th class="sortable" data-sort="last_battle_report_hours" title="Letzter Angriff" data-direction="ASC" style="text-align: right;">Attack <i class="fa fa-crosshairs"></i></th>',e+='<th class="sortable" data-sort="last_spy_report_hours" title="Letze Spionage" data-direction="DESC" style="text-align: right;">Spy <i class="fa fa-user-secret"></i></th>',e+='<th style="text-align: center;">Actions</th>',e+='<th class="sortable" data-sort="last_spy_metal" data-direction="DESC" title="Metall (Letzte Spionage)" style="text-align: right;" id="sortBySpioMet">MET</th>',e+='<th class="sortable" data-sort="last_spy_crystal" data-direction="DESC" title="Kristall (Letzte Spionage)" style="text-align: right;" id="sortBySpioCry">CRY</th>',e+='<th class="sortable" data-sort="last_spy_deuterium" data-direction="DESC" title="Deuterium (Letzte Spionage)" style="text-align: right;" id="sortBySpioDeu">DEU</th></tr>',null!==i.player&&(y=i.player);let r=0;$(i.players).each(function(s,o){if(filterTableRow(o,i.player)){r++,e+='<tr id="row'+o.id+'">',e+="<td>"+r+"</td>",e+='<td style="text-align: left; max-width: 50px"><div style="max-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+(o.alliance_name||"---")+"</div></td>",e+='<td style="text-align: left; max-width: 100px"><div style="max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">',null!==o.inactive_since&&o.inactive_since<48&&(e+='<span style="padding: 2px 5px; border-radius: 2px; background: '+getRgb(n)+"; color: "+getRgb(l)+'; border-radius: 2px; margin-right: 5px; font-size: 10px;">'+o.inactive_since+"H</span>"),e+='<a href="/game.php?page=playerCard&id='+o.player.id+'">'+o.player.name+"</a></div></td>",e+='<td id="row'+o.id+'Galaxy">'+(o.galaxy||"---")+"</td>",e+='<td id="row'+o.id+'System"><a href="/game.php?page=galaxy&galaxy='+(o.galaxy||"")+"&system="+(o.system||"")+'">'+(o.system||"---")+"</a></td>",e+='<td id="row'+o.id+'Planet">'+(o.planet||"---")+"</td>",e+='<td id="row'+o.id+'Score">'+(o.player.score||"")+"</td>",e+='<td id="row'+o.id+'ScoreBuilding">'+(o.player.score_building||"")+"</td>",e+='<td id="row'+o.id+'ScoreScience">'+(o.player.score_science||"")+"</td>",e+='<td id="row'+o.id+'ScoreMilitary">'+(o.player.score_military||"")+"</td>",e+='<td id="row'+o.id+'ScoreDefense">'+(o.player.score_defense||"")+"</td>",e+='<td style="text-align: right">';var d=0;$.each(t.fleetQueue,function(t,i){if(i.to==o.coordinates||i.from==o.coordinates)switch(i.type){case"flight ownattack":e+='<div style="text-align: center; background: '+getRgb(n)+"; margin-bottom: -1px; color: "+getRgb(l)+'; border-radius: 2px; padding: 2px 5px; font-size: 10px;">'+i.time[0].outerHTML+"</div>",d++;break;case"return ownattack":e+='<div style="text-align: center; background: '+getRgb(a)+"; color: "+getRgb(n)+"; outline: 1px solid "+getRgb(n)+'; outline-offset: -1px; border-radius: 2px; padding: 2px 5px; font-size: 10px;">'+i.time[0].outerHTML+"</div>",d++;break;case"flight ownespionage":e+='<div style="text-align: center; background: '+getRgb(c)+"; margin-bottom: -1px; color: "+getRgb(a)+'; border-radius: 2px; padding: 2px 5px; font-size: 10px;">'+i.time[0].outerHTML+"</div>",d++;break;case"return ownespionage":e+='<div style="text-align: center; background: '+getRgb(a)+"; color: "+getRgb(c)+"; outline: 1px solid "+getRgb(c)+'; outline-offset: -1px; border-radius: 2px; padding: 2px 5px; font-size: 10px;">'+i.time[0].outerHTML+"</div>",d++}}),e+=0===d&&o.last_battle_report||"",e+=" </td>",e+='<td style="text-align: right; cursor: pointer" id="lastSpyReport'+o.id+'">'+(o.last_spy_report||"")+"</td>",e+="<td>",o.external_id?e+='[<a class="spio-link" data-id="'+o.external_id+'" style="cursor: pointer">S</a>]':e+=' [<a style="color: #666" href="/game.php?page=fleetTable&galaxy='+o.galaxy+"&system="+o.system+"&planet="+o.planet+'&planettype=1&target_mission=6" style="cursor: pointer">S</a>]',e+=' [<a  href="/game.php?page=fleetTable&galaxy='+o.galaxy+"&system="+o.system+"&planet="+o.planet+'&planettype=1&target_mission=1" style="cursor: pointer">A</a>]',e+="</td>",e+='<td style="text-align: right;">'+(o.last_spy_metal||"")+"</td>",e+='<td style="text-align: right;">'+(o.last_spy_crystal||"")+"</td>";var g=Math.ceil(getInt(o.last_spy_metal)/2+getInt(o.last_spy_crystal)/2+getInt(o.last_spy_deuterium)/2);e+='<td style="text-align: right;" title="'+Math.ceil(g/5e3)+" KT, "+g+' raidable">'+(o.last_spy_deuterium||"")+"</td>",e+="</tr>"}}),this.container.html(getOverviewHeader()+e+"</table>"),this.bindFilters(),this.applyRowStyles(i),this.bindHeadlineSort(),this.bindSettingsLink(),this.bindSpyLinks(),this.checkUpdatableIds(i)}},window.parsePageStatistics=function(){var t=[],e=[],i=[];$(".table519:nth-child(2) tr").each(function(a,l){if(a>0){var n=parseInt($(l).find("td:nth-child(2) a").attr("onclick").replace(/return Dialog\.Playercard\((.*)\, (.*)\);/,"$1"));t.push(n),$(l).attr("id","row"+n),$(l).find("td:nth-child(2) .galaxy-short-inactive").length>0&&e.push(n),$(l).find("td:nth-child(2) .galaxy-short-vacation").length>0&&i.push(n)}else $(l).append("<th>Koords</th>"),$(l).append("<th>B</th>"),$(l).append("<th>S</th>"),$(l).append("<th>M</th>"),$(l).append("<th>D</th>")}),postJSON("players/stats",{ids:t,inactive_ids:e,vacation_ids:i,order_by:GM_getValue("orderBy")},function(t){t=JSON.parse(t.responseText),$(t.players).each(function(e,i){var a=$("#row"+i.id);a.append('<td id="row'+i.id+'Coordinates">'+(i.main_coordinates||"---")+"</td>"),a.append('<td id="row'+i.id+'ScoreBuilding">'+(i.score_building||"")+"</td>"),a.append('<td id="row'+i.id+'ScoreScience">'+(i.score_science||"")+"</td>"),a.append('<td id="row'+i.id+'ScoreMilitary">'+(i.score_military||"")+"</td>"),a.append('<td id="row'+i.id+'ScoreDefense">'+(i.score_defense||"")+"</td>"),a.css(getPlayerRowStyle(i)),$("#row"+i.id+" td:nth-child(5)").css(getPlayerScoreStyle(i,t.player)),$("#row"+i.id+"ScoreBuilding").css(getPlayerScoreBuildingStyle(i,t.player)),$("#row"+i.id+"ScoreScience").css(getPlayerScoreScienceStyle(i,t.player)),$("#row"+i.id+"ScoreMilitary").css(getPlayerScoreMilitaryStyle(i,t.player)),$("#row"+i.id+"ScoreDefense").css(getPlayerScoreDefenseStyle(i,t.player))}),t.missing_ids.length>0&&3==p&&227==u&&($("content").prepend('<button id="fetchMissingIdsBtn">Fetch '+t.missing_ids.length+" missing IDs</button>"),$("#fetchMissingIdsBtn").click(function(){f=t.missing_ids,$("#fetchMissingIdsBtn").remove(),processQueue()})),t.outdated_ids.length>0&&3==p&&227==u&&($("content").prepend('<button id="fetchUpdatableIdsBtn">Fetch '+t.outdated_ids.length+" outdated IDs</button>"),$("#fetchUpdatableIdsBtn").click(function(){f=t.outdated_ids,$("#fetchMissingIdsBtn").remove(),processQueue()}))})},window.parsePageMessages=function(){var t=$($("#messagestable > tbody > tr").get().reverse());t.each(function(e,i){if($(i).find(".spyRaport").length>0){$(t[e-1]).find("td:nth-child(2)").html();var a=$(i).find(".spyRaportHead a").html(),l=((o=a.match(/Spionagebericht von (.*) \[([0-9]+)\:([0-9]+)\:([0-9]+)\] am (.*)/,a))[2],o[3],o[4],o[5],$(i).find(".spyRaportContainerRow .spyRaportContainerCell:nth-child(2n+1)")),n=$(i).find(".spyRaportContainerRow .spyRaportContainerCell:nth-child(2n)"),r={};l.each(function(t,e){r[($(e).find("a").attr("onclick")||"").match(/\(([0-9]+)\)/)[1]]=getInt($(n[t]).html())}),postJSON("spy-reports",{id:parseInt($(i).attr("class").match(/message\_([0-9]+)/)[1]),galaxy:parseInt(o[2]),system:parseInt(o[3]),planet:parseInt(o[4]),timestamp:o[5],resources:r},function(t){})}if($(i).find(".raportMessage").length>0){var s=$(i).html(),o=getCoordinates($(i).find(".raportMessage").html());console.log(s),postJSON("battle-reports",{report_id:s.match(/(raport|report)\=([^"]{32})/)[2],galaxy:parseInt(o[1]),system:parseInt(o[2]),planet:parseInt(o[3]),attacker_lost:getInt(s.match(/Angreifer\: ([\.0-9]+)\</)[1]),defender_lost:getInt(s.match(/Verteidiger\: ([\.0-9]+)\</)[1]),metal:getInt(s.match(/(reportSteal|raportSteal) element901\"\>([\.0-9]+)\</)[2]),crystal:getInt(s.match(/(reportSteal|raportSteal) element902\"\>([\.0-9]+)\</)[2]),deuterium:getInt(s.match(/(reportSteal|raportSteal) element903\"\>([\.0-9]+)\</)[2]),debris_metal:getInt(s.match(/(reportDebris|raportDebris) element901\"\>([\.0-9]+)\</)[2]),debris_crystal:getInt(s.match(/(reportDebris|raportDebris) element902\"\>([\.0-9]+)\</)[2]),timestamp:$(t[e+1]).find("td:nth-child(2)").html()},function(t){})}})},window.parsePageGalaxy=function(){$("tr td:nth-child(2) a.tooltip_sticky").each(function(t,e){var i=$(e).attr("data-tooltip-content"),a=$(e).parent().parent().find("td:nth-child(6) a").attr("data-tooltip-content").match(/Dialog\.Buddy\(([0-9]+)\)/);a=a?parseInt(a[1]):null;var l=i.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/,i),n=i.match(/doit\(6\,([0-9]+)/,i);n=n?parseInt(n[1]):null,l&&n&&postJSON("planets",{coordinates:l[0],planet_id:n,player_id:a},function(t){})})},window.parsePagePlayerCard=function(){var t=($("#content tr:nth-child(4) a").attr("onclick")||"").match(/\&id\=([0-9]+)/),e=window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1];postJSON("players/"+e,{name:$("#content tr:nth-child(2) td:nth-child(2)").html(),alliance_id:t?t[1]:null,alliance_name:$("#content tr:nth-child(4) a").html()||null,main_coordinates:$("#content tr:nth-child(3) a").html().replace(/\[(.*)\]/,"$1"),score_building:getInt($("#content tr:nth-child(6) td:nth-child(2)").html()),score_science:getInt($("#content tr:nth-child(7) td:nth-child(2)").html()),score_military:getInt($("#content tr:nth-child(8) td:nth-child(2)").html()),score_defense:getInt($("#content tr:nth-child(9) td:nth-child(2)").html()),score:getInt($("#content tr:nth-child(10) td:nth-child(2)").html()),combats_won:getInt($("#content tr:nth-child(13) td:nth-child(2)").html()),combats_draw:getInt($("#content tr:nth-child(14) td:nth-child(2)").html()),combats_lost:getInt($("#content tr:nth-child(15) td:nth-child(2)").html()),combats_total:getInt($("#content tr:nth-child(16) td:nth-child(2)").html()),units_shot:getInt($("#content tr:nth-child(18) td:nth-child(2)").html()),units_lost:getInt($("#content tr:nth-child(19) td:nth-child(2)").html()),rubble_metal:getInt($("#content tr:nth-child(20) td:nth-child(2)").html()),rubble_crystal:getInt($("#content tr:nth-child(21) td:nth-child(2)").html())},function(t){});var i=$("table");i.append('<tr><th colspan="3">Planeten</th></tr>'),getJSON("players/"+e+"/planets",function(t){200===t.status&&$.each(JSON.parse(t.responseText),function(t,e){i.append('<tr><td colspan="3" style="text-align: left">'+e.coordinates+"</td></tr>")})})},window.parsePageAlliance=function(){var t=window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1],e=$($("content table")[0]);e.append('<tr><th colspan="2">Planeten</th></tr>'),getJSON("alliances/"+t+"/planets",function(t){200===t.status&&$.each(JSON.parse(t.responseText),function(t,i){e.append('<tr><td style="text-align: left">'+i.coordinates+'</td><td style="text-align: left">'+i.name+"</td></tr>")})})},window.getRgb=function(t){return"rgb("+t[0]+", "+t[1]+", "+t[2]+")"},window.getPlayerRowStyle=function(t,e){return 1===t.on_vacation?{background:getRgb(d)}:null!==y&&null!==y.alliance_id&&y.alliance_id===t.alliance_id?{background:getRgb(o)}:1===t.is_inactive?{background:getRgb(g)}:getInt(t.score)<e/5?{background:getRgb(r)}:getInt(t.score)>5*e?{background:getRgb(n)}:{}},window.getPlayerRowTdStyle=function(t,e){return 1===t.on_vacation?{color:getRgb(d)}:null!==y&&null!==y.alliance_id&&y.alliance_id===t.alliance_id?{color:getRgb(o)}:1===t.is_inactive?{color:getRgb(g)}:getInt(t.score)<getInt(e)/5?{color:getRgb(r)}:getInt(t.score)>5*getInt(e)?{color:getRgb(n)}:{}},window.getColorIntensity=function(t,e){var i=t/e*255;return i>255?255:i},window.getColor=function(t,e){var i=[255,255,255],a=e,l=1-(a=(a=a<0?0:a)>1?1:a);l=(l=l>1?1:l)<0?0:l;var n=[Math.round(t[0]*a+i[0]*l),Math.round(t[1]*a+i[1]*l),Math.round(t[2]*a+i[2]*l)];return"rgb("+n[0]+", "+n[1]+", "+n[2]+")"},window.getPlayerAttributeStyle=function(t,e,i,a){let l=1;return I[i]&&I[i].enabled?l=I[i].threshold:e&&e[i]&&(l=getInt(e[i])),{color:getColor(a,getInt(t[i])/l)}},window.getPlayerScoreStyle=function(t,e){return getPlayerAttributeStyle(t,e,"score",d)},window.getPlayerScoreBuildingStyle=function(t,e){return getPlayerAttributeStyle(t,e,"score_building",o)},window.getPlayerScoreScienceStyle=function(t,e){return getPlayerAttributeStyle(t,e,"score_science",s)},window.getPlayerScoreMilitaryStyle=function(t,e){return getPlayerAttributeStyle(t,e,"score_military",n)},window.getPlayerScoreDefenseStyle=function(t,e){return getPlayerAttributeStyle(t,e,"score_defense",c)},window.getProgressBar=function(){const t=$("#progress-bar");return 1===t.length?t:($("body").prepend('<div style="padding: 10px 15px; background: '+getRgb(d)+"; color: "+getRgb(l)+'; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"></div>'),$("#progress-bar"))},window.processQueue=function(){if(f.length>0){getProgressBar().html("Updating "+f.length+" items ...");var t=f.shift();$("content").append('<iframe class="player-iframe" id="iframe'+t+'" width="1" height="1" src="/game.php?page=playerCard&id='+t+'"></iframe>'),$("#iframe"+t).on("load",processQueue),$("#iframe"+t).animate({left:0},1e3,function(){$(this).remove()})}else getProgressBar().html("Save & reload"),$("body").animate({opacity:0},1e3,function(){window.location.reload()})},window.showMessage=function(t,e){let i,a;switch(e){case"danger":i="#161618",a="#d23c22";break;default:i="#161618",a="#5cb85c"}$("#alertBox").remove(),$("body").prepend('<div id="alertBox" style="padding: 25px 15px; background: '+i+"; color: "+a+'; z-index: 10000; position: fixed; top: 0; left: 0; right: 0; opacity: 0; text-align: center; font-weight: bold;">'+t+"</div>"),$("#alertBox").animate({opacity:1},250).animate({opacity:1},2500).animate({opacity:0},500,function(){$(this).remove()})},window.showSpyReportHistory=function(t){$("body").append('<div id="spyReportBackdrop" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.95); z-index: 10000"></div>'),$("body").append('<div id="spyReportOverlay" style="position: fixed; top: 25px; left: 25px; right: 25px; max-height: 95%; z-index: 10000; background: #161618; overflow-y: auto"></div>');var e=$("#spyReportOverlay"),i="";i+=showSpyReportHistoryBox(t,"resources"),i+=showSpyReportHistoryBox(t,"fleet"),i+=showSpyReportHistoryBox(t,"defense"),i+=showSpyReportHistoryBox(t,"science"),i+=showSpyReportHistoryBox(t,"buildings"),$(e).html(i),$(window).keydown(function(t){"Escape"===t.key&&($("#spyReportOverlay").remove(),$("#spyReportBackdrop").remove())}),$("#spyReportBackdrop").click(function(){$("#spyReportOverlay").remove(),$("#spyReportBackdrop").remove()})},window.showSpyReportHistoryBox=function(t,e){var i='<table width="100%" style="max-width: 100% !important" class="table519"><tr>';return i+='<th style="text-align: left; width: 250px" width="200">Zeit</th>',$(t[e].data[0].values).each(function(t,e){i+='<th style="text-align: center;">'+e.name+"</th>"}),i+="</tr>",$(t[e].data).each(function(t,e){i+="<tr>",i+='<td style="text-align: left;">'+e.timestamp+"</td>",$(e.values).each(function(t,e){e.value=null===e.value?"---":e.value,i+='<td style="position: relative; '+("0"!==e.value.toString()&&"---"!==e.value.toString()?"color: #fff":"color: #444")+'">',i+=e.value,null===e.difference||0===e.difference||e.valueBefore===e.value||(e.valueBefore&&e.valueBefore>e.value?i+=' <span style="color: '+getRgb(n)+'; position: absolute; right: 15px">'+e.difference+"</span>":i+=' <span style="color: '+getRgb(o)+'; position: absolute; right: 15px">+'+e.difference+"</span>"),i+="</td>"}),i+="</tr>"}),i+="</table>"},window.getInt=function(t){return parseInt((null!=t&&""!==t?t:"0").toString().replace(/\./,""))};let I={},k=GM_getValue("filter_inactive")||"ALL",M=GM_getValue("filter_noobs")||"ALL",G=GM_getValue("filter_vacation")||"ALL",R=GM_getValue("filter_alliance")||"ALL",V=GM_getValue("filter_spy_report")||"ALL",P=GM_getValue("filter_last_battle_report")||"ALL",H=GM_getValue("filter_score_enable")||"0",O=GM_getValue("filter_score_min")||"",A=GM_getValue("filter_score_max")||"",D=GM_getValue("filter_score_building_enable")||"0",L=GM_getValue("filter_score_building_min")||"",B=GM_getValue("filter_score_building_max")||"",z=GM_getValue("filter_score_science_enable")||"0",N=GM_getValue("filter_score_science_min")||"",C=GM_getValue("filter_score_science_max")||"",T=GM_getValue("filter_score_fleet_enable")||"0",E=GM_getValue("filter_score_fleet_min")||"",F=GM_getValue("filter_score_fleet_max")||"",K=GM_getValue("filter_score_defense_enable")||"0",J=GM_getValue("filter_score_defense_min")||"",j=GM_getValue("filter_score_defense_max")||"",Y=GM_getValue("filter_inactive_since_enable")||"0",U=GM_getValue("filter_inactive_since_min")||"",q=GM_getValue("filter_inactive_since_max")||"",Q=GM_getValue("filter_last_battle_report_enable")||"0",W=GM_getValue("filter_last_battle_report_min")||"",Z=GM_getValue("filter_last_battle_report_max")||"",X=GM_getValue("filter_last_spy_report_enable")||"0",tt=GM_getValue("filter_last_spy_report_min")||"",et=GM_getValue("filter_last_spy_report_max")||"",it=GM_getValue("filter_metal_enable")||"0",at=GM_getValue("filter_metal_min")||"",lt=GM_getValue("filter_metal_max")||"",nt=GM_getValue("filter_crystal_enable")||"0",rt=GM_getValue("filter_crystal_min")||"",st=GM_getValue("filter_crystal_max")||"",ot=GM_getValue("filter_deuterium_enable")||"0",dt=GM_getValue("filter_deuterium_min")||"",ct=GM_getValue("filter_deuterium_max")||"";window.updateConfigVars=function(){I={score:{enabled:"1"===(GM_getValue("highlight_score_enable")||"0"),threshold:getInt(GM_getValue("highlight_score_value")||"")},score_building:{enabled:"1"===(GM_getValue("highlight_score_building_enable")||"0"),threshold:getInt(GM_getValue("highlight_score_building_value")||"")},score_science:{enabled:"1"===(GM_getValue("highlight_score_science_enable")||"0"),threshold:getInt(GM_getValue("highlight_score_science_value")||"")},score_military:{enabled:"1"===(GM_getValue("highlight_score_military_enable")||"0"),threshold:getInt(GM_getValue("highlight_score_military_value")||"")},score_defense:{enabled:"1"===(GM_getValue("highlight_score_defense_enable")||"0"),threshold:getInt(GM_getValue("highlight_score_defense_value")||"")}},k=GM_getValue("filter_inactive")||"ALL",M=GM_getValue("filter_noobs")||"ALL",G=GM_getValue("filter_vacation")||"ALL",R=GM_getValue("filter_alliance")||"ALL",V=GM_getValue("filter_spy_report")||"ALL",P=GM_getValue("filter_last_battle_report")||"ALL",H=GM_getValue("filter_score_enable")||"0",O=GM_getValue("filter_score_min")||"",A=GM_getValue("filter_score_max")||"",D=GM_getValue("filter_score_building_enable")||"0",L=GM_getValue("filter_score_building_min")||"",B=GM_getValue("filter_score_building_max")||"",z=GM_getValue("filter_score_science_enable")||"0",N=GM_getValue("filter_score_science_min")||"",C=GM_getValue("filter_score_science_max")||"",T=GM_getValue("filter_score_fleet_enable")||"0",E=GM_getValue("filter_score_fleet_min")||"",F=GM_getValue("filter_score_fleet_max")||"",K=GM_getValue("filter_score_defense_enable")||"0",J=GM_getValue("filter_score_defense_min")||"",j=GM_getValue("filter_score_defense_max")||"",Y=GM_getValue("filter_inactive_since_enable")||"0",U=GM_getValue("filter_inactive_since_min")||"",q=GM_getValue("filter_inactive_since_max")||"",Q=GM_getValue("filter_last_battle_report_enable")||"0",W=GM_getValue("filter_last_battle_report_min")||"",Z=GM_getValue("filter_last_battle_report_max")||"",X=GM_getValue("filter_last_spy_report_enable")||"0",tt=GM_getValue("filter_last_spy_report_min")||"",et=GM_getValue("filter_last_spy_report_max")||"",it=GM_getValue("filter_metal_enable")||"0",at=GM_getValue("filter_metal_min")||"",lt=GM_getValue("filter_metal_max")||"",nt=GM_getValue("filter_crystal_enable")||"0",rt=GM_getValue("filter_crystal_min")||"",st=GM_getValue("filter_crystal_max")||"",ot=GM_getValue("filter_deuterium_enable")||"0",dt=GM_getValue("filter_deuterium_min")||"",ct=GM_getValue("filter_deuterium_max")||""},window.getOverviewHeader=function(){let t='<table cellspacing="0"><tr><td width="50%%" style="text-align: left; padding: 5px 10px">';return t+='<a href="https://pr0game-hub.eskju.net/download/legend.png" target="_blank"><i class="fa fa-info-circle"></i> Legende</a>',t+=" // ",t+='<a href="https://pr0game-hub.eskju.net/download/faq.txt" target="_blank"><i class="fa fa-question-circle"></i> FAQ</a>',t+="</td>","1"===GM_getValue("hideSettings")?t+='<td id="showSettings" style="text-align: right; padding: 5px 10px; cursor: pointer;"><i class="fa fa-cogs fa"></i> Einstellungen anzeigen</td>':t+='<td id="hideSettings" style="text-align: right; padding: 5px 10px; cursor: pointer;"><span style="color: lightgreen"><i class="fa fa-cogs"></i> Einstellungen ausblenden</span></td>',t+="</tr></table>",t+=displayOverviewSettings()};var gt="";window.checkRequirements=function(){return!!GM_getValue("api_keys")||(gt="Bitte hinterlege den API Key, den du von @eichhorn#1526 erhalten hast.",!1)},window.showSetupDialog=function(){$("head").append('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">'),$(".wrapper").css("filter","blur(5px)"),$("body").append('<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.95); z-index: 10000"></div>'),$("body").append('<div id="configOverlay" style="position: fixed; top: 25px; left: 25px; right: 25px; max-height: 95%; z-index: 10000; background: #161618; overflow-y: auto; padding: 25px 50px;"></div>');const t=$("#configOverlay");$(t).append('<p><b style="color: #fff">Willkommen bei pr0gameHub!</b></p>'),$(t).append('<p style="color: rgb(0, 255, 255)">Für bisherige User: Damit das Updaten leichter wird, kann der API Key nun im lokalen Speicher hinterlegt werden. So muss die Updatedatei nicht mehr editiert werden.</p><br><br>'),$(t).append('<div class="alert alert-info">'+gt+"</div>"),$(t).append('<div class="input-group"><input id="apiKey" type="text" placeholder="Dein API Key" class="form-control" style="text-align: left"><div id="apiKeySave" class="input-group-append"><a class="btn btn-success" href="javascript:void(0)">prüfen &amp; speichern</a></div></div>'),$("#apiKeySave").click(saveApiKey),$("#apiKeySave").on("keypress",function(t){13==t.which&&saveApiKey()})},window.saveApiKey=function(t){var e=i+"login?api_key="+$("#apiKey").val()+"&version=0.4.0";GM_xmlhttpRequest({method:"GET",url:e,onload:function(t){200!==t.status&&(gt="Der API Key ist ungültig.",showSetupDialog())}}),GM_setValue("api_key",$("#apiKey").val())},window.displayOverviewSettings=function(){let t="";return t+='<table id="phSettings" width="100%" style="max-width: 100% !important; '+("1"===GM_getValue("hideSettings")?"display: none":"")+'" class="table519">',t+='<tr><th colspan="4">API</th></tr>',t+='<tr><td colspan="4"><p style="font-size: 11px; text-align: left;">Solltest Du keinen API Key besitzen, wende Dich bitte per Discord an @eichhorn#1526.<br><b style="color: '+getRgb(n)+'">Gib Deinen API Key nicht an andere weiter!</b></p></td></tr>',t+="<tr>",t+='<td width="50%" style="text-align: left">API Key</td>',t+='<td colspan="3"><input class="phFilter" data-alias="api_key" type="text" style="width: 100%" placeholder="API Key" value="'+(GM_getValue("api_key")||"")+'"></td>',t+="<tr>",t+='<td width="50%" style="text-align: left">Debug-Modus</td>',t+='<td><input type="checkbox" class="phFilter" data-alias="debug_mode" value="1" '+("1"===GM_getValue("debug_mode")?"checked":"")+'></td><td colspan="2" style="text-align: left; color: #888">Zeige Infos in der Konsole</td>',t+="<tr>",t+='<td width="50%" style="text-align: left">Developer-Modus</td>',t+='<td><input type="checkbox" class="phFilter" data-alias="developer_mode" value="1" '+("1"===GM_getValue("developer_mode")?"checked":"")+'></td><td colspan="2" style="text-align: left; color: #888">Nutzt die Entwickler-API (nur zum Coden!)</td>',t+="<tr>",t+='<td width="50%" style="text-align: left">Leserliches Datumsformat</td>',t+='<td><input type="checkbox" class="phFilter" data-alias="date_for_humans" value="1" '+("1"===GM_getValue("date_for_humans")?"checked":"")+'></td><td colspan="2" style="text-align: left; color: #888">z.B. "vor 5min" statt Datum/Uhrzeit. Erfordert Reload (F5)!</td>',t+='<tr><th colspan="4">HIGHLIGHTING</th></tr>',t+='<tr><td colspan="4"><p style="font-size: 11px; text-align: left;">Standardmäßig werden die Spielerwerte als Referenz genommen; Für Galaxie/System/Planet wird standardmäßig der aktive Planet gesetzt. Ist die Checkbox angehakt, wird der jeweilige Wert vom Eingetragenen überschrieben. Die Spieler-Werte werden in der Farbskala weiß (0 Punkte) bis Farbe (gesetztes Punktelimit) dargestellt.</p></td></tr>',t+=displayOverviewHighlight("Gesamtpunkte","highlight_score",d),t+=displayOverviewHighlight("Gebäudepunkte","highlight_score_building",o),t+=displayOverviewHighlight("Forschungspunkte","highlight_score_science",s),t+=displayOverviewHighlight("Militärpunkte","highlight_score_military",n),t+=displayOverviewHighlight("Verteidigungspunkte","highlight_score_defense",c),t+='<tr><th colspan="4">FILTER</th></tr>',t+=displayOverviewSettingsSelect(getHotkeyIcon("I")+"Inaktive Spieler","filter_inactive",{ALL:"Anzeigen",HIDE:"Ausblenden",ONLY:"Andere ausblenden"}),t+=displayOverviewSettingsSelect(getHotkeyIcon("N")+"Spieler mit Noobschutz","filter_noobs",{ALL:"Anzeigen",HIDE:"Ausblenden",ONLY:"Andere ausblenden"}),t+=displayOverviewSettingsSelect(getHotkeyIcon("U")+"Spieler im Urlaubsmodus","filter_vacation",{ALL:"Anzeigen",HIDE:"Ausblenden",ONLY:"Andere ausblenden"}),t+=displayOverviewSettingsSelect(getHotkeyIcon("A")+"Spieler der Allianz","filter_alliance",{ALL:"Anzeigen",HIDE:"Ausblenden",ONLY:"Andere ausblenden"}),t+=displayOverviewSettingsSelect(getHotkeyIcon("S")+"Spieler mit Spiobericht","filter_spy_report",{ALL:"Anzeigen",HIDE:"Ausblenden",ONLY:"Andere ausblenden"}),t+=displayOverviewSettingsSelect(getHotkeyIcon("K")+"Spieler mit Kampfbericht","filter_battle_report",{ALL:"Anzeigen",HIDE:"Ausblenden",ONLY:"Andere ausblenden"}),t+='<tr><th colspan="4">THRESHOLDS</th></tr>',t+=displayOverviewSettingsRange(getHotkeyIcon("P",!0)+"Punkte","filter_score"),t+=displayOverviewSettingsRange(getHotkeyIcon("G",!0)+"Gebäudepunkte","filter_score_building"),t+=displayOverviewSettingsRange(getHotkeyIcon("F",!0)+"Forschungspunkte","filter_score_science"),t+=displayOverviewSettingsRange(getHotkeyIcon("M",!0)+"Militärpunkte","filter_score_fleet"),t+=displayOverviewSettingsRange(getHotkeyIcon("V",!0)+"Verteidigungspunkte","filter_score_defense"),t+=displayOverviewSettingsRange(getHotkeyIcon("I",!0)+"Inaktiv seit ... Stunden","filter_inactive_since"),t+=displayOverviewSettingsRange(getHotkeyIcon("K",!0)+"Stunden seit letztem Kampfbericht","filter_last_battle_report"),t+=displayOverviewSettingsRange(getHotkeyIcon("S",!0)+"Stunden seit letztem Spionagebericht","filter_last_spy_report"),t+=displayOverviewSettingsRange(getHotkeyIcon("Q",!0)+"Metall (letzte Spionage)","filter_metal"),t+=displayOverviewSettingsRange(getHotkeyIcon("W",!0)+"Kristall (letzte Spionage)","filter_crystal"),t+=displayOverviewSettingsRange(getHotkeyIcon("E",!0)+"Deuterium (letzte Spionage)","filter_deuterium"),t+="</table>"},window.getHotkeyIcon=function(t,e=!1){let i="";return e&&(i=getHotkeyIcon('<i class="fa fa-arrow-up"></i>')),i+'<span style="width: 21px; outline: 1px solid '+getRgb(n)+"; outline-offset: -1px; display: inline-block; font-size: 10px; line-height: 21px; text-align: center; margin-right: 5px; border-radius: 2px; background: "+getRgb(a)+"; color: "+getRgb(n)+'">'+t+"</span>"},window.displayOverviewHighlight=function(t,e,i){let a="<tr>";return a+='<td width="50%" style="text-align: left; color: '+getRgb(i)+'">'+t+"</td>",a+='<td width="4%">',a+='<input id="'+e+'" class="phFilter" data-alias="'+e+'_enable" value="1" type="checkbox" '+("1"===GM_getValue(e+"_enable")?"checked":"")+">",a+="</td>",a+='<td width="46%" colspan="2">',a+='<input id="'+e+'_value" class="phFilter" data-alias="'+e+'_value" style="width: 100%" placeholder="Schwellwert" value="'+(GM_getValue(e+"_value")||"")+'">',a+="</td>",a+="</tr>"},window.displayOverviewSettingsSelect=function(t,e,i){let a="<tr>";return a+='<td width="50%" style="text-align: left">'+t+"</td>",a+='<td colspan="3">',a+='<select id="'+e+'_select" class="phFilter" data-alias="'+e+'" style="width: 100%">',$.each(i,function(t,i){a+='<option value="'+t+'" '+(GM_getValue(e)===t?"selected":"")+">"+i+"</option>"}),a+="</select>",a+="</td>"},window.displayOverviewSettingsRange=function(t,e){let i="<tr>";return i+='<td width="50%" style="text-align: left">'+t+"</td>",i+='<td width="4%">',i+='<input id="'+e+'_enable" class="phFilter" data-alias="'+e+'_enable" value="1" type="checkbox" '+("1"===GM_getValue(e+"_enable")?"checked":"")+">",i+="</td>",i+='<td width="23%">',i+='<input id="'+e+'_min" class="phFilter" data-alias="'+e+'_min" style="width: 100%" placeholder="min" value="'+(GM_getValue(e+"_min")||"")+'">',i+="</td>",i+='<td width="23%">',i+='<input id="'+e+'_max" class="phFilter" data-alias="'+e+'_max" style="width: 100%" placeholder="max" value="'+(GM_getValue(e+"_max")||"")+'">',i+="</td>"},window.filterTableRow=function(t,e){if("HIDE"===k&&1===t.player.is_inactive)return!1;if("ONLY"===k&&0===t.player.is_inactive)return!1;if(null!==e){if("HIDE"===M&&0===t.player.is_inactive&&getInt(t.player.score)<getInt(e.score)/5)return!1;if("ONLY"===M&&0===t.player.is_inactive&&getInt(t.player.score)>=getInt(e.score)/5)return!1}if("HIDE"===G&&1===t.player.on_vacation)return!1;if("ONLY"===G&&0===t.player.on_vacation)return!1;if(e){if("HIDE"===R&&null!==t.player.alliance_id&&t.player.alliance_id===e.alliance_id)return!1;if("ONLY"===R&&(null===t.player.alliance_id||t.player.alliance_id!==e.alliance_id))return!1}return("HIDE"!==V||""===t.last_spy_report)&&(("ONLY"!==V||""!==t.last_spy_report)&&(("HIDE"!==P||""===t.last_battle_report)&&(("ONLY"!==P||""!==t.last_battle_report)&&(!("1"===H&&getInt(O)>0&&getInt(O)>getInt(t.player.score))&&(!("1"===H&&getInt(A)>0&&getInt(A)<getInt(t.player.score))&&(!("1"===D&&getInt(L)>0&&getInt(L)>getInt(t.player.score_building))&&(!("1"===D&&getInt(B)>0&&getInt(B)<getInt(t.player.score_building))&&(!("1"===z&&getInt(N)>0&&getInt(N)>getInt(t.player.score_science))&&(!("1"===z&&getInt(C)>0&&getInt(C)<getInt(t.player.score_science))&&(!("1"===T&&getInt(E)>0&&getInt(E)>getInt(t.player.score_military))&&(!("1"===T&&getInt(F)>0&&getInt(F)<getInt(t.player.score_military))&&(!("1"===K&&getInt(J)>0&&getInt(J)>getInt(t.player.score_defense))&&(!("1"===K&&getInt(j)>0&&getInt(j)<getInt(t.player.score_defense))&&(!("1"===Y&&getInt(U)>0&&getInt(U)>getInt(t.inactive_since))&&(!("1"===Y&&getInt(q)>0&&getInt(q)<getInt(t.inactive_since))&&(!("1"===Q&&getInt(W)>0&&getInt(W)>getInt(t.last_battle_report_hours))&&(!("1"===Q&&getInt(Z)>0&&getInt(Z)<getInt(t.last_battle_report_hours))&&(!("1"===X&&getInt(tt)>0&&getInt(tt)>getInt(t.last_spy_report_hours))&&(!("1"===X&&getInt(et)>0&&getInt(et)<getInt(t.last_spy_report_hours))&&(!("1"===it&&getInt(at)>0&&getInt(at)>getInt(t.last_spy_metal))&&(!("1"===it&&getInt(lt)>0&&getInt(lt)<getInt(t.last_spy_metal))&&(!("1"===nt&&getInt(rt)>0&&getInt(rt)>getInt(t.last_spy_crystal))&&(!("1"===nt&&getInt(st)>0&&getInt(st)<getInt(t.last_spy_crystal))&&(!("1"===ot&&getInt(dt)>0&&getInt(dt)>getInt(t.last_spy_deuterium))&&!("1"===ot&&getInt(ct)>0&&getInt(ct)<getInt(t.last_spy_deuterium))))))))))))))))))))))))))},window.savePhOption=function(t,e){GM_setValue(t,e),x.renderHtml()},parseUrl()}();
+(function() {
+    'use strict';
+
+    $('head').append('<link rel="stylesheet" href="https://pr0game-hub.local/skin.css">');
+
+    // API settings
+    const version = '0.4.0';
+    let apiKey = GM_getValue('api_key');
+    let apiKeyValid = GM_getValue('api_key_valid') === '1';
+    let debugMode = GM_getValue('debug_mode') === '1';
+    let developerMode = GM_getValue('developer_mode') === '1';
+    let apiUrl = developerMode ? 'http://pr0game-hub.local/' : 'https://pr0game-hub.esKju.net/';
+
+    // colors
+    const cBlack = [22, 22, 24];
+    const cWhite = [242, 245, 244];
+    const cRed = [238, 77, 46];
+    const cGray = [136, 136, 136];
+    const cPink = [255, 0, 130];
+    const cGreen = [92, 184, 92];
+    const cBlue = [0, 143, 255];
+    const cYellow = [247, 197, 22];
+    const cCyan = [0, 255, 255];
+
+    window.getCoordinates = function (string) {
+        return string ? string.match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/) : false;
+    }
+
+    window.isNewerVersionAvailable = function (apiVersion) {
+        const currentVersion = version.split('.');
+        const latestVersion = apiVersion.split('.');
+
+        // new major
+        if (getInt(latestVersion[0]) > getInt(currentVersion[0])) {
+            return true;
+        }
+
+        // major version is newer than server's version
+        if (getInt(latestVersion[0]) < getInt(currentVersion[0])) {
+            return false;
+        }
+
+        // new minor
+        if (getInt(latestVersion[1]) > getInt(currentVersion[1])) {
+            return true;
+        }
+
+        // minor version is newer than server's version
+        if (getInt(latestVersion[1]) < getInt(currentVersion[1])) {
+            return false;
+        }
+
+        // new fix
+        return getInt(latestVersion[2]) > getInt(currentVersion[2]);
+    }
+
+    // identify own coords by selected planet
+    const ownCoords = getCoordinates($('#planetSelector option:selected').html());
+    const ownGalaxy = ownCoords[1];
+    const ownSystem = ownCoords[2];
+    const ownPlanet = ownCoords[3];
+    let ownPlayer = null;
+
+    // internal vars
+    let playerUpdateQueue = [];
+    let menu = null;
+    let pageHub = null;
+    let pageOverview = null;
+    let pageBuildings = null;
+    let pageResearch = null;
+    let pageFleet = null;
+
+    // regex
+    const rxNumber = '([.0-9]+)';
+
+
+    window.getJSON = function (url, callback) {
+        url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
+
+        if (debugMode) {
+            console.log('GET', url);
+        }
+
+        return GM_xmlhttpRequest({
+            method: 'GET',
+            url: url,
+            onload: function (response) {
+                if (debugMode) {
+                    console.log(response.responseText);
+                }
+
+                callback(response);
+            }
+        });
+    };
+    window.postJSON = function (url, data, callback) {
+        url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
+
+        if (debugMode) {
+            console.log('POST', url, data);
+        }
+
+        return GM_xmlhttpRequest({
+            method: 'POST',
+            data: JSON.stringify(data),
+            url: url,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            onload: function (response) {
+                if (debugMode) {
+                    console.log(response.status);
+                }
+
+                callback(response);
+            },
+            onerror: function (response) {
+                if (debugMode) {
+                    console.log(response.status);
+                }
+            }
+        });
+    };
+    window.parseUrl = function () {
+        $('head').append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');
+        const url = window.location.href.replace('www.', '');
+
+        // overview page
+        if (url === 'https://pr0game.com/game.php' || url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=overview/) === 0) {
+            $('span.fleets').each(function(key, obj) {
+                $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /, ''));
+            });
+
+            $('span.fleets').each(function(key, obj) {
+                $(obj).parent().html($(obj).parent().html().replace(/Flotten/, 'Flotte'));
+            });
+
+            $('span.fleets').each(function(key, obj) {
+                $(obj).parent().html($(obj).parent().html().replace(/\. Mission\: /, '</span><span>'));
+            });
+
+            $('span.fleets').each(function(key, obj) {
+                var end = new Date($(obj).attr('data-fleet-end-time') * 1000);
+
+                $(obj).parent().append(' <span>' + end.toLocaleTimeString("de-DE") + '</span>');
+            });
+
+            pageOverview = new PageOverview();
+            pageOverview.init();
+        }
+
+        // stats page
+        else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=statistics/) === 0) {
+            parsePageStatistics();
+        }
+
+        // message page
+        else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=messages/) === 0) {
+            parsePageMessages();
+        }
+
+        // galaxy page
+        else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=galaxy/) === 0) {
+            parsePageGalaxy();
+        }
+
+        // player page
+        else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=playerCard/) === 0) {
+            parsePagePlayerCard();
+        }
+
+        // player page
+        else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=alliance/) === 0) {
+            parsePageAlliance();
+        }
+
+        // buildings page
+        else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=buildings/) === 0) {
+            pageBuildings = new PageBuildings();
+            pageBuildings.init();
+        }
+
+        // research page
+        else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=research/) === 0) {
+            pageResearch = new PageResearch();
+            pageResearch.init();
+        }
+
+        // fleet page
+        else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=fleetTable/) === 0) {
+            pageFleet = new PageFleet();
+            pageFleet.init();
+        }
+
+        pageHub = new PageHub();
+        pageHub.init();
+
+        menu = new Menu();
+        menu.init();
+    };
+
+    window.PageHub = function() {
+        this.container = $('content');
+        this.init = function() {
+        };
+
+        this.loadPage = function(alias) {
+            switch(alias) {
+                case 'planets':
+                    this.clearPage();
+                    this.loadPagePlanets();
+                    break;
+
+                case 'research':
+                    this.clearPage();
+                    this.loadPageResearch();
+                    break;
+
+                case 'fleet':
+                    this.clearPage();
+                    this.loadPageFleet();
+                    break;
+
+                default:
+                    alert('unknown page ' + alias);
+            }
+        };
+
+        this.clearPage = function() {
+            this.container.html('');
+        };
+
+        this.loadPagePlanets = function() {
+            const $this = this;
+
+            getJSON('hub/planets', function(response) {
+                if(response.status !== 200) {
+                    $this.container.html('<p style="color: ' + getRgb(cRed) + ';">Du bist nicht berechtigt, diese Informationen zu sehen</p>');
+                }
+
+                const data = JSON.parse(response.responseText);
+                let html = '';
+
+                html += '<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Gebäudenamen zu sehen.</i></p>';
+                html += '<table class="table519">';
+                html += '<tr>';
+                html += '<th colspan="3">Koordinaten</th>';
+                html += '<th style="text-align: left;">Spieler</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Metallmine">M</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Kristallmine">K</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Deuteriumsynthetisierer">D</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Solarkraftwerk">S</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cPink) + '" title="Technodom">T</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Fusionskraftwerk">F</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cBlue) + '" title="Roboterfabrik">R</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cBlue) + '" title="Nanofabrik">N</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Raumschiffwerft">R</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Metallspeicher">M</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Kristallspeicher">K</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Deuteriumtank">D</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cPink) + '" title="Forschungslabor">F</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cBlue) + '" title="Terraformer">T</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Allianzdepot">A</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cYellow) + '" title="Mondbasis">M</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cYellow) + '" title="Phalanx">P</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cYellow) + '" title="Sprungtor">S</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Raketensilo">R</th>';
+                html += '</tr>';
+
+                $.each(data, function(key, obj) {
+                    html += '<tr>';
+                    html += '<td style="text-align: right; width: 35px">' + obj.galaxy + '</td>';
+                    html += '<td style="text-align: right; width: 35px">' + obj.system + '</td>';
+                    html += '<td style="text-align: right; width: 35px">' + obj.planet + '</td>';
+                    html += '<td style="text-align: left;">' + obj.name + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.metal_mine || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.crystal_mine || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.deuterium_mine || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.solar_plant || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.techno_dome || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.fusion_plant || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.robot_factory || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.nano_factory || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.hangar || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.metal_storage || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.crystal_storage || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.deuterium_storage || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.laboratory || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.terra_former || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.alliance_depot || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.base || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.phalanx || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.portal || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.missile_silo || '') + '</td>';
+                    html += '</tr>';
+                });
+
+                html += '</table>';
+
+                $this.container.html(html);
+            });
+        };
+
+        this.loadPageResearch = function() {
+            const $this = this;
+
+            getJSON('hub/research', function(response) {
+                const data = JSON.parse(response.responseText);
+                let html = '';
+
+                html += '<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Technologienamen zu sehen.</i></p>';
+                html += '<table class="table519">';
+                html += '<tr>';
+                html += '<td></td>';
+                html += '<td></td>';
+                html += '<td colspan="2"></td>';
+                html += '<td colspan="3">Flottenwert</td>';
+                html += '<td colspan="2">Technik</td>';
+                html += '<td colspan="3">Triebwerk</td>';
+                html += '<td colspan="3">Bewaffnung</td>';
+                html += '<td colspan="2"></td>';
+                html += '<td colspan="3">Produktion</td>';
+                html += '<td></td>';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<th style="text-align: left;">Spieler</th>';
+                html += '<th style="text-align: right;">Punkte</th>';
+                html += '<th style="text-align: right;" title="Spionagetechnik">S</th>';
+                html += '<th style="text-align: right;" title="Computertechnik">C</th>';
+                html += '<th style="text-align: right;" title="Waffentechnik">W</th>';
+                html += '<th style="text-align: right;" title="Schildtechnik">S</th>';
+                html += '<th style="text-align: right;" title="Raumschiffpanzerung">R</th>';
+                html += '<th style="text-align: right;" title="Energietechnik">E</th>';
+                html += '<th style="text-align: right;" title="Hyperraumtechnik">H</th>';
+                html += '<th style="text-align: right;" title="Verbrennungstriebwerk">V</th>';
+                html += '<th style="text-align: right;" title="Impulstriebwerk">I</th>';
+                html += '<th style="text-align: right;" title="Hyperraumantrieb">H</th>';
+                html += '<th style="text-align: right;" title="Lasertechnik">L</th>';
+                html += '<th style="text-align: right;" title="Ionentechnik">I</th>';
+                html += '<th style="text-align: right;" title="Plasmatechnik">P</th>';
+                html += '<th style="text-align: right;" title="Intergalaktisches Forschungsnetzwerk">I</th>';
+                html += '<th style="text-align: right;" title="Astrophysik">A</th>';
+                html += '<th style="text-align: right;" title="Produktionsmaximierung Metall">M</th>';
+                html += '<th style="text-align: right;" title="Produktionsmaximierung Kristall">K</th>';
+                html += '<th style="text-align: right;" title="Produktionsmaximierung Deuterium">D</th>';
+                html += '<th style="text-align: right;" title="Gravitonforschung">G</th>';
+                html += '</tr>';
+
+                $.each(data, function(key, obj) {
+                    html += '<tr>';
+                    html += '<td style="text-align: left;">' + obj.name + '</td>';
+                    html += '<td style="text-align: right;">' + obj.score_science + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.spy_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.computer_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.military_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.defense_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.shield_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.energy_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.hyperspace_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.combustion_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.impulse_motor_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.hyperspace_motor_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.laser_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.ion_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.buster_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.intergalactic_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.expedition_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.metal_proc_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.crystal_proc_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.deuterium_proc_tech || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.graviton_tech || '') + '</td>';
+                    html += '</tr>';
+                });
+
+                html += '</table>';
+
+                $this.container.html(html);
+            });
+        };
+
+        this.loadPageFleet = function() {
+            const $this = this;
+
+            getJSON('hub/fleet', function(response) {
+                const data = JSON.parse(response.responseText);
+                let html = '';
+
+                html += '<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Schiffsnamen zu sehen.</i></p>';
+                html += '<table class="table519">';
+                html += '<tr>';
+                html += '<th style="text-align: left;">Spieler</th>';
+                html += '<th style="text-align: right">Punkte</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Kleiner Transporter">KT</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Großer Transporter">GT</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Kolonieschiff">KS</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Recycler">Rec</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Spionagesonden">Spy</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Solar Satellit">Sat</th>';
+
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Leichter Jäger">LJ</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Schwerer Jäger">SJ</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Kreuzer">Xer</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Schlachtschiff">SS</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Bomber">B</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Zerstörer">Z</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Todesstern">DS</th>';
+                html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Schlachtkreuzer">SXer</th>';
+                html += '</tr>';
+
+                let style;
+                $.each(data, function(key, obj) {
+                    style = obj.name === 'Gesamt' ? 'font-weight: bold; padding-top: 5px; border-top: 1px solid ' + getRgb(cRed) + '; color: ' + getRgb(cRed) : '';
+                    html += '<tr>';
+                    html += '<td style="text-align: left; ' + style + '">' + obj.name + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.score_military || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.small_transporters || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.large_transporters || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.coloy_ships || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.recyclers || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.spy_drones || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.solar_satellites || '') + '</td>';
+
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.light_hunters || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.heavy_hunters || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.cruisers || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.battleships || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.bombers || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.destroyers || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.death_stars || '') + '</td>';
+                    html += '<td style="text-align: right; ' + style + '">' + (obj.battle_cruisers || '') + '</td>';
+                    html += '</tr>';
+                });
+
+                html += '</table>';
+
+                $this.container.html(html);
+            });
+        };
+    };
+
+    window.Menu = function() {
+        this.init = function() {
+            let html = '';
+            html += '<li><a style="color: #ee4d2e !important">pr0game Hub v' + version + '</a></li>';
+            html += '<li data-hub-page="planets"><a href="javascript:void(0)"><i class="fa fa-globe-asia"></i> Planeten</a></li>';
+            html += '<li data-hub-page="research"><a href="javascript:void(0)"><i class="fa fa-flask"></i> Forschung</a></li>';
+            html += '<li data-hub-page="fleet"><a href="javascript:void(0)"><i class="fa fa-fighter-jet"></i> Flotte</a></li>';
+
+            $('ul#menu').prepend(html);
+
+            $('*[data-hub-page]').each(function(key, obj) {
+                $(obj).click(function() {
+                    pageHub.loadPage($(obj).attr('data-hub-page'));
+                });
+            });
+
+            let content;
+            $('.res_max').each(function(key, obj) {
+                content = $(obj).html();
+                $(obj).html(content.replace('.000', 'K'));
+            });
+        };
+    };
+
+    window.PageFleet = function()
+    {
+        this.data = [];
+
+        this.init = function() {
+            const $this = this;
+            const fleet = [];
+            let info;
+
+            $('.table519 tr').each(function(key, obj) {
+                info = $(obj).html().replace(/\n/,'').match(/id\=\"ship([0-9]+)\_value\"\>([\.0-9]+)\</);
+
+                if(info) {
+                    fleet.push({
+                        ship_id: getInt(info[1]),
+                        amount: getInt(info[2])
+                    });
+                }
+            });
+
+            let fleetInfo;
+            let startPlanet;
+            let ships;
+            $('content > table:first-child > tbody > tr').each(function(key, obj) {
+                if($(obj).find('td').length > 1) {
+                    fleetInfo = $(obj).find('td:nth-child(3)').html();
+                    startPlanet = $(obj).find('td:nth-child(4)').html().match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/);
+
+                    ships = fleetInfo.match(/\'\>([^<]+)\:\<\/td\>\<td class\=\'transparent\'\>([\.0-9]+)\</g);
+
+                    if(ships && startPlanet[1] == ownGalaxy && startPlanet[2] == ownSystem && startPlanet[3] == ownPlanet) {
+                        $.each(ships, function(sKey, sObj) {
+                            info = sObj.match(/\'\>([^<]+)\:\<\/td\>\<td class\=\'transparent\'\>([\.0-9]+)\</);
+
+                            if(info) {
+                                fleet.push({
+                                    ship_id: info[1],
+                                    amount: getInt(info[2])
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+
+            postJSON('planets/fleet', {
+                coordinates: ownGalaxy + ':' + ownSystem + ':' + ownPlanet,
+                fleet
+            }, function(response) {
+                $this.data = JSON.parse(response.responseText);
+
+                let html = '<br><table class="table 519" style="max-width: 519px !important"><tr><th style="text-align: left">Schiffstyp</th><th style="text-align: right">Anzahl (planetübergreifend)</th></tr>';
+                $.each($this.data, function(key, obj) {
+                    html += '<tr><td style="text-align: left">' + obj.name + '</td><td style="text-align: right">' + obj.sum + '</td></tr>';
+                });
+
+                $('content').append(html + '</table><p style="max-width: 519px !important; margin: 10px auto"><i>Diese Anzahl der stationierten und in der Luft befindlichen Schiffe (Aktiver Planet = Startplanet) wird aktualisiert, sobald die entsprechende Flottenseite des Planeten geöffnet wird.<br><br>Nach Kampf mit Verlust, werden die verlorenen Schiffe also erst nach Aufruf der Flottenansicht am Startplaneten aktualisiert. Nach Schiffsbau v.v.<br><br>Nach erfolgreicher Stationierung müssen somit die Flottenseiten von Start- und Zielplanet zur Aktualisierung geöffnet werden.</i></p>');
+            });
+        };
+    };
+
+    window.PageBuildings = function()
+    {
+        this.data = [];
+
+        this.convertHtml = function() {
+            $('.infos, .infoso').each(function(key, obj) {
+                $(obj).addClass('building');
+                $($(obj).find('div:nth-child(2)')).addClass('building-left');
+                $($(obj).find('div:nth-child(3)')).addClass('building-right');
+            });
+
+            $('content').html($('content').html().replace(/\(Stufe ([0-9]+)\)/g, '<br><span class="highlight">Stufe $1</span><br>'));
+        };
+
+        this.init = function() {
+            const $this = this;
+            const buildings = [];
+            let info;
+            let level;
+
+            this.convertHtml();
+
+            $('.buildn').each(function(key, obj) {
+                info = $(obj).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/);
+                level = $(obj).html().match(/\(Stufe ([0-9]+)\)/);
+
+                buildings.push({
+                    building_id: getInt(info[1]),
+                    level: level ? getInt(level[1]) : 0
+                });
+            });
+
+            postJSON('planets/buildings', {
+                coordinates: ownGalaxy + ':' + ownSystem + ':' + ownPlanet,
+                buildings
+            }, function(response) {
+                $this.data = JSON.parse(response.responseText);
+
+                $('.buildn').each(function(key, obj) {
+                    info = $(obj).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/);
+                    $(obj).append('Max Stufe: ' + $this.data[info[1]].max_level);
+
+                    if($this.data[info[1]].max_level > 0) {
+                        $(obj).append('<div class="player_names">' + $this.data[info[1]].player_names.replace(/,/g,', ') + '</div>');
+                    }
+                });
+            });
+        };
+    };
+
+    window.PageResearch = function()
+    {
+        this.data = [];
+
+        this.convertHtml = function() {
+            $('.infos, .infoso').each(function(key, obj) {
+                $(obj).addClass('building');
+                $($(obj).find('div:nth-child(2)')).addClass('building-left');
+                $($(obj).find('div:nth-child(3)')).addClass('building-right');
+            });
+
+            $('content').html($('content').html().replace(/\(Stufe ([0-9]+)\)/g, '<br><span class="highlight">Stufe $1</span><br>'));
+        };
+
+        this.init = function() {
+            const $this = this;
+            const research = [];
+            let info;
+            let level;
+
+            this.convertHtml();
+
+            $('.buildn').each(function(key, obj) {
+                info = $(obj).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/);
+                level = $(obj).html().match(/\(Stufe ([0-9]+)\)/);
+
+                research.push({
+                    research_id: getInt(info[1]),
+                    level: level ? getInt(level[1]) : 0
+                });
+            });
+
+            postJSON('players/research', {research}, function(response) {
+                $this.data = JSON.parse(response.responseText);
+
+                $('.buildn').each(function(key, obj) {
+                    info = $(obj).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/);
+                    $(obj).append('Max: ' + $this.data[info[1]].max_level);
+
+                    if($this.data[info[1]].max_level > 0) {
+                        $(obj).append('<div class="player_names">' + $this.data[info[1]].player_names.replace(/,/g,', ') + '</div>');
+                    }
+                });
+            });
+        };
+    };
+
+    window.PageOverview = function()
+    {
+        this.isLoading = false;
+        this.cacheKey = 'overviewData';
+        this.container = null;
+        this.request = null;
+        this.fleetQueue = [];
+
+        this.init = function() {
+            this.parseOwnAttacks();
+            this.prepareHtml();
+            this.renderHtml();
+            this.loadData();
+            this.bindHotkeys();
+        };
+
+        this.bindHotkeys = function() {
+            const $this = this;
+            const mappingFilters = {
+                i: 'filter_inactive',
+                n: 'filter_noobs',
+                u: 'filter_vacation',
+                a: 'filter_alliance',
+                s: 'filter_spy_report',
+                k: 'filter_battle_report',
+            };
+
+            const mappingThresholds = {
+                p: 'filter_score_enable',
+                g: 'filter_score_building_enable',
+                f: 'filter_score_science_enable',
+                m: 'filter_score_fleet_enable',
+                v: 'filter_score_defense_enable',
+                i: 'filter_inactive_since_enable',
+                k: 'filter_last_battle_report_enable',
+                s: 'filter_last_spy_report_enable',
+                q: 'filter_metal_enable',
+                w: 'filter_crystal_enable',
+                e: 'filter_deuterium_enable',
+            };
+
+            $(window).keypress(function(e) {
+                const key = e.key.toLowerCase();
+                let newValue = null;
+
+                if($('*:focus').length === 0) {
+                    if(!e.shiftKey) {
+                        if(mappingFilters[key]) {
+                            switch(GM_getValue(mappingFilters[key])) {
+                                case 'HIDE':
+                                    newValue = 'ONLY';
+                                    break;
+
+                                case 'ONLY':
+                                    newValue = 'ALL';
+                                    break;
+
+                                default:
+                                    newValue = 'HIDE';
+                            }
+
+                            GM_setValue(mappingFilters[key], newValue)
+                        }
+                    }
+
+                    // thresholds
+                    else {
+                        if(mappingThresholds[key]) {
+                            switch(GM_getValue(mappingThresholds[key])) {
+                                case '0':
+                                    newValue = '1';
+                                    break;
+
+                                default:
+                                    newValue = '0';
+                            }
+
+                            GM_setValue(mappingThresholds[key], newValue)
+                        }
+                    }
+
+                    $this.renderHtml();
+                }
+            });
+        }
+
+        this.setLoading = function(value) {
+            this.isLoading = value;
+        };
+
+        this.prepareHtml = function() {
+            $('.infos:last-child').css('margin-top', '-17px');
+            this.container = $('.infos:last-child');
+            this.container.html('<div style="padding: 15px"><i class="fa fa-spinner fa-spin"></i> Loading overview...</div>');
+        };
+
+        this.checkVersion = function() {
+            var data = this.getData();
+
+            if (data && isNewerVersionAvailable(data.version)) {
+                $('body').prepend('<div style="padding: 10px 15px; background: ' + getRgb(cRed) + '; color: ' + getRgb(cWhite) + '; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"><i class="fa fa-exclamation-triangle"></i>  Eine neue Plugin-Version v<a href="https://pr0game-hub.eskju.net/download/releases/pr0game-hub.v' + data.version + '.js" target="_blank" download>' + data.version + '</a> ist verf&uuml;gbar.</div>');
+            }
+        };
+
+        this.parseOwnAttacks = function() {
+            var $this = this;
+            let coordinates = null;
+
+            $('#hidden-div2 > li > span:last-child').each(function(key, obj) {
+                obj = $(obj);
+
+                if(obj.hasClass('ownattack')) {
+                    coordinates = $(obj).find('.ownattack');
+
+                    $this.fleetQueue.push({
+                        from: $(coordinates[1]).html().replace(/\[(.*)\]/,'$1'),
+                        to: $(coordinates[2]).html().replace(/\[(.*)\]/,'$1'),
+                        type: obj.attr('class'),
+                        time: $(obj).parent().find('span.fleets')
+                    });
+                }
+
+                if(obj.hasClass('ownespionage')) {
+                    coordinates = $(obj).find('.ownespionage');
+
+                    $this.fleetQueue.push({
+                        from: $(coordinates[1]).html().replace(/\[(.*)\]/,'$1'),
+                        to: $(coordinates[2]).html().replace(/\[(.*)\]/,'$1'),
+                        type: obj.attr('class'),
+                        time: $(obj).parent().find('span.fleets')
+                    });
+                }
+            });
+        },
+
+            this.loadData = function() {
+                var $this = this;
+
+                if(this.request !== null) {
+                    this.request.abort();
+                }
+
+                this.setLoading(true);
+                this.request = postJSON('players/overview', {
+                    galaxy: ownGalaxy,
+                    system: ownSystem,
+                    planet: ownPlanet,
+                    order_by: GM_getValue('orderBy'),
+                    order_direction: GM_getValue('orderDirection'),
+                    date_for_humans: (GM_getValue('date_for_humans') || '0') === '1'
+                }, function (response) {
+                    GM_setValue($this.cacheKey, response.responseText);
+                    $this.setLoading(false);
+                    $this.checkVersion();
+                    $this.renderHtml();
+                });
+            };
+
+        this.getData = function() {
+            var $this = this;
+            var content = GM_getValue(this.cacheKey);
+
+            try {
+                var fn = $this.sortData;
+                var data = JSON.parse(content);
+
+                // sort player list
+                data.players = data.players.sort(fn);
+
+                return data;
+            }
+            catch(msg) {
+                return {
+                    players: [],
+                    outdated_ids: [],
+                    version: version,
+                    player: null
+                };
+            };
+        };
+
+        this.bindFilters = function() {
+            $('.phFilter').each(function(key, obj) {
+                $(obj).on('change', function() {
+                    if($(this).attr('type') === 'checkbox') {
+                        savePhOption($(this).attr('data-alias'), $(this)[0].checked ? '1' : '0');
+                    }
+                    else {
+                        savePhOption($(this).attr('data-alias'), $(this).val());
+                    }
+                });
+            });
+        };
+
+        this.bindHeadlineSort = function() {
+            var $this = this;
+
+            $('th.sortable').each(function (key, obj) {
+                $(obj).css('cursor', 'pointer');
+
+                if ($(obj).attr('data-sort') == (GM_getValue('orderBy') || 'distance') && $(obj).attr('data-direction') == (GM_getValue('orderDirection') || 'ASC')) {
+                    $(obj).prepend($this.isLoading ? '<i class="fa fa-spin fa-spinner fa"></i> ' : '<i class="fa fa-caret-down"></i> ');
+                }
+
+                $(obj).click(function () {
+                    $this.orderBy($(obj).attr('data-sort'), $(obj).attr('data-direction'));
+                    $this.renderHtml();
+                });
+            });
+        };
+
+        this.orderBy = function(orderBy, orderDirection) {
+            GM_setValue('orderBy', orderBy);
+            GM_setValue('orderDirection', orderDirection);
+
+        }
+
+        this.sortData = function(a, b) {
+            let property = GM_getValue('orderBy') || 'distance';
+            const invertSort = GM_getValue('orderDirection') !== 'DESC' ? 1 : -1;
+
+            const offsets = property.split('.');
+            if(offsets.length === 2) {
+                a = a[offsets[0]];
+                b = b[offsets[0]];
+                property = offsets[1];
+            }
+
+            let aVal = a[property] || '';
+            let bVal = b[property] || '';
+
+            if(property !== 'alliance_name' && property !== 'name') {
+                aVal = getInt(aVal);
+                bVal = getInt(bVal);
+            }
+
+            return ((aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0) * invertSort;
+        };
+
+        this.applyRowStyles = function(response) {
+            $(response.players).each(function (key, obj) {
+                var selector = $('#row' + obj.id);
+                var columns = $(selector).find('td');
+                var links = selector.find('td a');
+                if(response.player) selector.css(getPlayerRowStyle(obj.player, response.player.score));
+                $(columns[6]).css(getPlayerScoreStyle(obj.player, response.player));
+                $(columns[7]).css(getPlayerScoreBuildingStyle(obj.player, response.player));
+                $(columns[8]).css(getPlayerScoreScienceStyle(obj.player, response.player));
+                $(columns[9]).css(getPlayerScoreMilitaryStyle(obj.player, response.player));
+                $(columns[10]).css(getPlayerScoreDefenseStyle(obj.player, response.player));
+                if(response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
+                if(response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
+
+                $('#lastSpyReport' + obj.id).click(function () {
+                    getJSON('spy-reports/' + obj.galaxy + '/' + obj.system + '/' + obj.planet, function (spyReports) {
+                        spyReports = JSON.parse(spyReports.responseText);
+                        showSpyReportHistory(spyReports);
+                    });
+                });
+            });
+        };
+
+        this.bindSettingsLink = function() {
+            var $this = this;
+
+            $('#showSettings').click(function() {
+                GM_setValue('hideSettings', '0');
+                $('#phSettings').show();
+                $this.renderHtml();
+            });
+
+            $('#hideSettings').click(function() {
+                GM_setValue('hideSettings', '1');
+                $('#phSettings').show();
+                $this.renderHtml();
+            });
+        };
+
+        this.bindSpyLinks = function() {
+            $('.spio-link').click(function () {
+                $.getJSON("game.php?page=fleetAjax&ajax=1&mission=6&planetID=" + $(this).attr('data-id'), function (data) {
+                    showMessage(data.mess, (data.code === 600 ? 'success' : 'danger'));
+                });
+            });
+        };
+
+        this.checkUpdatableIds = function(response) {
+            if (response.outdated_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227 && ownPlanet == 10) {
+                this.container.prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
+                $('#fetchMissingIdsBtn').click(function () {
+                    playerUpdateQueue = response.outdated_ids;
+
+                    $('#fetchMissingIdsBtn').remove();
+                    processQueue();
+                });
+            }
+        };
+
+        this.renderHtml = function()
+        {
+            var $this = this;
+            var html = '<table id="hubOverview" width="100%" style="max-width: 100% !important" class="table519"><tr>';
+            var response = this.getData();
+
+            updateConfigVars();
+
+            if(!response) {
+                return;
+            }
+
+            html += '<th style="text-align: center;">#</th>';
+            html += '<th class="sortable" data-sort="alliance_name" data-direction="ASC">Ally</th>';
+            html += '<th class="sortable" data-sort="player.name" data-direction="ASC">Spieler</th>';
+            html += '<th class="sortable" data-sort="distance" title="Distanz" data-direction="ASC" style="text-align: center;" id="sortByDistance" colspan="3"><i class="fa fa-map-marker-alt"></i></th>';
+            html += '<th class="sortable" data-sort="player.score" title="Punkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cBlue) + '" id="sortByScore"><i class="fa fa-chart-line"></i></th>';
+            html += '<th class="sortable" data-sort="player.score_building" title="Gebaeudepunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cGreen) + '" id="sortByScoreBuilding"><i class="fa fa-industry"></i></th>';
+            html += '<th class="sortable" data-sort="player.score_science" title="Forschungspunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cPink) + '" id="sortByScoreScience"><i class="fa fa-flask"></i></th>';
+            html += '<th class="sortable" data-sort="player.score_military" title="Militaerpunkte" data-direction="DESC" style="text-align: center; color:' + getRgb(cRed) + '" id="sortByScoreMilitary"><i class="fa fa-fighter-jet"></i></th>';
+            html += '<th class="sortable" data-sort="player.score_defense" title="Verteidigungspunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cYellow) + '" id="sortByScoreDefense"><i class="fa fa-shield"></i></th>';
+            html += '<th class="sortable" data-sort="last_battle_report_hours" title="Letzter Angriff" data-direction="ASC" style="text-align: right;">Attack <i class="fa fa-crosshairs"></i></th>';
+            html += '<th class="sortable" data-sort="last_spy_report_hours" title="Letze Spionage" data-direction="DESC" style="text-align: right;">Spy <i class="fa fa-user-secret"></i></th>';
+            html += '<th style="text-align: center;">Actions</th>';
+            html += '<th class="sortable" data-sort="last_spy_metal" data-direction="DESC" title="Metall (Letzte Spionage)" style="text-align: right;" id="sortBySpioMet">MET</th>';
+            html += '<th class="sortable" data-sort="last_spy_crystal" data-direction="DESC" title="Kristall (Letzte Spionage)" style="text-align: right;" id="sortBySpioCry">CRY</th>';
+            html += '<th class="sortable" data-sort="last_spy_deuterium" data-direction="DESC" title="Deuterium (Letzte Spionage)" style="text-align: right;" id="sortBySpioDeu">DEU</th></tr>';
+
+            if (response.player !== null) {
+                ownPlayer = response.player;
+            }
+
+            let counter = 0;
+            $(response.players).each(function (key, obj) {
+                if(filterTableRow(obj, response.player)) {
+                    counter++;
+                    html += '<tr id="row' + obj.id + '">';
+                    html += '<td>' + counter + '</td>';
+                    html += '<td style="text-align: left; max-width: 50px"><div style="max-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (obj.alliance_name || '---') + '</div></td>';;
+                    html += '<td style="text-align: left; max-width: 100px"><div style="max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
+
+                    if (obj.inactive_since !== null && obj.inactive_since < 48) {
+                        html += '<span style="padding: 2px 5px; border-radius: 2px; background: ' + getRgb(cRed) + '; color: ' + getRgb(cWhite) + '; border-radius: 2px; margin-right: 5px; font-size: 10px;">' + obj.inactive_since + 'H</span>';
+                    }
+
+                    html += '<a href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + '</a></div></td>';
+                    html += '<td id="row' + obj.id + 'Galaxy">' + (obj.galaxy || '---') + '</td>';
+                    html += '<td id="row' + obj.id + 'System"><a href="/game.php?page=galaxy&galaxy=' + (obj.galaxy || '') + '&system=' + (obj.system || '') + '">' + (obj.system || '---') + '</a></td>';
+                    html += '<td id="row' + obj.id + 'Planet">' + (obj.planet || '---') + '</td>';
+                    html += '<td id="row' + obj.id + 'Score">' + (obj.player.score || '') + '</td>';
+                    html += '<td id="row' + obj.id + 'ScoreBuilding">' + (obj.player.score_building || '') + '</td>';
+                    html += '<td id="row' + obj.id + 'ScoreScience">' + (obj.player.score_science || '') + '</td>';
+                    html += '<td id="row' + obj.id + 'ScoreMilitary">' + (obj.player.score_military || '') + '</td>';
+                    html += '<td id="row' + obj.id + 'ScoreDefense">' + (obj.player.score_defense || '') + '</td>';
+                    html += '<td style="text-align: right">';
+
+                    var fleetQueueItemsDisplayed = 0;
+                    $.each($this.fleetQueue, function(i, fleetQueueItem) {
+                        if(fleetQueueItem.to == obj.coordinates || fleetQueueItem.from == obj.coordinates) {
+                            switch(fleetQueueItem.type) {
+                                case 'flight ownattack':
+                                    html += '<div style="text-align: center; background: ' + getRgb(cRed) + '; margin-bottom: -1px; color: ' + getRgb(cWhite) + '; border-radius: 2px; padding: 2px 5px; font-size: 10px;">' + fleetQueueItem.time[0].outerHTML + '</div>';
+                                    fleetQueueItemsDisplayed++;
+                                    break;
+
+                                case 'return ownattack':
+                                    html += '<div style="text-align: center; background: ' + getRgb(cBlack) + '; color: ' + getRgb(cRed) + '; outline: 1px solid ' + getRgb(cRed) + '; outline-offset: -1px; border-radius: 2px; padding: 2px 5px; font-size: 10px;">' + fleetQueueItem.time[0].outerHTML + '</div>';
+                                    fleetQueueItemsDisplayed++;
+                                    break;
+
+                                case 'flight ownespionage':
+                                    html += '<div style="text-align: center; background: ' + getRgb(cYellow) + '; margin-bottom: -1px; color: ' + getRgb(cBlack) + '; border-radius: 2px; padding: 2px 5px; font-size: 10px;">' + fleetQueueItem.time[0].outerHTML + '</div>';
+                                    fleetQueueItemsDisplayed++;
+                                    break;
+
+                                case 'return ownespionage':
+                                    html += '<div style="text-align: center; background: ' + getRgb(cBlack) + '; color: ' + getRgb(cYellow) + '; outline: 1px solid ' + getRgb(cYellow) + '; outline-offset: -1px; border-radius: 2px; padding: 2px 5px; font-size: 10px;">' + fleetQueueItem.time[0].outerHTML + '</div>';
+                                    fleetQueueItemsDisplayed++;
+                                    break;
+                            }
+                        }
+                    });
+
+                    html += (fleetQueueItemsDisplayed === 0 ? (obj.last_battle_report || '') : '');
+                    html +=' </td>';
+                    html += '<td style="text-align: right; cursor: pointer" id="lastSpyReport' + obj.id + '">' + (obj.last_spy_report || '') + '</td>';
+                    html += '<td>';
+
+                    if (obj.external_id) {
+                        html += '[<a class="spio-link" data-id="' + obj.external_id + '" style="cursor: pointer">S</a>]';
+                    } else {
+                        html += ' [<a style="color: #666" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=6" style="cursor: pointer">S</a>]';
+                    }
+
+                    html += ' [<a  href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=1" style="cursor: pointer">A</a>]';
+
+                    html += '</td>';
+                    html += '<td style="text-align: right;">' + (obj.last_spy_metal || '') + '</td>';
+                    html += '<td style="text-align: right;">' + (obj.last_spy_crystal || '') + '</td>';
+                    var ressSum = Math.ceil(getInt(obj.last_spy_metal) / 2 + getInt(obj.last_spy_crystal) / 2 + getInt(obj.last_spy_deuterium) / 2);
+                    html += '<td style="text-align: right;" title="' + Math.ceil(ressSum / 5000) + ' KT, ' + ressSum + ' raidable">' + (obj.last_spy_deuterium || '') + '</td>';
+                    html += '</tr>';
+                }
+            });
+
+            this.container.html(getOverviewHeader() + html + '</table>');
+            this.bindFilters();
+            this.applyRowStyles(response);
+            this.bindHeadlineSort();
+            this.bindSettingsLink();
+            this.bindSpyLinks();
+            this.checkUpdatableIds(response);
+        }
+    };
+
+    window.parsePageStatistics = function () {
+        var userIds = [];
+        var inactiveIds = [];
+        var vacationIds = [];
+
+        $('.table519:nth-child(2) tr').each(function (key, obj) {
+            if (key > 0) {
+                var userId = parseInt($(obj).find('td:nth-child(2) a').attr('onclick').replace(/return Dialog\.Playercard\((.*)\, (.*)\);/, '$1'));
+                userIds.push(userId);
+
+                $(obj).attr('id', 'row' + userId);
+
+                if ($(obj).find('td:nth-child(2) .galaxy-short-inactive').length > 0) {
+                    inactiveIds.push(userId);
+                }
+
+                if ($(obj).find('td:nth-child(2) .galaxy-short-vacation').length > 0) {
+                    vacationIds.push(userId);
+                }
+            } else {
+                $(obj).append('<th>Koords</th>');
+                $(obj).append('<th>B</th>');
+                $(obj).append('<th>S</th>');
+                $(obj).append('<th>M</th>');
+                $(obj).append('<th>D</th>');
+            }
+        });
+
+        postJSON('players/stats', {
+            ids: userIds,
+            inactive_ids: inactiveIds,
+            vacation_ids: vacationIds,
+            order_by: GM_getValue('orderBy')
+        }, function (response) {
+            response = JSON.parse(response.responseText);
+
+            $(response.players).each(function (key, obj) {
+                var selector = $('#row' + obj.id);
+                selector.append('<td id="row' + obj.id + 'Coordinates">' + (obj.main_coordinates || '---') + '</td>');
+                selector.append('<td id="row' + obj.id + 'ScoreBuilding">' + (obj.score_building || '') + '</td>');
+                selector.append('<td id="row' + obj.id + 'ScoreScience">' + (obj.score_science || '') + '</td>');
+                selector.append('<td id="row' + obj.id + 'ScoreMilitary">' + (obj.score_military || '') + '</td>');
+                selector.append('<td id="row' + obj.id + 'ScoreDefense">' + (obj.score_defense || '') + '</td>');
+
+                selector.css(getPlayerRowStyle(obj));
+                $('#row' + obj.id + ' td:nth-child(5)').css(getPlayerScoreStyle(obj, response.player));
+                $('#row' + obj.id + 'ScoreBuilding').css(getPlayerScoreBuildingStyle(obj, response.player));
+                $('#row' + obj.id + 'ScoreScience').css(getPlayerScoreScienceStyle(obj, response.player));
+                $('#row' + obj.id + 'ScoreMilitary').css(getPlayerScoreMilitaryStyle(obj, response.player));
+                $('#row' + obj.id + 'ScoreDefense').css(getPlayerScoreDefenseStyle(obj, response.player));
+            });
+
+            if (response.missing_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227) {
+                $('content').prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.missing_ids.length + ' missing IDs</button>');
+                $('#fetchMissingIdsBtn').click(function () {
+                    playerUpdateQueue = response.missing_ids;
+
+                    $('#fetchMissingIdsBtn').remove();
+                    processQueue();
+                });
+            }
+
+            if (response.outdated_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227) {
+                $('content').prepend('<button id="fetchUpdatableIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
+                $('#fetchUpdatableIdsBtn').click(function () {
+                    playerUpdateQueue = response.outdated_ids;
+
+                    $('#fetchMissingIdsBtn').remove();
+                    processQueue();
+                });
+            }
+        });
+    };
+    window.parsePageMessages = function () {
+        var messages = $($('#messagestable > tbody > tr').get().reverse());
+        messages.each(function (key, obj) {
+            // spy report
+            if ($(obj).find('.spyRaport').length > 0) {
+                var dateTime = $(messages[key - 1]).find('td:nth-child(2)').html();
+
+                var headerText = $(obj).find('.spyRaportHead a').html();
+                var parseResult = headerText.match(/Spionagebericht von (.*) \[([0-9]+)\:([0-9]+)\:([0-9]+)\] am (.*)/, headerText);
+                var galaxy = parseResult[2];
+                var system = parseResult[3];
+                var planet = parseResult[4];
+                var timestamp = parseResult[5];
+                var coords = galaxy + ':' + system + ':' + planet;
+
+                var labels = $(obj).find('.spyRaportContainerRow .spyRaportContainerCell:nth-child(2n+1)');
+                var values = $(obj).find('.spyRaportContainerRow .spyRaportContainerCell:nth-child(2n)');
+                var resources = {};
+
+                labels.each(function (labelKey, label) {
+                    resources[($(label).find('a').attr('onclick') || '').match(/\(([0-9]+)\)/)[1]] = getInt($(values[labelKey]).html());
+                });
+
+                postJSON('spy-reports', {
+                    id: parseInt($(obj).attr('class').match(/message\_([0-9]+)/)[1]),
+                    galaxy: parseInt(parseResult[2]),
+                    system: parseInt(parseResult[3]),
+                    planet: parseInt(parseResult[4]),
+                    timestamp: parseResult[5],
+                    resources: resources
+                }, function (response) {
+                });
+            }
+
+            if ($(obj).find('.raportMessage').length > 0) {
+                var html = $(obj).html();
+                var parseResult = getCoordinates($(obj).find('.raportMessage').html());
+                console.log(html);
+
+                postJSON('battle-reports', {
+                    report_id: html.match(/(raport|report)\=([^"]{32})/)[2],
+                    galaxy: parseInt(parseResult[1]),
+                    system: parseInt(parseResult[2]),
+                    planet: parseInt(parseResult[3]),
+                    attacker_lost: getInt(html.match(/Angreifer\: ([\.0-9]+)\</)[1]),
+                    defender_lost: getInt(html.match(/Verteidiger\: ([\.0-9]+)\</)[1]),
+                    metal: getInt(html.match(/(reportSteal|raportSteal) element901\"\>([\.0-9]+)\</)[2]),
+                    crystal: getInt(html.match(/(reportSteal|raportSteal) element902\"\>([\.0-9]+)\</)[2]),
+                    deuterium: getInt(html.match(/(reportSteal|raportSteal) element903\"\>([\.0-9]+)\</)[2]),
+                    debris_metal: getInt(html.match(/(reportDebris|raportDebris) element901\"\>([\.0-9]+)\</)[2]),
+                    debris_crystal: getInt(html.match(/(reportDebris|raportDebris) element902\"\>([\.0-9]+)\</)[2]),
+                    timestamp: $(messages[key + 1]).find('td:nth-child(2)').html()
+                }, function (response) {
+                });
+            }
+        });
+    }
+    window.parsePageGalaxy = function () {
+        $('tr td:nth-child(2) a.tooltip_sticky').each(function (key, obj) {
+            var tooltipSrc = $(obj).attr('data-tooltip-content');
+            var playerId = $(obj).parent().parent().find('td:nth-child(6) a').attr('data-tooltip-content').match(/Dialog\.Buddy\(([0-9]+)\)/);
+            playerId = playerId ? parseInt(playerId[1]) : null;
+
+            var coords = tooltipSrc.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/, tooltipSrc);
+            var planetId = tooltipSrc.match(/doit\(6\,([0-9]+)/, tooltipSrc);
+            planetId = planetId ? parseInt(planetId[1]) : null;
+
+            if (coords && planetId) {
+                postJSON('planets', {
+                    coordinates: coords[0],
+                    planet_id: planetId,
+                    player_id: playerId
+                }, function (response) {
+                });
+            }
+        });
+    };
+    window.parsePagePlayerCard = function () {
+        var allianceId = ($('#content tr:nth-child(4) a').attr('onclick') || '').match(/\&id\=([0-9]+)/);
+        var playerId = window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1];
+
+        postJSON('players/' + playerId, {
+            name: $('#content tr:nth-child(2) td:nth-child(2)').html(),
+            alliance_id: allianceId ? allianceId[1] : null,
+            alliance_name: $('#content tr:nth-child(4) a').html() || null,
+            main_coordinates: $('#content tr:nth-child(3) a').html().replace(/\[(.*)\]/, '$1'),
+            score_building: getInt($('#content tr:nth-child(6) td:nth-child(2)').html()),
+            score_science: getInt($('#content tr:nth-child(7) td:nth-child(2)').html()),
+            score_military: getInt($('#content tr:nth-child(8) td:nth-child(2)').html()),
+            score_defense: getInt($('#content tr:nth-child(9) td:nth-child(2)').html()),
+            score: getInt($('#content tr:nth-child(10) td:nth-child(2)').html()),
+            combats_won: getInt($('#content tr:nth-child(13) td:nth-child(2)').html()),
+            combats_draw: getInt($('#content tr:nth-child(14) td:nth-child(2)').html()),
+            combats_lost: getInt($('#content tr:nth-child(15) td:nth-child(2)').html()),
+            combats_total: getInt($('#content tr:nth-child(16) td:nth-child(2)').html()),
+            units_shot: getInt($('#content tr:nth-child(18) td:nth-child(2)').html()),
+            units_lost: getInt($('#content tr:nth-child(19) td:nth-child(2)').html()),
+            rubble_metal: getInt($('#content tr:nth-child(20) td:nth-child(2)').html()),
+            rubble_crystal: getInt($('#content tr:nth-child(21) td:nth-child(2)').html()),
+        }, function (response) {});
+
+        var tbl = $('table');
+        tbl.append('<tr><th colspan="3">Planeten</th></tr>');
+        getJSON('players/' + playerId + '/planets', function(response) {
+            if(response.status === 200) {
+                $.each(JSON.parse(response.responseText), function(key, obj) {
+                    tbl.append('<tr><td colspan="3" style="text-align: left">' + obj.coordinates + '</td></tr>');
+                });
+            }
+        });
+    }
+
+    window.parsePageAlliance = function () {
+        var allianceId = window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1];
+        var tbl = $($('content table')[0]);
+        tbl.append('<tr><th colspan="2">Planeten</th></tr>');
+        getJSON('alliances/' + allianceId + '/planets', function(response) {
+            if(response.status === 200) {
+                $.each(JSON.parse(response.responseText), function(key, obj) {
+                    tbl.append('<tr><td style="text-align: left">' + obj.coordinates + '</td><td style="text-align: left">' + obj.name + '</td></tr>');
+                });
+            }
+        });
+    }
+
+    window.getRgb = function(color) {
+        return 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
+    }
+
+    window.getPlayerRowStyle = function (obj, ownScore) {
+        if (obj.on_vacation === 1) {
+            return {background: getRgb(cBlue)};
+        } else if (ownPlayer !== null && (ownPlayer.alliance_id !== null && ownPlayer.alliance_id === obj.alliance_id)) {
+            return {background: getRgb(cGreen)};
+        } else if (obj.is_inactive === 1) {
+            return {background: getRgb(cCyan)};
+        } else if (getInt(obj.score) < ownScore / 5) {
+            return {background: getRgb(cGray)};
+        } else if (getInt(obj.score) > ownScore * 5) {
+            return {background: getRgb(cRed)};
+        }
+
+        return {};
+    }
+    window.getPlayerRowTdStyle = function (obj, ownScore) {
+        if (obj.on_vacation === 1) {
+            return {color: getRgb(cBlue)};
+        } else if (ownPlayer !== null && (ownPlayer.alliance_id !== null && ownPlayer.alliance_id === obj.alliance_id)) {
+            return {color: getRgb(cGreen)};
+        } else if (obj.is_inactive === 1) {
+            return {color: getRgb(cCyan)};
+        } else if (getInt(obj.score) < getInt(ownScore) / 5) {
+            return {color: getRgb(cGray)};
+        } else if (getInt(obj.score) > getInt(ownScore) * 5) {
+            return {color: getRgb(cRed)};
+        }
+
+        return {};
+    }
+    window.getColorIntensity = function (value, threshold) {
+        var intensity = value / threshold * 255;
+        return intensity > 255 ? 255 : intensity;
+    }
+    window.getColor = function pickHex(color1, weight) {
+        var color = [255, 255, 255];
+        var w1 = weight;
+        w1 = w1 < 0 ? 0 : w1;
+        w1 = w1 > 1 ? 1 : w1;
+        var w2 = 1 - w1;
+        w2 = w2 > 1 ? 1 : w2;
+        w2 = w2 < 0 ? 0 : w2;
+        var rgb = [Math.round(color1[0] * w1 + color[0] * w2),
+            Math.round(color1[1] * w1 + color[1] * w2),
+            Math.round(color1[2] * w1 + color[2] * w2)];
+        return 'rgb(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2] + ')';
+    };
+    window.getPlayerAttributeStyle = function(obj, player, alias, color) {
+        let referenceValue = 1;
+
+        if(cfgHighlight[alias] && cfgHighlight[alias].enabled) {
+            referenceValue = cfgHighlight[alias].threshold;
+        }
+        else {
+            if(player && player[alias]) {
+                referenceValue = getInt(player[alias]);
+            }
+        }
+
+        return {color: getColor(color, getInt(obj[alias]) / referenceValue)};
+    };
+
+    window.getPlayerScoreStyle = function (obj, player) {
+        return getPlayerAttributeStyle(obj, player, 'score', cBlue);
+    }
+    window.getPlayerScoreBuildingStyle = function (obj, player) {
+        return getPlayerAttributeStyle(obj, player, 'score_building', cGreen);
+    }
+    window.getPlayerScoreScienceStyle = function (obj, player) {
+        return getPlayerAttributeStyle(obj, player, 'score_science', cPink);
+    }
+    window.getPlayerScoreMilitaryStyle = function (obj, player) {
+        return getPlayerAttributeStyle(obj, player, 'score_military', cRed);
+    }
+    window.getPlayerScoreDefenseStyle = function (obj, player) {
+        return getPlayerAttributeStyle(obj, player, 'score_defense', cYellow);
+    }
+
+    window.getProgressBar = function () {
+        const progressBar = $('#progress-bar');
+
+        if (progressBar.length === 1) {
+            return progressBar;
+        }
+
+        $('body').prepend('<div style="padding: 10px 15px; background: ' + getRgb(cBlue) + '; color: ' + getRgb(cWhite) + '; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"></div>');
+        return $('#progress-bar');
+    };
+    window.processQueue = function () {
+        if (playerUpdateQueue.length > 0) {
+            getProgressBar().html('Updating ' + playerUpdateQueue.length + ' items ...');
+            var id = playerUpdateQueue.shift();
+            $('content').append('<iframe class="player-iframe" id="iframe' + id + '" width="1" height="1" src="/game.php?page=playerCard&id=' + id + '"></iframe>');
+            $('#iframe' + id).on('load', processQueue);
+            $('#iframe' + id).animate({left: 0 }, 1000, function() {
+                $(this).remove();
+            });
+        } else {
+            getProgressBar().html('Save & reload');
+            $('body').animate({opacity: 0}, 1000, function () {
+                window.location.reload();
+            });
+        }
+    };
+
+    window.showMessage = function(message, level) {
+        let background;
+        let color;
+
+        switch(level)
+        {
+            case 'danger':
+                background = '#161618';
+                color = '#d23c22';
+                break;
+
+            default:
+                background = '#161618';
+                color = '#5cb85c';
+                break;
+        }
+
+        $('#alertBox').remove();
+        $('body').prepend('<div id="alertBox" style="padding: 25px 15px; background: ' + background + '; color: ' + color + '; z-index: 10000; position: fixed; top: 0; left: 0; right: 0; opacity: 0; text-align: center; font-weight: bold;">' + message + '</div>');
+        $('#alertBox').animate({ opacity: 1 }, 250).animate({ opacity: 1 }, 2500).animate({ opacity: 0 }, 500, function() { $(this).remove(); });
+    }
+
+    window.showSpyReportHistory = function (spyReportHistory) {
+        $('body').append('<div id="spyReportBackdrop" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.95); z-index: 10000"></div>');
+        $('body').append('<div id="spyReportOverlay" style="position: fixed; top: 25px; left: 25px; right: 25px; max-height: 95%; z-index: 10000; background: #161618; overflow-y: auto"></div>');
+        var container = $('#spyReportOverlay');
+        var html = '';
+        html += showSpyReportHistoryBox(spyReportHistory, 'resources');
+        html += showSpyReportHistoryBox(spyReportHistory, 'fleet');
+        html += showSpyReportHistoryBox(spyReportHistory, 'defense');
+        html += showSpyReportHistoryBox(spyReportHistory, 'science');
+        html += showSpyReportHistoryBox(spyReportHistory, 'buildings');
+
+        $(container).html(html);
+
+        // close by ESC or backdrop click
+        $(window).keydown(function (event) {
+            if (event.key === 'Escape') {
+                $('#spyReportOverlay').remove();
+                $('#spyReportBackdrop').remove();
+            }
+        });
+
+        $('#spyReportBackdrop').click(function () {
+            $('#spyReportOverlay').remove();
+            $('#spyReportBackdrop').remove();
+        });
+    };
+    window.showSpyReportHistoryBox = function (spyReportHistory, offset) {
+        var html = '<table width="100%" style="max-width: 100% !important" class="table519"><tr>';
+        html += '<th style="text-align: left; width: 250px" width="200">Zeit</th>';
+
+        $(spyReportHistory[offset].data[0].values).each(function (key, obj) {
+            html += '<th style="text-align: center;">' + obj.name + '</th>';
+        });
+
+        html += '</tr>';
+
+        $(spyReportHistory[offset].data).each(function (key, obj) {
+            html += '<tr>';
+            html += '<td style="text-align: left;">' + obj.timestamp + '</td>';
+
+            $(obj.values).each(function (key, value) {
+                value.value = value.value === null ? '---' : value.value;
+                html += '<td style="position: relative; ' + (value.value.toString() !== '0' && value.value.toString() !== '---' ? 'color: #fff' : 'color: #444') + '">';
+                html += value.value;
+
+                if (value.difference === null || value.difference === 0 || value.valueBefore === value.value) {
+                    // nothing to show
+                } else if (value.valueBefore && value.valueBefore > value.value) {
+                    html += ' <span style="color: ' + getRgb(cRed) + '; position: absolute; right: 15px">' + value.difference + '</span>';
+                } else {
+                    html += ' <span style="color: ' + getRgb(cGreen) + '; position: absolute; right: 15px">+' + value.difference + '</span>';
+                }
+
+                html += '</td>';
+            });
+
+            html += '</tr>';
+        });
+
+        html += '</table>';
+
+        return html;
+    };
+    window.getInt = function (intOrString) {
+        return parseInt((intOrString !== null && intOrString !== undefined && intOrString !== ''? intOrString : '0').toString().replace(/\./, ''));
+    }
+
+    let cfgHighlight = {};
+
+    let filterInactive = GM_getValue('filter_inactive') || 'ALL';
+    let filterNoobs = GM_getValue('filter_noobs') || 'ALL';
+    let filterVacation = GM_getValue('filter_vacation') || 'ALL';
+    let filterAlliance = GM_getValue('filter_alliance') || 'ALL';
+    let filterSpyReport = GM_getValue('filter_spy_report') || 'ALL';
+    let filterBattleReport = GM_getValue('filter_last_battle_report') || 'ALL';
+    let filterScoreEnabled = GM_getValue('filter_score_enable') || '0';
+    let filterScoreMin = GM_getValue('filter_score_min') || '';
+    let filterScoreMax = GM_getValue('filter_score_max') || '';
+    let filterScoreBuildingEnabled = GM_getValue('filter_score_building_enable') || '0';
+    let filterScoreBuildingMin = GM_getValue('filter_score_building_min') || '';
+    let filterScoreBuildingMax = GM_getValue('filter_score_building_max') || '';
+    let filterScoreScienceEnabled = GM_getValue('filter_score_science_enable') || '0';
+    let filterScoreScienceMin = GM_getValue('filter_score_science_min') || '';
+    let filterScoreScienceMax = GM_getValue('filter_score_science_max') || '';
+    let filterScoreFleetEnabled = GM_getValue('filter_score_fleet_enable') || '0';
+    let filterScoreFleetMin = GM_getValue('filter_score_fleet_min') || '';
+    let filterScoreFleetMax = GM_getValue('filter_score_fleet_max') || '';
+    let filterScoreDefenseEnabled = GM_getValue('filter_score_defense_enable') || '0';
+    let filterScoreDefenseMin = GM_getValue('filter_score_defense_min') || '';
+    let filterScoreDefenseMax = GM_getValue('filter_score_defense_max') || '';
+    let filterInactiveSinceEnabled = GM_getValue('filter_inactive_since_enable') || '0';
+    let filterInactiveSinceMin = GM_getValue('filter_inactive_since_min') || '';
+    let filterInactiveSinceMax = GM_getValue('filter_inactive_since_max') || '';
+    let filterLastBattleReportEnabled = GM_getValue('filter_last_battle_report_enable') || '0';
+    let filterLastBattleReportMin = GM_getValue('filter_last_battle_report_min') || '';
+    let filterLastBattleReportMax = GM_getValue('filter_last_battle_report_max') || '';
+    let filterLastSpyReportEnabled = GM_getValue('filter_last_spy_report_enable') || '0';
+    let filterLastSpyReportMin = GM_getValue('filter_last_spy_report_min') || '';
+    let filterLastSpyReportMax = GM_getValue('filter_last_spy_report_max') || '';
+    let filterMetalEnabled = GM_getValue('filter_metal_enable') || '0';
+    let filterMetalMin = GM_getValue('filter_metal_min') || '';
+    let filterMetalMax = GM_getValue('filter_metal_max') || '';
+    let filterCrystalEnabled = GM_getValue('filter_crystal_enable') || '0';
+    let filterCrystalMin = GM_getValue('filter_crystal_min') || '';
+    let filterCrystalMax = GM_getValue('filter_crystal_max') || '';
+    let filterDeuteriumEnabled = GM_getValue('filter_deuterium_enable') || '0';
+    let filterDeuteriumMin = GM_getValue('filter_deuterium_min') || '';
+    let filterDeuteriumMax = GM_getValue('filter_deuterium_max') || '';
+
+    window.updateConfigVars = function() {
+        cfgHighlight = {
+            score: {
+                enabled: (GM_getValue('highlight_score_enable') || '0') === '1',
+                threshold: getInt(GM_getValue('highlight_score_value') || '')
+            },
+            score_building: {
+                enabled: (GM_getValue('highlight_score_building_enable') || '0') === '1',
+                threshold: getInt(GM_getValue('highlight_score_building_value') || '')
+            },
+            score_science: {
+                enabled: (GM_getValue('highlight_score_science_enable') || '0') === '1',
+                threshold: getInt(GM_getValue('highlight_score_science_value') || '')
+            },
+            score_military: {
+                enabled: (GM_getValue('highlight_score_military_enable') || '0') === '1',
+                threshold: getInt(GM_getValue('highlight_score_military_value') || '')
+            },
+            score_defense: {
+                enabled: (GM_getValue('highlight_score_defense_enable') || '0') === '1',
+                threshold: getInt(GM_getValue('highlight_score_defense_value') || '')
+            }
+        };
+
+        filterInactive = GM_getValue('filter_inactive') || 'ALL';
+        filterNoobs = GM_getValue('filter_noobs') || 'ALL';
+        filterVacation = GM_getValue('filter_vacation') || 'ALL';
+        filterAlliance = GM_getValue('filter_alliance') || 'ALL';
+        filterSpyReport = GM_getValue('filter_spy_report') || 'ALL';
+        filterBattleReport = GM_getValue('filter_last_battle_report') || 'ALL';
+        filterScoreEnabled = GM_getValue('filter_score_enable') || '0';
+        filterScoreMin = GM_getValue('filter_score_min') || '';
+        filterScoreMax = GM_getValue('filter_score_max') || '';
+        filterScoreBuildingEnabled = GM_getValue('filter_score_building_enable') || '0';
+        filterScoreBuildingMin = GM_getValue('filter_score_building_min') || '';
+        filterScoreBuildingMax = GM_getValue('filter_score_building_max') || '';
+        filterScoreScienceEnabled = GM_getValue('filter_score_science_enable') || '0';
+        filterScoreScienceMin = GM_getValue('filter_score_science_min') || '';
+        filterScoreScienceMax = GM_getValue('filter_score_science_max') || '';
+        filterScoreFleetEnabled = GM_getValue('filter_score_fleet_enable') || '0';
+        filterScoreFleetMin = GM_getValue('filter_score_fleet_min') || '';
+        filterScoreFleetMax = GM_getValue('filter_score_fleet_max') || '';
+        filterScoreDefenseEnabled = GM_getValue('filter_score_defense_enable') || '0';
+        filterScoreDefenseMin = GM_getValue('filter_score_defense_min') || '';
+        filterScoreDefenseMax = GM_getValue('filter_score_defense_max') || '';
+        filterInactiveSinceEnabled = GM_getValue('filter_inactive_since_enable') || '0';
+        filterInactiveSinceMin = GM_getValue('filter_inactive_since_min') || '';
+        filterInactiveSinceMax = GM_getValue('filter_inactive_since_max') || '';
+        filterLastBattleReportEnabled = GM_getValue('filter_last_battle_report_enable') || '0';
+        filterLastBattleReportMin = GM_getValue('filter_last_battle_report_min') || '';
+        filterLastBattleReportMax = GM_getValue('filter_last_battle_report_max') || '';
+        filterLastSpyReportEnabled = GM_getValue('filter_last_spy_report_enable') || '0';
+        filterLastSpyReportMin = GM_getValue('filter_last_spy_report_min') || '';
+        filterLastSpyReportMax = GM_getValue('filter_last_spy_report_max') || '';
+        filterMetalEnabled = GM_getValue('filter_metal_enable') || '0';
+        filterMetalMin = GM_getValue('filter_metal_min') || '';
+        filterMetalMax = GM_getValue('filter_metal_max') || '';
+        filterCrystalEnabled = GM_getValue('filter_crystal_enable') || '0';
+        filterCrystalMin = GM_getValue('filter_crystal_min') || '';
+        filterCrystalMax = GM_getValue('filter_crystal_max') || '';
+        filterDeuteriumEnabled = GM_getValue('filter_deuterium_enable') || '0';
+        filterDeuteriumMin = GM_getValue('filter_deuterium_min') || '';
+        filterDeuteriumMax = GM_getValue('filter_deuterium_max') || '';
+    }
+
+    window.getOverviewHeader = function() {
+        let header = '<table cellspacing="0"><tr><td width="50%%" style="text-align: left; padding: 5px 10px">';
+        header += '<a href="https://pr0game-hub.eskju.net/download/legend.png" target="_blank"><i class="fa fa-info-circle"></i> Legende</a>';
+        header += ' // ';
+        header += '<a href="https://pr0game-hub.eskju.net/download/faq.txt" target="_blank"><i class="fa fa-question-circle"></i> FAQ</a>';
+        header += '</td>';
+
+        if(GM_getValue('hideSettings') === '1') {
+            header += '<td id="showSettings" style="text-align: right; padding: 5px 10px; cursor: pointer;"><i class="fa fa-cogs fa"></i> Einstellungen anzeigen</td>';
+        }
+        else {
+            header += '<td id="hideSettings" style="text-align: right; padding: 5px 10px; cursor: pointer;"><span style="color: lightgreen"><i class="fa fa-cogs"></i> Einstellungen ausblenden</span></td>';
+        }
+
+        header += '</tr></table>';
+
+        header += displayOverviewSettings();
+
+        return header;
+    }
+
+    var setupMessage = '';
+    window.checkRequirements = function() {
+        if(!GM_getValue('api_keys')) {
+            setupMessage = 'Bitte hinterlege den API Key, den du von @eichhorn#1526 erhalten hast.';
+            return false;
+        }
+
+        return true;
+    };
+
+    window.showSetupDialog = function() {
+        $('head').append('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">');
+        $('.wrapper').css('filter', 'blur(5px)');
+        $('body').append('<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.95); z-index: 10000"></div>');
+        $('body').append('<div id="configOverlay" style="position: fixed; top: 25px; left: 25px; right: 25px; max-height: 95%; z-index: 10000; background: #161618; overflow-y: auto; padding: 25px 50px;"></div>');
+        const overlay = $('#configOverlay');
+        $(overlay).append('<p><b style="color: #fff">Willkommen bei pr0gameHub!</b></p>');
+        $(overlay).append('<p style="color: rgb(0, 255, 255)">Für bisherige User: Damit das Updaten leichter wird, kann der API Key nun im lokalen Speicher hinterlegt werden. So muss die Updatedatei nicht mehr editiert werden.</p><br><br>');
+        $(overlay).append('<div class="alert alert-info">' + setupMessage + '</div>');
+        $(overlay).append('<div class="input-group"><input id="apiKey" type="text" placeholder="Dein API Key" class="form-control" style="text-align: left"><div id="apiKeySave" class="input-group-append"><a class="btn btn-success" href="javascript:void(0)">prüfen &amp; speichern</a></div></div>');
+        $('#apiKeySave').click(saveApiKey);
+        $('#apiKeySave').on('keypress',function(e) {
+            if(e.which == 13) {
+                saveApiKey();
+            }
+        });
+    };
+
+    window.saveApiKey = function(apiKey) {
+        var url = apiUrl + 'login?api_key=' + $('#apiKey').val() + '&version=' + version;
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: url,
+            onload: function (response) {
+                if(response.status !== 200) {
+                    setupMessage = 'Der API Key ist ungültig.';
+                    showSetupDialog();
+                }
+            }
+        });
+
+        GM_setValue('api_key', $('#apiKey').val());
+    };
+
+    window.displayOverviewSettings = function() {
+        let html = '';
+        html += '<table id="phSettings" width="100%" style="max-width: 100% !important; ' + (GM_getValue('hideSettings') === '1' ? 'display: none' : '') + '" class="table519">';
+        html += '<tr><th colspan="4">API</th></tr>';
+        html += '<tr><td colspan="4"><p style="font-size: 11px; text-align: left;">Solltest Du keinen API Key besitzen, wende Dich bitte per Discord an @eichhorn#1526.<br><b style="color: ' + getRgb(cRed) + '">Gib Deinen API Key nicht an andere weiter!</b></p></td></tr>';
+        html += '<tr>';
+        html += '<td width="50%" style="text-align: left">API Key</td>';
+        html += '<td colspan="3"><input class="phFilter" data-alias="api_key" type="text" style="width: 100%" placeholder="API Key" value="' + (GM_getValue('api_key') || '') + '"></td>';
+        html + '</tr>';
+        html += '<tr>';
+        html += '<td width="50%" style="text-align: left">Debug-Modus</td>';
+        html += '<td><input type="checkbox" class="phFilter" data-alias="debug_mode" value="1" ' + (GM_getValue('debug_mode') === '1' ? 'checked' : '') + '></td><td colspan="2" style="text-align: left; color: #888">Zeige Infos in der Konsole</td>';
+        html + '</tr>';
+        html += '<tr>';
+        html += '<td width="50%" style="text-align: left">Developer-Modus</td>';
+        html += '<td><input type="checkbox" class="phFilter" data-alias="developer_mode" value="1" ' + (GM_getValue('developer_mode') === '1' ? 'checked' : '') + '></td><td colspan="2" style="text-align: left; color: #888">Nutzt die Entwickler-API (nur zum Coden!)</td>';
+        html + '</tr>';
+        html += '<tr>';
+        html += '<td width="50%" style="text-align: left">Leserliches Datumsformat</td>';
+        html += '<td><input type="checkbox" class="phFilter" data-alias="date_for_humans" value="1" ' + (GM_getValue('date_for_humans') === '1' ? 'checked' : '') + '></td><td colspan="2" style="text-align: left; color: #888">z.B. "vor 5min" statt Datum/Uhrzeit. Erfordert Reload (F5)!</td>';
+        html + '</tr>';
+
+        html += '<tr><th colspan="4">HIGHLIGHTING</th></tr>';
+        html += '<tr><td colspan="4"><p style="font-size: 11px; text-align: left;">Standardmäßig werden die Spielerwerte als Referenz genommen; Für Galaxie/System/Planet wird standardmäßig der aktive Planet gesetzt. Ist die Checkbox angehakt, wird der jeweilige Wert vom Eingetragenen überschrieben. Die Spieler-Werte werden in der Farbskala weiß (0 Punkte) bis Farbe (gesetztes Punktelimit) dargestellt.</p></td></tr>';
+        html += displayOverviewHighlight('Gesamtpunkte', 'highlight_score', cBlue);
+        html += displayOverviewHighlight('Gebäudepunkte', 'highlight_score_building', cGreen);
+        html += displayOverviewHighlight('Forschungspunkte', 'highlight_score_science', cPink);
+        html += displayOverviewHighlight('Militärpunkte', 'highlight_score_military', cRed);
+        html += displayOverviewHighlight('Verteidigungspunkte', 'highlight_score_defense', cYellow);
+
+        html += '<tr><th colspan="4">FILTER</th></tr>';
+        html += displayOverviewSettingsSelect(getHotkeyIcon('I') + 'Inaktive Spieler', 'filter_inactive', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
+        html += displayOverviewSettingsSelect(getHotkeyIcon('N') + 'Spieler mit Noobschutz', 'filter_noobs', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
+        html += displayOverviewSettingsSelect(getHotkeyIcon('U') + 'Spieler im Urlaubsmodus', 'filter_vacation', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
+        html += displayOverviewSettingsSelect(getHotkeyIcon('A') + 'Spieler der Allianz', 'filter_alliance', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
+        html += displayOverviewSettingsSelect(getHotkeyIcon('S') + 'Spieler mit Spiobericht', 'filter_spy_report', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
+        html += displayOverviewSettingsSelect(getHotkeyIcon('K') + 'Spieler mit Kampfbericht', 'filter_battle_report', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
+        html += '<tr><th colspan="4">THRESHOLDS</th></tr>';
+        html += displayOverviewSettingsRange(getHotkeyIcon('P', true) + 'Punkte', 'filter_score');
+        html += displayOverviewSettingsRange(getHotkeyIcon('G', true) + 'Gebäudepunkte', 'filter_score_building');
+        html += displayOverviewSettingsRange(getHotkeyIcon('F', true) + 'Forschungspunkte', 'filter_score_science');
+        html += displayOverviewSettingsRange(getHotkeyIcon('M', true) + 'Militärpunkte', 'filter_score_fleet');
+        html += displayOverviewSettingsRange(getHotkeyIcon('V', true) + 'Verteidigungspunkte', 'filter_score_defense');
+        html += displayOverviewSettingsRange(getHotkeyIcon('I', true) + 'Inaktiv seit ... Stunden', 'filter_inactive_since');
+        html += displayOverviewSettingsRange(getHotkeyIcon('K', true) + 'Stunden seit letztem Kampfbericht', 'filter_last_battle_report');
+        html += displayOverviewSettingsRange(getHotkeyIcon('S', true) + 'Stunden seit letztem Spionagebericht', 'filter_last_spy_report');
+        html += displayOverviewSettingsRange(getHotkeyIcon('Q', true) + 'Metall (letzte Spionage)', 'filter_metal');
+        html += displayOverviewSettingsRange(getHotkeyIcon('W', true) + 'Kristall (letzte Spionage)', 'filter_crystal');
+        html += displayOverviewSettingsRange(getHotkeyIcon('E', true) + 'Deuterium (letzte Spionage)', 'filter_deuterium');
+        html += '</table>';
+
+        return html;
+    }
+
+    window.getHotkeyIcon = function(key, shift = false) {
+        let html = '';
+
+        if(shift) {
+            html = getHotkeyIcon('<i class="fa fa-arrow-up"></i>');
+        }
+
+        return html + '<span style="width: 21px; outline: 1px solid ' + getRgb(cRed) + '; outline-offset: -1px; display: inline-block; font-size: 10px; line-height: 21px; text-align: center; margin-right: 5px; border-radius: 2px; background: ' + getRgb(cBlack) + '; color: ' + getRgb(cRed) + '">' + key + '</span>';
+    };
+
+    window.displayOverviewHighlight = function(label, alias, color) {
+        let html = '<tr>';
+        html += '<td width="50%" style="text-align: left; color: ' + getRgb(color) + '">' + label + '</td>';
+        html += '<td width="4%">';
+        html += '<input id="' + alias + '" class="phFilter" data-alias="' + alias + '_enable" value="1" type="checkbox" ' + (GM_getValue(alias + '_enable') === '1' ? 'checked' : '') + '>';
+        html += '</td>';
+        html += '<td width="46%" colspan="2">';
+        html += '<input id="' + alias + '_value" class="phFilter" data-alias="' + alias + '_value" style="width: 100%" placeholder="Schwellwert" value="' + (GM_getValue(alias + '_value') || '') + '">';
+        html += '</td>';
+        html += '</tr>';
+
+        return html;
+    }
+
+    window.displayOverviewSettingsSelect = function(label, alias, values) {
+        let html = '<tr>';
+        html += '<td width="50%" style="text-align: left">' + label + '</td>';
+        html += '<td colspan="3">';
+        html += '<select id="' + alias + '_select" class="phFilter" data-alias="' + alias + '" style="width: 100%">';
+
+        $.each(values, function(key, obj) {
+            html += '<option value="' + key + '" ' + (GM_getValue(alias) === key ? 'selected' : '') + '>' + obj + '</option>';
+        });
+
+        html += '</select>';
+        html += '</td>';
+        html + '</tr>';
+
+        return html;
+    };
+
+    window.displayOverviewSettingsRange = function(label, alias) {
+        let html = '<tr>';
+        html += '<td width="50%" style="text-align: left">' + label + '</td>';
+        html += '<td width="4%">';
+        html += '<input id="' + alias + '_enable" class="phFilter" data-alias="' + alias + '_enable" value="1" type="checkbox" ' + (GM_getValue(alias + '_enable') === '1' ? 'checked' : '') + '>';
+        html += '</td>';
+        html += '<td width="23%">';
+        html += '<input id="' + alias + '_min" class="phFilter" data-alias="' + alias + '_min" style="width: 100%" placeholder="min" value="' + (GM_getValue(alias + '_min') || '') + '">';
+        html += '</td>';
+        html += '<td width="23%">';
+        html += '<input id="' + alias + '_max" class="phFilter" data-alias="' + alias + '_max" style="width: 100%" placeholder="max" value="' + (GM_getValue(alias + '_max') || '') + '">';
+        html += '</td>';
+        html + '</tr>';
+
+        return html;
+    };
+
+    window.filterTableRow = function(obj, player) {
+        // selects
+        if(filterInactive === 'HIDE' && obj.player.is_inactive === 1) return false;
+        if(filterInactive === 'ONLY' && obj.player.is_inactive === 0) return false;
+
+        if(player !== null) {
+            if(filterNoobs === 'HIDE' && obj.player.is_inactive === 0 && getInt(obj.player.score) < getInt(player.score) / 5) return false;
+            if(filterNoobs === 'ONLY' && obj.player.is_inactive === 0 && getInt(obj.player.score) >= getInt(player.score) / 5) return false;
+        }
+        if(filterVacation === 'HIDE' && obj.player.on_vacation === 1) return false;
+        if(filterVacation === 'ONLY' && obj.player.on_vacation === 0) return false;
+
+        if(player) {
+            if(filterAlliance === 'HIDE' && obj.player.alliance_id !== null && obj.player.alliance_id === player.alliance_id) return false;
+            if(filterAlliance === 'ONLY' && (obj.player.alliance_id === null || obj.player.alliance_id !== player.alliance_id)) return false;
+        }
+        if(filterSpyReport === 'HIDE' && obj.last_spy_report !== '') return false;
+        if(filterSpyReport === 'ONLY' && obj.last_spy_report === '') return false;
+        if(filterBattleReport === 'HIDE' && obj.last_battle_report !== '') return false;
+        if(filterBattleReport === 'ONLY' && obj.last_battle_report === '') return false;
+        if(filterScoreEnabled === '1' && getInt(filterScoreMin) > 0 && getInt(filterScoreMin) > getInt(obj.player.score)) return false;
+        if(filterScoreEnabled === '1' && getInt(filterScoreMax) > 0 && getInt(filterScoreMax) < getInt(obj.player.score)) return false;
+        if(filterScoreBuildingEnabled === '1' && getInt(filterScoreBuildingMin) > 0 && getInt(filterScoreBuildingMin) > getInt(obj.player.score_building)) return false;
+        if(filterScoreBuildingEnabled === '1' && getInt(filterScoreBuildingMax) > 0 && getInt(filterScoreBuildingMax) < getInt(obj.player.score_building)) return false;
+        if(filterScoreScienceEnabled === '1' && getInt(filterScoreScienceMin) > 0 && getInt(filterScoreScienceMin) > getInt(obj.player.score_science)) return false;
+        if(filterScoreScienceEnabled === '1' && getInt(filterScoreScienceMax) > 0 && getInt(filterScoreScienceMax) < getInt(obj.player.score_science)) return false;
+        if(filterScoreFleetEnabled === '1' && getInt(filterScoreFleetMin) > 0 && getInt(filterScoreFleetMin) > getInt(obj.player.score_military)) return false;
+        if(filterScoreFleetEnabled === '1' && getInt(filterScoreFleetMax) > 0 && getInt(filterScoreFleetMax) < getInt(obj.player.score_military)) return false;
+        if(filterScoreDefenseEnabled === '1' && getInt(filterScoreDefenseMin) > 0 && getInt(filterScoreDefenseMin) > getInt(obj.player.score_defense)) return false;
+        if(filterScoreDefenseEnabled === '1' && getInt(filterScoreDefenseMax) > 0 && getInt(filterScoreDefenseMax) < getInt(obj.player.score_defense)) return false;
+        if(filterInactiveSinceEnabled === '1' && getInt(filterInactiveSinceMin) > 0 && getInt(filterInactiveSinceMin) > getInt(obj.inactive_since)) return false;
+        if(filterInactiveSinceEnabled === '1' && getInt(filterInactiveSinceMax) > 0 && getInt(filterInactiveSinceMax) < getInt(obj.inactive_since)) return false;
+        if(filterLastBattleReportEnabled === '1' && getInt(filterLastBattleReportMin) > 0 && getInt(filterLastBattleReportMin) > getInt(obj.last_battle_report_hours)) return false;
+        if(filterLastBattleReportEnabled === '1' && getInt(filterLastBattleReportMax) > 0 && getInt(filterLastBattleReportMax) < getInt(obj.last_battle_report_hours)) return false;
+        if(filterLastSpyReportEnabled === '1' && getInt(filterLastSpyReportMin) > 0 && getInt(filterLastSpyReportMin) > getInt(obj.last_spy_report_hours)) return false;
+        if(filterLastSpyReportEnabled === '1' && getInt(filterLastSpyReportMax) > 0 && getInt(filterLastSpyReportMax) < getInt(obj.last_spy_report_hours)) return false;
+        if(filterMetalEnabled === '1' && getInt(filterMetalMin) > 0 && getInt(filterMetalMin) > getInt(obj.last_spy_metal)) return false;
+        if(filterMetalEnabled === '1' && getInt(filterMetalMax) > 0 && getInt(filterMetalMax) < getInt(obj.last_spy_metal)) return false;
+        if(filterCrystalEnabled === '1' && getInt(filterCrystalMin) > 0 && getInt(filterCrystalMin) > getInt(obj.last_spy_crystal)) return false;
+        if(filterCrystalEnabled === '1' && getInt(filterCrystalMax) > 0 && getInt(filterCrystalMax) < getInt(obj.last_spy_crystal)) return false;
+        if(filterDeuteriumEnabled === '1' && getInt(filterDeuteriumMin) > 0 && getInt(filterDeuteriumMin) > getInt(obj.last_spy_deuterium)) return false;
+        if(filterDeuteriumEnabled === '1' && getInt(filterDeuteriumMax) > 0 && getInt(filterDeuteriumMax) < getInt(obj.last_spy_deuterium)) return false;
+
+        return true;
+    }
+
+    window.savePhOption = function(key, value) {
+        GM_setValue(key, value);
+
+        pageOverview.renderHtml();
+    };
+
+    parseUrl();
+})();

@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PlayerController extends Controller
 {
@@ -295,10 +296,32 @@ class PlayerController extends Controller
 
     private function getDateTime(Carbon $dateTime): string
     {
-        if($this->dateFormatForHumans) {
+        if ($this->dateFormatForHumans) {
             return $dateTime->shortAbsoluteDiffForHumans();
         }
 
         return $dateTime->format('d.m. H:i');
+    }
+
+    public function getPlayerChart(?Player $player = null, ?Request $request = null)
+    {
+        if (!$player) {
+            $player = auth()->user()->player;
+        }
+
+        Log::info($request->get('api_key') . ', ' . $request->ip());
+
+        LogPlayer::query()
+            ->select([
+                DB::raw('DATE(`created_at`) AS `date`'),
+                DB::raw('MAX(`score`) AS `score`'),
+                DB::raw('MAX(`score_building`) AS `score_building`'),
+                DB::raw('MAX(`score_science`) AS `score_science`'),
+                DB::raw('MAX(`score_military`) AS `score_military`'),
+                DB::raw('MAX(`score_defense`) AS `score_defense`'),
+            ])
+            ->where('external_id', $player->id)
+            ->orderBy('created_at')
+            ->groupBy(DB::raw('DATE(created_at)'));
     }
 }

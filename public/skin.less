@@ -4,13 +4,127 @@
 @colorText: #f2f5f4;
 @colorLink: #ee4d2e;
 @colorLinkHover: #75c0c7;
+@colorGreen: #addc8d;
+@colorYellow: #888;
 
 html {
     background-image: url('https://pr0game-hub.local/background.jpg');
     background-size: cover;
 }
 
+.text-left {
+    text-align: left !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-red {
+    color: @colorLink !important;
+}
+
+.text-green {
+    color: @colorGreen !important;
+}
+
+.build_submit {
+    color: #8bff6b;
+    margin-bottom: 15px;
+}
+
+.text-yellow {
+    color: @colorYellow !important;
+}
+
+content.home {
+    .infos {
+        padding: 15px;
+        margin: 0 0 15px 0;
+
+        ul {
+            margin: 0;
+            padding: 0 10px;
+        }
+
+        &.noPadding,
+        &:last-child {
+            padding: 0 !important;
+        }
+    }
+
+    .infos + br {
+        display: none;
+    }
+
+    table.borderless {
+        tr,
+        tr > th,
+        tr > td {
+            border: none !important;
+            background: transparent !important;
+        }
+    }
+}
+
+content.buildings,
+content.hangar,
+content.defense,
+content.research {
+    .infos, .infoso {
+        margin: 15px 0 0 0;
+    }
+
+    &.hangar {
+        input[type=submit].b {
+            border-radius: 2px !important;
+            border: 1px solid #222 !important;
+            color: @colorGreen !important;
+            padding: 5px 15px !important;
+            background: #3A3A3A !important;
+            min-height: 0;
+            margin: 15px 0;
+        }
+    }
+}
+
+header .planetImage,
+header .fixed img,
+logo .fixed a {
+    display: none !important;
+}
+
+logo .fixed {
+    background: url('https://pr0game-hub.local/logo.png') no-repeat left center !important;
+}
+
+top,
+.wrapper .fixed,
+header {
+    height: 60px;
+    min-height: 0;
+
+    #planetSelector {
+        top: 15px;
+        padding: 5px 10px;
+    }
+
+    #resource_mobile {
+        margin-top: 15px !important;
+    }
+}
+
+menu .fixed {
+    top: 50px;
+}
+
 .wrapper {
+    grid-template-rows: 50px 1fr auto;
+
     .fixed {
         background: rgba(0, 0, 0, 0.9);
     }
@@ -35,7 +149,15 @@ html {
         width: 100% !important;
         max-width: inherit !important;
 
-        th, td {
+        th {
+            background: transparent;
+            border: none !important;
+            padding: 5px 10px !important;
+        }
+
+        td {
+            border: none !important;
+            outline: 1px solid @colorBackground;
             padding: 3px 10px;
         }
     }
@@ -77,9 +199,51 @@ html {
     content {
         padding-top: 10px;
 
-        .infos {
-            margin: 0 0 15px 0;
+        .message {
+            background: @colorLink;
+            border-radius: 2px;
+            text-align: left;
+            padding-left: 50px;
+            top: 15px;
+            right: 15px;
+            z-index: 10000;
+            transition: background 200ms ease-in-out;
 
+            a {
+                transition: all 200ms ease-in-out;
+            }
+
+            &:before {
+                transition: all 250ms ease-in-out;
+                content: "\f0e0";
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-family: "Font Awesome 5 Pro";
+                font-size: 25px;
+                font-weight: 300;
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+                display: inline-block;
+                font-style: normal;
+                font-variant: normal;
+                text-rendering: auto;
+                line-height: 1;
+            }
+
+            &:hover {
+                background: @colorText;
+
+                &:before,
+                a, a:hover {
+                    font-weight: 300 !important;
+                    color: @colorBackground !important;
+                }
+            }
+        }
+
+        .infos {
             & > ul#hidden-div2 li {
                 display: flex;
 
@@ -130,7 +294,8 @@ html {
             }
         }
 
-        .building {
+        .building,
+        .hangar > form {
             height: auto;
             display: flex;
 
@@ -206,7 +371,7 @@ html {
 
 #resources_mobile {
     img {
-        margin-bottom: 5px;
+        display: none;
     }
 
     .resource_name {

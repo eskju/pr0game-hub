@@ -2,6 +2,102 @@ html {
   background-image: url('https://pr0game-hub.local/background.jpg');
   background-size: cover;
 }
+.text-left {
+  text-align: left !important;
+}
+.text-center {
+  text-align: center !important;
+}
+.text-right {
+  text-align: right !important;
+}
+.text-red {
+  color: #ee4d2e !important;
+}
+.text-green {
+  color: #addc8d !important;
+}
+.build_submit {
+  color: #8bff6b;
+  margin-bottom: 15px;
+}
+.text-yellow {
+  color: #888 !important;
+}
+content.home .infos {
+  padding: 15px;
+  margin: 0 0 15px 0;
+}
+content.home .infos ul {
+  margin: 0;
+  padding: 0 10px;
+}
+content.home .infos.noPadding,
+content.home .infos:last-child {
+  padding: 0 !important;
+}
+content.home .infos + br {
+  display: none;
+}
+content.home table.borderless tr,
+content.home table.borderless tr > th,
+content.home table.borderless tr > td {
+  border: none !important;
+  background: transparent !important;
+}
+content.buildings .infos,
+content.hangar .infos,
+content.defense .infos,
+content.research .infos,
+content.buildings .infoso,
+content.hangar .infoso,
+content.defense .infoso,
+content.research .infoso {
+  margin: 15px 0 0 0;
+}
+content.buildings.hangar input[type=submit].b,
+content.hangar.hangar input[type=submit].b,
+content.defense.hangar input[type=submit].b,
+content.research.hangar input[type=submit].b {
+  border-radius: 2px !important;
+  border: 1px solid #222 !important;
+  color: #addc8d !important;
+  padding: 5px 15px !important;
+  background: #3A3A3A !important;
+  min-height: 0;
+  margin: 15px 0;
+}
+header .planetImage,
+header .fixed img,
+logo .fixed a {
+  display: none !important;
+}
+logo .fixed {
+  background: url('https://pr0game-hub.local/logo.png') no-repeat left center !important;
+}
+top,
+.wrapper .fixed,
+header {
+  height: 60px;
+  min-height: 0;
+}
+top #planetSelector,
+.wrapper .fixed #planetSelector,
+header #planetSelector {
+  top: 15px;
+  padding: 5px 10px;
+}
+top #resource_mobile,
+.wrapper .fixed #resource_mobile,
+header #resource_mobile {
+  margin-top: 15px !important;
+}
+menu .fixed {
+  top: 50px;
+}
+.wrapper {
+  grid-template-rows: 50px 1fr auto;
+}
 .wrapper .fixed {
   background: rgba(0, 0, 0, 0.9);
 }
@@ -22,8 +118,14 @@ html {
   width: 100% !important;
   max-width: inherit !important;
 }
-.wrapper table th,
+.wrapper table th {
+  background: transparent;
+  border: none !important;
+  padding: 5px 10px !important;
+}
 .wrapper table td {
+  border: none !important;
+  outline: 1px solid #161618;
   padding: 3px 10px;
 }
 .wrapper ul#menu {
@@ -61,8 +163,45 @@ html {
 .wrapper content {
   padding-top: 10px;
 }
-.wrapper content .infos {
-  margin: 0 0 15px 0;
+.wrapper content .message {
+  background: #ee4d2e;
+  border-radius: 2px;
+  text-align: left;
+  padding-left: 50px;
+  top: 15px;
+  right: 15px;
+  z-index: 10000;
+  transition: background 200ms ease-in-out;
+}
+.wrapper content .message a {
+  transition: all 200ms ease-in-out;
+}
+.wrapper content .message:before {
+  transition: all 250ms ease-in-out;
+  content: "\f0e0";
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: "Font Awesome 5 Pro";
+  font-size: 25px;
+  font-weight: 300;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+.wrapper content .message:hover {
+  background: #f2f5f4;
+}
+.wrapper content .message:hover:before,
+.wrapper content .message:hover a,
+.wrapper content .message:hover a:hover {
+  font-weight: 300 !important;
+  color: #161618 !important;
 }
 .wrapper content .infos > ul#hidden-div2 li {
   display: flex;
@@ -107,38 +246,46 @@ html {
 .wrapper content #buildlist .buildb span[style] {
   color: #ee4d2e !important;
 }
-.wrapper content .building {
+.wrapper content .building,
+.wrapper content .hangar > form {
   height: auto;
   display: flex;
 }
-.wrapper content .building > div:nth-child(1) {
+.wrapper content .building > div:nth-child(1),
+.wrapper content .hangar > form > div:nth-child(1) {
   flex-basis: 25%;
   text-align: left;
   background: #161618;
 }
-.wrapper content .building a:hover {
+.wrapper content .building a:hover,
+.wrapper content .hangar > form a:hover {
   color: #75c0c7 !important;
   font-weight: normal;
 }
-.wrapper content .building .building-left {
+.wrapper content .building .building-left,
+.wrapper content .hangar > form .building-left {
   height: auto;
   text-align: left;
 }
-.wrapper content .building .building-left img {
+.wrapper content .building .building-left img,
+.wrapper content .hangar > form .building-left img {
   height: 75px;
   width: auto;
   margin-right: 30px !important;
   border-radius: 4px;
 }
-.wrapper content .building .building-left span[style] {
+.wrapper content .building .building-left span[style],
+.wrapper content .hangar > form .building-left span[style] {
   color: #ee4d2e !important;
 }
-.wrapper content .building .building-right {
+.wrapper content .building .building-right,
+.wrapper content .hangar > form .building-right {
   height: auto;
   padding: 15px;
   text-align: right;
 }
-.wrapper content .building .building-right form button {
+.wrapper content .building .building-right form button,
+.wrapper content .hangar > form .building-right form button {
   max-width: 100%;
 }
 .wrapper .ui-progressbar {
@@ -173,7 +320,7 @@ html {
   padding: 15px;
 }
 #resources_mobile img {
-  margin-bottom: 5px;
+  display: none;
 }
 #resources_mobile .resource_name {
   color: #ee4d2e;
