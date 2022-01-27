@@ -594,7 +594,7 @@
 
             $('.buildn').each(function(key, obj) {
                 info = $(obj).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/);
-                level = $(obj).html().match(/\(Stufe ([0-9]+)\)/);
+                level = $(obj).html().match(/Stufe ([0-9]+)/);
 
                 buildings.push({
                     building_id: getInt(info[1]),
@@ -665,7 +665,7 @@
 
             $('.buildn').each(function(key, obj) {
                 info = $(obj).html().match(/\.info\(([0-9]+)\)\"\>([^<]+)\<\/a\>/);
-                level = $(obj).html().match(/\(Stufe ([0-9]+)\)/);
+                level = $(obj).html().match(/Stufe ([0-9]+)/);
 
                 research.push({
                     research_id: getInt(info[1]),
