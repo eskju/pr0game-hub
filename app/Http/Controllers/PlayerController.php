@@ -321,7 +321,7 @@ class PlayerController extends Controller
                 DB::raw('MAX(`score_defense`) AS `score_defense`'),
             ])
             ->where('external_id', $player->id)
-            ->orderBy('DATE(created_at)')
+            ->orderBy('date')
             ->groupBy(DB::raw('DATE(created_at)'))
             ->get();
     }
