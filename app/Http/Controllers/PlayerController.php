@@ -325,6 +325,11 @@ class PlayerController extends Controller
             ->where('external_id', $player->id)
             ->orderBy('date')
             ->groupBy(DB::raw('DATE(created_at)'))
-            ->get();
+            ->get()
+            ->map(function (LogPlayer $player) {
+                $player->date = Carbon::parse($player->date)->format('d.m.');
+
+                return $player;
+            });
     }
 }
