@@ -332,6 +332,9 @@ menu .fixed {
 #resources_mobile .res_current:after {
   content: ' / ';
 }
+#resources_mobile .res_current.res_current_max {
+  color: #ee4d2e;
+}
 #resources_mobile .res_max {
   color: #addc8d;
   display: inline;
