@@ -322,6 +322,7 @@ class PlayerController extends Controller
             ])
             ->where('external_id', $player->id)
             ->orderBy('created_at')
-            ->groupBy(DB::raw('DATE(created_at)'));
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->get();
     }
 }
