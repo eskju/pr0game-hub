@@ -303,7 +303,7 @@ class PlayerController extends Controller
         return $dateTime->format('d.m. H:i');
     }
 
-    public function getPlayerChart(?Player $player = null, ?Request $request = null)
+    public function getPlayerChart(?Player $player = null, Request $request)
     {
         if (!$player) {
             $player = auth()->user()->player;
@@ -311,7 +311,7 @@ class PlayerController extends Controller
 
         Log::info($request->get('api_key') . ', ' . $request->ip());
 
-        LogPlayer::query()
+        return LogPlayer::query()
             ->select([
                 DB::raw('DATE(`created_at`) AS `date`'),
                 DB::raw('MAX(`score`) AS `score`'),
