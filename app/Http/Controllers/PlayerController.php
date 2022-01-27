@@ -309,6 +309,7 @@ class PlayerController extends Controller
             $player = auth()->user()->player;
         }
 
+        Log::info($player->id);
         Log::info($request->get('api_key') . ', ' . $request->ip());
 
         return LogPlayer::query()
