@@ -30,7 +30,7 @@ Route::post('/players/overview', PlayerController::class . '@overview');
 Route::post('/players/research', PlayerController::class . '@storeResearch');
 Route::get('/players/{player}/planets', PlayerController::class . '@getPlanets');
 Route::get('/players/chart', PlayerController::class . '@getOwnPlayerChart');
-Route::get('/players/{playerId}/chart', PlayerController::class . '@getPlayerChart');
+Route::get('/players/{player}/chart', PlayerController::class . '@getPlayerChart');
 Route::post('/players/{playerId}', PlayerController::class . '@store');
 
 Route::get('/alliances/{alliance}/planets', AllianceController::class . '@getPlanets');
