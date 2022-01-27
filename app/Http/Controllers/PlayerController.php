@@ -303,12 +303,13 @@ class PlayerController extends Controller
         return $dateTime->format('d.m. H:i');
     }
 
-    public function getPlayerChart(?Player $player = null, Request $request)
+    public function getOwnPlayerChart(Player $player, Request $request)
     {
-        if (!$player) {
-            $player = auth()->user()->player;
-        }
+        return $this->getPlayerChart(auth()->user()->player, $request);
+    }
 
+    public function getPlayerChart(Player $player, Request $request)
+    {
         Log::info($player->id);
         Log::info($request->get('api_key') . ', ' . $request->ip());
 
