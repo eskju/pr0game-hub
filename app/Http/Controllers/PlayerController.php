@@ -92,6 +92,7 @@ class PlayerController extends Controller
                 DB::raw('`players`.`score_defense`'),
                 DB::raw('`players`.`is_inactive`'),
                 DB::raw('`players`.`on_vacation`'),
+                DB::raw('`players`.`alliance_id`'),
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
@@ -146,6 +147,7 @@ class PlayerController extends Controller
                     $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '';
                     $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
                     $return['player']['id'] = $return['player_id'];
+                    $return['player']['alliance_id'] = $return['alliance_id'];
                     $return['player']['name'] = $return['name'];
                     $return['player']['is_inactive'] = $return['is_inactive'];
                     $return['player']['on_vacation'] = $return['on_vacation'];
