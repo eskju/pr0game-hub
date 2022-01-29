@@ -145,6 +145,8 @@ class PlayerController extends Controller
                     $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
                     $return['player']['id'] = $return['player_id'];
                     $return['player']['name'] = $return['name'];
+                    $return['player']['is_inactive'] = $return['is_inactive'];
+                    $return['player']['on_vacation'] = $return['on_vacation'];
                     $return['player']['score'] = number_format($return['score'], 0, ',', '.');
                     $return['player']['score_building'] = number_format($return['score_building'], 0, ',', '.');
                     $return['player']['score_science'] = number_format($return['score_science'], 0, ',', '.');
