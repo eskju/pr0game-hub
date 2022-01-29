@@ -82,12 +82,18 @@ class PlayerController extends Controller
                 DB::raw('(SELECT deuterium FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_deuterium`'),
                 DB::raw('(SELECT TIMESTAMPDIFF(HOUR, MAX(log_player_status.created_at), NOW()) FROM log_player_status WHERE log_player_status.player_id = planets.player_id AND is_inactive = 1) AS `inactive_since`'),
                 DB::raw('ABS(planets.system - ' . (int)$request->get('system') . ') * 100 + ABS(planets.planet - ' . (int)$request->get('planet') . ') AS `distance`'),
-                DB::raw('`players`.`score` - (SELECT `score` FROM `log_players` WHERE `log_players`.`external_id` = `players`.`id` AND `log_players`.`created_at` <= "' . Carbon::now()->subDay()->format('Y-m-d H:i:s') . '" ORDER BY `created_at` DESC LIMIT 1) AS `diff`')
+                DB::raw('`players`.`score` - (SELECT `score` FROM `log_players` WHERE `log_players`.`external_id` = `players`.`id` AND `log_players`.`created_at` <= "' . Carbon::now()->subDay()->format('Y-m-d H:i:s') . '" ORDER BY `created_at` DESC LIMIT 1) AS `diff`'),
+                DB::raw('`players`.`id` AS `player_id`'),
+                DB::raw('`players`.`name`'),
+                DB::raw('`players`.`score`'),
+                DB::raw('`players`.`score_building`'),
+                DB::raw('`players`.`score_science`'),
+                DB::raw('`players`.`score_military`'),
+                DB::raw('`players`.`score_defense`'),
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
-            ->where('galaxy', $request->get('galaxy'))
-            ->with('player');
+            ->where('galaxy', $request->get('galaxy'));
 
         switch ($request->get('order_by')) {
             case 'name':
@@ -137,11 +143,13 @@ class PlayerController extends Controller
                     $return['last_spy_metal'] = $return['last_spy_metal'] ? number_format($return['last_spy_metal'], 0, ',', '.') : '';
                     $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '';
                     $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
-                    $return['player']['score'] = number_format($return['player']['score'], 0, ',', '.');
-                    $return['player']['score_building'] = number_format($return['player']['score_building'], 0, ',', '.');
-                    $return['player']['score_science'] = number_format($return['player']['score_science'], 0, ',', '.');
-                    $return['player']['score_military'] = number_format($return['player']['score_military'], 0, ',', '.');
-                    $return['player']['score_defense'] = number_format($return['player']['score_defense'], 0, ',', '.');
+                    $return['player']['id'] = $return['player_id'];
+                    $return['player']['name'] = $return['name'];
+                    $return['player']['score'] = number_format($return['score'], 0, ',', '.');
+                    $return['player']['score_building'] = number_format($return['score_building'], 0, ',', '.');
+                    $return['player']['score_science'] = number_format($return['score_science'], 0, ',', '.');
+                    $return['player']['score_military'] = number_format($return['score_military'], 0, ',', '.');
+                    $return['player']['score_defense'] = number_format($return['score_defense'], 0, ',', '.');
 
                     return $return;
                 }),
