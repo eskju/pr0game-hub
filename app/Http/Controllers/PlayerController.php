@@ -82,7 +82,7 @@ class PlayerController extends Controller
                 DB::raw('(SELECT deuterium FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_deuterium`'),
                 DB::raw('(SELECT TIMESTAMPDIFF(HOUR, MAX(log_player_status.created_at), NOW()) FROM log_player_status WHERE log_player_status.player_id = planets.player_id AND is_inactive = 1) AS `inactive_since`'),
                 DB::raw('ABS(planets.system - ' . (int)$request->get('system') . ') * 100 + ABS(planets.planet - ' . (int)$request->get('planet') . ') AS `distance`'),
-                DB::raw('`players`.`score` - (SELECT `score` FROM `log_players` WHERE `log_players`.`external_id` = `players`.`id` AND UNIX_TIMESTAMP(`log_players`.`created_at`) - UNIX_TIMESTAMP(`players.updated_at`) > 86400 ORDER BY `created_at` DESC LIMIT 1) AS `diff`')
+                DB::raw('`players`.`score` - (SELECT `score` FROM `log_players` WHERE `log_players`.`external_id` = `players`.`id` AND UNIX_TIMESTAMP(`log_players`.`created_at`) - UNIX_TIMESTAMP(`players`.`updated_at`) > 86400 ORDER BY `created_at` DESC LIMIT 1) AS `diff`')
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
