@@ -90,6 +90,8 @@ class PlayerController extends Controller
                 DB::raw('`players`.`score_science`'),
                 DB::raw('`players`.`score_military`'),
                 DB::raw('`players`.`score_defense`'),
+                DB::raw('`players`.`is_inactive`'),
+                DB::raw('`players`.`on_vacation`'),
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
