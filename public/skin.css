@@ -74,6 +74,7 @@ logo .fixed a {
 }
 logo .fixed {
   background: url('https://pr0game-hub.esKju.net/logo.png') no-repeat left center !important;
+  background-size: cover;
 }
 top,
 .wrapper .fixed,
