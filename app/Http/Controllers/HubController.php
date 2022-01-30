@@ -96,7 +96,7 @@ class HubController extends Controller
     private function checkPermission(string $string)
     {
         // not in main ally and not RedStar
-        if (auth()->user()->player->alliance_id !== $this->allowedAllianceId && auth()->id() != 275) {
+        if (auth()->user()->player->alliance_id !== $this->allowedAllianceId && auth()->user()->player_id != 275) {
             throw new Exception('PermissionException');
         }
     }
