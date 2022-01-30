@@ -97,7 +97,8 @@ class PlayerController extends Controller
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
-            ->where('galaxy', $request->get('galaxy'));
+            ->where('galaxy', $request->get('galaxy'))
+            ->where('is_deleted', 0);
 
         switch ($request->get('order_by')) {
             case 'name':
