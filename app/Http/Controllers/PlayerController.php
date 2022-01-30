@@ -61,9 +61,9 @@ class PlayerController extends Controller
             ->update(['on_vacation' => 1, 'updated_at' => DB::raw('updated_at')]);
 
         return [
-            'players' => Player::query()->whereIn('id', $request->get('ids'))->get(),
-            'missing_ids' => Player::query()->select('id')->whereIn('id', $request->get('ids'))->whereNull('name')->get()->pluck('id'),
-            'outdated_ids' => Player::query()->select('id')->whereIn('id', $request->get('ids'))->where('updated_at', '<', time() - 3600 * 8)->get()->pluck('id')
+            'players' => Player::query()->where('is_deleted',0)->whereIn('id', $request->get('ids'))->get(),
+            'missing_ids' => Player::query()->select('id')->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->whereNull('name')->get()->pluck('id'),
+            'outdated_ids' => Player::query()->select('id')->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->where('updated_at', '<', time() - 3600 * 8)->get()->pluck('id')
         ];
     }
 
