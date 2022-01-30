@@ -32,6 +32,7 @@ Route::get('/players/{player}/planets', PlayerController::class . '@getPlanets')
 Route::get('/players/chart', PlayerController::class . '@getOwnPlayerChart');
 Route::get('/players/{player}/chart', PlayerController::class . '@getPlayerChart');
 Route::post('/players/{playerId}', PlayerController::class . '@store');
+Route::post('/players/{playerId}/delete', PlayerController::class . '@delete');
 
 Route::get('/alliances/{alliance}/planets', AllianceController::class . '@getPlanets');
 

@@ -42,6 +42,7 @@ class PlayerController extends Controller
 
         // vacation
         Player::query()
+            ->where('is_deleted', 0)
             ->where(function ($q) {
                 $q->where('on_vacation', '!=', 0);
                 $q->orWhereNull('on_vacation');
@@ -214,6 +215,14 @@ class PlayerController extends Controller
         }
 
         $this->storeLog($playerId, $request);
+    }
+
+    public function delete(int $playerId, Request $request)
+    {
+        if ($player = Player::query()->find($playerId)) {
+            $player->is_deleted = 1;
+            $player->save();
+        }
     }
 
     private function storeLog(int $playerId, Request $request)
