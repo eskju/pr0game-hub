@@ -359,4 +359,16 @@ menu .fixed {
   background: #addc8d;
   color: #161618;
 }
+.badge-fight {
+  background: #ee4d2e;
+  color: #f2f5f4;
+}
+.badge-ships {
+  background: #75c0c7;
+  color: #161618;
+}
+.badge-nothing {
+  background: #888;
+  color: #161618;
+}
 /*# sourceMappingURL=skin.css.map */
