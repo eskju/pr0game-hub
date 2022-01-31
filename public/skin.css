@@ -355,6 +355,12 @@ menu .fixed {
   border-radius: 2px;
   font-weight: bold;
 }
+.badge-ress,
+.badge-fight,
+.badge-ships,
+.badge-nothing {
+  float: right;
+}
 .badge-ress {
   background: #addc8d;
   color: #161618;
