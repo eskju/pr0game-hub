@@ -117,7 +117,7 @@ window.parseUrl = function () {
     window.menu = new Menu();
     menu.init();
 };
-
+console.log('test');
 window.version = '1.0.0';
 window.apiKey = getValue('api_key');
 window.debugMode = getValue('debug_mode') === '1';
