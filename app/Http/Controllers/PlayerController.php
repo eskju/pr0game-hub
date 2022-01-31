@@ -97,7 +97,7 @@ class PlayerController extends Controller
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
-            ->where('galaxy', $request->get('galaxy'))
+            ->where('galaxy', $request->get('show_galaxy') ?? $request->get('galaxy'))
             ->where('is_deleted', 0);
 
         switch ($request->get('order_by')) {
@@ -131,9 +131,9 @@ class PlayerController extends Controller
         }
 
         $planet = Planet::query()
-            ->where('galaxy', $request->get('show_galaxy') ?? $request->get('galaxy'))
-            ->where('system', $request->get('show_system') ?? $request->get('system'))
-            ->where('planet', $request->get('show_planet') ?? $request->get('planet'))
+            ->where('galaxy', $request->get('galaxy'))
+            ->where('system', $request->get('system'))
+            ->where('planet', $request->get('planet'))
             ->first();
 
         return [
