@@ -1,5 +1,5 @@
 window.parsePagePlayerCard = function () {
-    var playerId = unsafeWindow.location.href.match(/[\?\&]id=([(0-9]+)/i)[1];
+    var playerId = window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1];
 
     if($('body').html().match(/\/includes\/pages\/game\/ShowPlayerCardPage\.class\.php/)) {
         postJSON('players/' + playerId + '/delete', {}, function() {});

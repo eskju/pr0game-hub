@@ -14,7 +14,7 @@ window.processQueue = function () {
     } else {
         getProgressBar().html('Save & reload');
         $('body').animate({opacity: 0}, 1000, function () {
-            unsafeWindow.location.reload();
+            window.location.reload();
         });
     }
 };
