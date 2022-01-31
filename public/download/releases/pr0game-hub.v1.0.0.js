@@ -10,7 +10,7 @@
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
-// @require      https://pr0game-hub.local/scripts/dist/script.js
+// @require      https://pr0game-hub.esKju.net/scripts/dist/script.js
 // ==/UserScript==
 
 (function() {
