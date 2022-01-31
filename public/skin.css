@@ -353,6 +353,7 @@ menu .fixed {
   text-transform: uppercase;
   padding: 3px;
   border-radius: 2px;
+  font-weight: bold;
 }
 .badge-ress {
   background: #addc8d;
