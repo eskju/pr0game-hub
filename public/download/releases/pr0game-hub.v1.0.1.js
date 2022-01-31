@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pr0game Hub (aka hornyHub)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  alliance hub using cloud
 // @author       esKju <info@sq-webdesign.de>
 // @match        https://pr0game.com/game.php?*
@@ -14,7 +14,7 @@
 // ==/UserScript==
 
 $(function() {
-    unsafeWindow.version = GM_getValue('version') || '1.0.0';
+    unsafeWindow.version = GM_getValue('version') || '1.0.1';
     unsafeWindow.apiKey = GM_getValue('api_key');
     unsafeWindow.debugMode = GM_getValue('debug_mode') === '1';
     unsafeWindow.developerMode = GM_getValue('developer_mode') === '1';
