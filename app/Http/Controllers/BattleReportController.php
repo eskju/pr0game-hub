@@ -10,7 +10,7 @@ class BattleReportController extends Controller
 {
     public function store(Request $request)
     {
-        if (!$battleReport = BattleReport::query()->where('report_id', $request->get('id'))->first()) {
+        if (!$battleReport = BattleReport::query()->where('report_id', $request->get('report_id'))->first()) {
             $battleReport = new BattleReport();
             $battleReport->report_id = $request->get('report_id');
         }
