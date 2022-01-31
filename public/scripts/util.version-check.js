@@ -1,5 +1,5 @@
 window.isNewerVersionAvailable = function (apiVersion) {
-    if(apiVersion !== currentVersion) {
+    if(apiVersion !== version) {
         setValue('version', apiVersion);
         window.location.reload();
     }
