@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AllianceController;
 use App\Http\Controllers\BattleReportController;
+use App\Http\Controllers\ExpeditionController;
 use App\Http\Controllers\HubController;
 use App\Http\Controllers\PlanetController;
 use App\Http\Controllers\PlayerController;
@@ -48,3 +49,5 @@ Route::get('/hub/fleet', HubController::class . '@getFleet');
 Route::post('/planets', PlanetController::class . '@storePlanetId');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');
 Route::post('/planets/fleet', PlanetController::class . '@storeFleet');
+
+Route::post('/expeditions', ExpeditionController::class . '@store');
