@@ -119,12 +119,6 @@ window.parseUrl = function () {
 };
 
 $(function() {
-    window.version = '1.0.0';
-    window.apiKey = getValue('api_key');
-    window.debugMode = getValue('debug_mode') === '1';
-    window.developerMode = getValue('developer_mode') === '1';
-    window.apiUrl = developerMode ? 'http://pr0game-hub.local/' : 'https://pr0game-hub.esKju.net/';
-
 // colors
     window.cBlack = [22, 22, 24];
     window.cWhite = [242, 245, 244];
