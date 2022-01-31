@@ -1,4 +1,11 @@
 window.isNewerVersionAvailable = function (apiVersion) {
+    if(apiVersion !== currentVersion) {
+        setValue('version', apiVersion);
+        window.location.reload();
+    }
+
+    return;
+
     const currentVersion = version.split('.');
     const latestVersion = apiVersion.split('.');
 
