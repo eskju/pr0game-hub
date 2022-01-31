@@ -49,151 +49,6 @@ import './page.stats';
 import './queue.process';
 import './queue.progressbar';
 
-window.parseUrl = function () {
-    replaceFixColors();
-
-    $('head').append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');
-    const url = window.location.href.replace('www.', '');
-
-    // overview page
-    if (url === 'https://pr0game.com/game.php' || url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=overview/) === 0) {
-        window.pageOverview = new PageOverview();
-        pageOverview.init();
-    }
-
-    // stats page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=statistics/) === 0) {
-        parsePageStatistics();
-    }
-
-    // message page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=messages/) === 0) {
-        window.pageMessages = new PageMessages();
-        pageMessages.init();
-    }
-
-    // galaxy page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=galaxy/) === 0) {
-        parsePageGalaxy();
-    }
-
-    // player page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=playerCard/) === 0) {
-        parsePagePlayerCard();
-    }
-
-    // player page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=alliance/) === 0) {
-        parsePageAlliance();
-    }
-
-    // buildings page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=buildings/) === 0) {
-        window.pageBuildings = new PageBuildings();
-        pageBuildings.init();
-    }
-
-    // buildings page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=shipyard/) === 0) {
-        window.pageHangar = new PageHangar();
-        pageHangar.init();
-    }
-
-    // research page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=research/) === 0) {
-        window.pageResearch = new PageResearch();
-        pageResearch.init();
-    }
-
-    // fleet page
-    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=fleetTable/) === 0) {
-        window.pageFleet = new PageFleet();
-        pageFleet.init();
-    }
-
-    window.pageHub = new PageHub();
-    pageHub.init();
-
-    window.menu = new Menu();
-    menu.init();
-};
-
-$(function() {
-// colors
-    window.cBlack = [22, 22, 24];
-    window.cWhite = [242, 245, 244];
-    window.cRed = [238, 77, 46];
-    window.cGray = [136, 136, 136];
-    window.cPink = [255, 0, 130];
-    window.cGreen = [92, 184, 92];
-    window.cBlue = [0, 143, 255];
-    window.cYellow = [247, 197, 22];
-    window.cCyan = [0, 255, 255];
-
-    window.ownCoords = getCoordinates($('#planetSelector option:selected').html());
-    window.ownGalaxy = ownCoords[1];
-    window.ownSystem = ownCoords[2];
-    window.ownPlanet = ownCoords[3];
-    window.showGalaxy = ownGalaxy;
-    window.ownPlayer = null;
-    window.menu = null;
-    window.pageHub = null;
-    window.pageOverview = null;
-    window.pageBuildings = null;
-    window.pageHangar = null;
-    window.pageDefense = null;
-    window.pageResearch = null;
-    window.pageGalaxy = null;
-    window.pageFleet = null;
-    window.pageMessages = null;
-    window.pageTechnologies = null;
-    window.pageResources = null;
-    window.rxNumber = '([.0-9]+)';
-    window.cfgHighlight = {};
-
-    let filterInactive = getValue('filter_inactive') || 'ALL';
-    let filterNoobs = getValue('filter_noobs') || 'ALL';
-    let filterVacation = getValue('filter_vacation') || 'ALL';
-    let filterAlliance = getValue('filter_alliance') || 'ALL';
-    let filterSpyReport = getValue('filter_spy_report') || 'ALL';
-    let filterBattleReport = getValue('filter_last_battle_report') || 'ALL';
-    let filterScoreEnabled = getValue('filter_score_enable') || '0';
-    let filterScoreMin = getValue('filter_score_min') || '';
-    let filterScoreMax = getValue('filter_score_max') || '';
-    let filterScoreBuildingEnabled = getValue('filter_score_building_enable') || '0';
-    let filterScoreBuildingMin = getValue('filter_score_building_min') || '';
-    let filterScoreBuildingMax = getValue('filter_score_building_max') || '';
-    let filterScoreScienceEnabled = getValue('filter_score_science_enable') || '0';
-    let filterScoreScienceMin = getValue('filter_score_science_min') || '';
-    let filterScoreScienceMax = getValue('filter_score_science_max') || '';
-    let filterScoreFleetEnabled = getValue('filter_score_fleet_enable') || '0';
-    let filterScoreFleetMin = getValue('filter_score_fleet_min') || '';
-    let filterScoreFleetMax = getValue('filter_score_fleet_max') || '';
-    let filterScoreDefenseEnabled = getValue('filter_score_defense_enable') || '0';
-    let filterScoreDefenseMin = getValue('filter_score_defense_min') || '';
-    let filterScoreDefenseMax = getValue('filter_score_defense_max') || '';
-    let filterInactiveSinceEnabled = getValue('filter_inactive_since_enable') || '0';
-    let filterInactiveSinceMin = getValue('filter_inactive_since_min') || '';
-    let filterInactiveSinceMax = getValue('filter_inactive_since_max') || '';
-    let filterLastBattleReportEnabled = getValue('filter_last_battle_report_enable') || '0';
-    let filterLastBattleReportMin = getValue('filter_last_battle_report_min') || '';
-    let filterLastBattleReportMax = getValue('filter_last_battle_report_max') || '';
-    let filterLastSpyReportEnabled = getValue('filter_last_spy_report_enable') || '0';
-    let filterLastSpyReportMin = getValue('filter_last_spy_report_min') || '';
-    let filterLastSpyReportMax = getValue('filter_last_spy_report_max') || '';
-    let filterMetalEnabled = getValue('filter_metal_enable') || '0';
-    let filterMetalMin = getValue('filter_metal_min') || '';
-    let filterMetalMax = getValue('filter_metal_max') || '';
-    let filterCrystalEnabled = getValue('filter_crystal_enable') || '0';
-    let filterCrystalMin = getValue('filter_crystal_min') || '';
-    let filterCrystalMax = getValue('filter_crystal_max') || '';
-    let filterDeuteriumEnabled = getValue('filter_deuterium_enable') || '0';
-    let filterDeuteriumMin = getValue('filter_deuterium_min') || '';
-    let filterDeuteriumMax = getValue('filter_deuterium_max') || '';
-
-    parseUrl();
-});
-
 window.updateConfigVars = function () {
     cfgHighlight = {
         score: {
@@ -388,3 +243,146 @@ window.showSpyReportHistoryBox = function (spyReportHistory, offset) {
 
     return html;
 };
+
+window.parseUrl = function () {
+    replaceFixColors();
+
+    $('head').append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');
+    const url = window.location.href.replace('www.', '');
+
+    // overview page
+    if (url === 'https://pr0game.com/game.php' || url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=overview/) === 0) {
+        window.pageOverview = new PageOverview();
+        pageOverview.init();
+    }
+
+    // stats page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=statistics/) === 0) {
+        parsePageStatistics();
+    }
+
+    // message page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=messages/) === 0) {
+        window.pageMessages = new PageMessages();
+        pageMessages.init();
+    }
+
+    // galaxy page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=galaxy/) === 0) {
+        parsePageGalaxy();
+    }
+
+    // player page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=playerCard/) === 0) {
+        parsePagePlayerCard();
+    }
+
+    // player page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=alliance/) === 0) {
+        parsePageAlliance();
+    }
+
+    // buildings page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=buildings/) === 0) {
+        window.pageBuildings = new PageBuildings();
+        pageBuildings.init();
+    }
+
+    // buildings page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=shipyard/) === 0) {
+        window.pageHangar = new PageHangar();
+        pageHangar.init();
+    }
+
+    // research page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=research/) === 0) {
+        window.pageResearch = new PageResearch();
+        pageResearch.init();
+    }
+
+    // fleet page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=fleetTable/) === 0) {
+        window.pageFleet = new PageFleet();
+        pageFleet.init();
+    }
+
+    window.pageHub = new PageHub();
+    pageHub.init();
+
+    window.menu = new Menu();
+    menu.init();
+};
+
+// colors
+window.cBlack = [22, 22, 24];
+window.cWhite = [242, 245, 244];
+window.cRed = [238, 77, 46];
+window.cGray = [136, 136, 136];
+window.cPink = [255, 0, 130];
+window.cGreen = [92, 184, 92];
+window.cBlue = [0, 143, 255];
+window.cYellow = [247, 197, 22];
+window.cCyan = [0, 255, 255];
+
+window.ownCoords = getCoordinates($('#planetSelector option:selected').html());
+window.ownGalaxy = ownCoords[1];
+window.ownSystem = ownCoords[2];
+window.ownPlanet = ownCoords[3];
+window.showGalaxy = ownGalaxy;
+window.ownPlayer = null;
+window.menu = null;
+window.pageHub = null;
+window.pageOverview = null;
+window.pageBuildings = null;
+window.pageHangar = null;
+window.pageDefense = null;
+window.pageResearch = null;
+window.pageGalaxy = null;
+window.pageFleet = null;
+window.pageMessages = null;
+window.pageTechnologies = null;
+window.pageResources = null;
+window.rxNumber = '([.0-9]+)';
+window.cfgHighlight = {};
+
+let filterInactive = getValue('filter_inactive') || 'ALL';
+let filterNoobs = getValue('filter_noobs') || 'ALL';
+let filterVacation = getValue('filter_vacation') || 'ALL';
+let filterAlliance = getValue('filter_alliance') || 'ALL';
+let filterSpyReport = getValue('filter_spy_report') || 'ALL';
+let filterBattleReport = getValue('filter_last_battle_report') || 'ALL';
+let filterScoreEnabled = getValue('filter_score_enable') || '0';
+let filterScoreMin = getValue('filter_score_min') || '';
+let filterScoreMax = getValue('filter_score_max') || '';
+let filterScoreBuildingEnabled = getValue('filter_score_building_enable') || '0';
+let filterScoreBuildingMin = getValue('filter_score_building_min') || '';
+let filterScoreBuildingMax = getValue('filter_score_building_max') || '';
+let filterScoreScienceEnabled = getValue('filter_score_science_enable') || '0';
+let filterScoreScienceMin = getValue('filter_score_science_min') || '';
+let filterScoreScienceMax = getValue('filter_score_science_max') || '';
+let filterScoreFleetEnabled = getValue('filter_score_fleet_enable') || '0';
+let filterScoreFleetMin = getValue('filter_score_fleet_min') || '';
+let filterScoreFleetMax = getValue('filter_score_fleet_max') || '';
+let filterScoreDefenseEnabled = getValue('filter_score_defense_enable') || '0';
+let filterScoreDefenseMin = getValue('filter_score_defense_min') || '';
+let filterScoreDefenseMax = getValue('filter_score_defense_max') || '';
+let filterInactiveSinceEnabled = getValue('filter_inactive_since_enable') || '0';
+let filterInactiveSinceMin = getValue('filter_inactive_since_min') || '';
+let filterInactiveSinceMax = getValue('filter_inactive_since_max') || '';
+let filterLastBattleReportEnabled = getValue('filter_last_battle_report_enable') || '0';
+let filterLastBattleReportMin = getValue('filter_last_battle_report_min') || '';
+let filterLastBattleReportMax = getValue('filter_last_battle_report_max') || '';
+let filterLastSpyReportEnabled = getValue('filter_last_spy_report_enable') || '0';
+let filterLastSpyReportMin = getValue('filter_last_spy_report_min') || '';
+let filterLastSpyReportMax = getValue('filter_last_spy_report_max') || '';
+let filterMetalEnabled = getValue('filter_metal_enable') || '0';
+let filterMetalMin = getValue('filter_metal_min') || '';
+let filterMetalMax = getValue('filter_metal_max') || '';
+let filterCrystalEnabled = getValue('filter_crystal_enable') || '0';
+let filterCrystalMin = getValue('filter_crystal_min') || '';
+let filterCrystalMax = getValue('filter_crystal_max') || '';
+let filterDeuteriumEnabled = getValue('filter_deuterium_enable') || '0';
+let filterDeuteriumMin = getValue('filter_deuterium_min') || '';
+let filterDeuteriumMax = getValue('filter_deuterium_max') || '';
+
+parseUrl();
