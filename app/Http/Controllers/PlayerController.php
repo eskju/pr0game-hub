@@ -27,10 +27,6 @@ class PlayerController extends Controller
 
     public function stats(Request $request): array
     {
-        $user = auth()->user();
-        $user->version = $request->get('version');
-        $user->save();
-
         foreach ($request->get('ids') as $id) {
             if (!Player::query()->find($id)) {
                 $player = new Player();
@@ -73,6 +69,10 @@ class PlayerController extends Controller
 
     public function overview(Request $request): array
     {
+        $user = auth()->user();
+        $user->version = $request->get('version');
+        $user->save();
+
         $this->dateFormatForHumans = $request->get('date_for_humans') ?? false;
 
         $query = Planet::query()
