@@ -347,4 +347,15 @@ menu .fixed {
   font-weight: normal;
   color: #75c0c7 !important;
 }
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  text-transform: uppercase;
+  padding: 3px;
+  border-radius: 2px;
+}
+.badge-ress {
+  background: #addc8d;
+  color: #fff;
+}
 /*# sourceMappingURL=skin.css.map */
