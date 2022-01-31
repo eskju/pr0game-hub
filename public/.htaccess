@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    AddCharset UTF-8 .html .css .js
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
