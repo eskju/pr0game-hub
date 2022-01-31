@@ -168,7 +168,7 @@ class PlayerController extends Controller
                 ->orderBy('name')
                 ->get()
                 ->pluck('id'),
-            'version' => '1.0.1',
+            'version' => '1.0.2',
             'player' => $planet ? $planet->player : []
         ];
     }
@@ -331,14 +331,11 @@ class PlayerController extends Controller
 
     public function getOwnPlayerChart(Player $player, Request $request)
     {
-        return $this->getPlayerChart(auth()->user()->player, $request);
+        return $this->getPlayerChart(Player::query()->find(auth()->user()->player_id), $request);
     }
 
     public function getPlayerChart(Player $player, Request $request)
     {
-        Log::info($player->id);
-        Log::info($request->get('api_key') . ', ' . $request->ip());
-
         return LogPlayer::query()
             ->select([
                 DB::raw('DATE(`created_at`) AS `date`'),

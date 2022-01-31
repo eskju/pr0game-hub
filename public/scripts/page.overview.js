@@ -308,7 +308,7 @@ window.PageOverview = function()
                 galaxy: ownGalaxy,
                 system: ownSystem,
                 planet: ownPlanet,
-                show_galaxy: showGalaxy,
+                show_galaxy: getValue('show_galaxy_enable') === '1' ? (getValue('show_galaxy_value') || ownGalaxy) : ownGalaxy,
                 order_by: getValue('orderBy'),
                 order_direction: getValue('orderDirection'),
                 date_for_humans: (getValue('date_for_humans') || '0') === '1'

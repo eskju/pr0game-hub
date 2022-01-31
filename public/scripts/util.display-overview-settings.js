@@ -27,6 +27,7 @@ window.displayOverviewSettings = function() {
     html += displayOverviewHighlight('Forschungspunkte', 'highlight_score_science', cPink);
     html += displayOverviewHighlight('Militärpunkte', 'highlight_score_military', cRed);
     html += displayOverviewHighlight('Verteidigungspunkte', 'highlight_score_defense', cYellow);
+    html += displayOverviewHighlight('Galaxie überschreiben? (z.B. 4 für Gala 4)', 'show_galaxy', cWhite, 'Galaxie Nummer');
 
     html += '<tr><th colspan="4">FILTER</th></tr>';
     html += displayOverviewSettingsSelect(getHotkeyIcon('I') + 'Inaktive Spieler', 'filter_inactive', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
