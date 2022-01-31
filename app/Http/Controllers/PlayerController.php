@@ -131,9 +131,9 @@ class PlayerController extends Controller
         }
 
         $planet = Planet::query()
-            ->where('galaxy', $request->get('galaxy'))
-            ->where('system', $request->get('system'))
-            ->where('planet', $request->get('planet'))
+            ->where('galaxy', $request->get('show_galaxy') ?? $request->get('galaxy'))
+            ->where('system', $request->get('show_system') ?? $request->get('system'))
+            ->where('planet', $request->get('show_planet') ?? $request->get('planet'))
             ->first();
 
         return [
