@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PlayerController extends Controller
 {
@@ -28,6 +27,10 @@ class PlayerController extends Controller
 
     public function stats(Request $request): array
     {
+        $user = auth()->user();
+        $user->version = $request->get('version');
+        $user->save();
+
         foreach ($request->get('ids') as $id) {
             if (!Player::query()->find($id)) {
                 $player = new Player();
