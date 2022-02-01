@@ -47,12 +47,12 @@ class AllianceController extends Controller
                 }
 
                 $score = LogPlayer::query()
-                    ->select(DB::raw('MAX(score) as own_score'))
+                    ->select(DB::raw('MAX(score) as score'))
                     ->where('external_id', $player->id)
                     ->whereRaw('DATE(created_at) = "' . $date . '"')
                     ->first();
 
-                $return[$player->id][] = $score ?? null;
+                $return[$player->id][] = $score ? $score->score : null;
             }
 
             $return['dates'][] = $date;
