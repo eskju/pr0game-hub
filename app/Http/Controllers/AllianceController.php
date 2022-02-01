@@ -40,28 +40,32 @@ class AllianceController extends Controller
             'data' => []
         ];
 
-        foreach($players as $player) {
+        for ($i = 0; $i < $daysDiff; $i++) {
+            $date = Carbon::parse('2022-01-18')->addDays($i)->toDateString();
+            $return['dates'][] = $date;
+        }
+
+        foreach ($players as $player) {
             $return['players'][] = $player->name;
         }
 
-        for ($i = 0; $i < $daysDiff; $i++) {
-            $date = Carbon::parse('2022-01-18')->addDays($i)->toDateString();
+        $return['data'] = [];
 
-            foreach ($players as $player) {
-                if (!isset($return['data'][$player->id])) {
-                    $return['data'][$player->id] = [];
-                }
+        foreach ($players as $player) {
+            $row = [];
 
+            for ($i = 0; $i < $daysDiff; $i++) {
+                $date = Carbon::parse('2022-01-18')->addDays($i)->toDateString();
                 $score = LogPlayer::query()
                     ->select(DB::raw('MAX(score) as score'))
                     ->where('external_id', $player->id)
                     ->whereRaw('DATE(created_at) = "' . $date . '"')
                     ->first();
 
-                $return['data'][$player->id][] = $score ? $score->score : null;
+                $row[] = $score ? $score->score : null;
             }
 
-            $return['dates'][] = $date;
+            $return['data'][] = $row;
         }
 
         return $return;
