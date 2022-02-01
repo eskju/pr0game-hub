@@ -354,11 +354,12 @@ class PlayerController extends Controller
             ->get()
             ->map(function (LogPlayer $player) {
                 $player->date = Carbon::parse($player->date)->format('d.m.');
-                $player->own_score = LogPlayer::query()
-                        ->select(DB::raw('MAX(score) as own_score'))
-                        ->where('external_id', auth()->id())
-                        ->where(DB::raw('DATE(created_at)'), $player->date)
-                        ->first('own_score');
+                $tmp = LogPlayer::query()
+                    ->select(DB::raw('MAX(score) as own_score'))
+                    ->where('external_id', auth()->user()->player_id)
+                    ->where(DB::raw('DATE(created_at)'), $player->date)
+                    ->first();
+                $player->own_score = $tmp->own_score ?? null;
 
                 return $player;
             });
