@@ -353,13 +353,13 @@ class PlayerController extends Controller
             ->groupBy(DB::raw('DATE(created_at)'))
             ->get()
             ->map(function (LogPlayer $player) {
-                $player->date = Carbon::parse($player->date)->format('d.m.');
                 $tmp = LogPlayer::query()
                     ->select(DB::raw('MAX(score) as own_score'))
                     ->where('external_id', auth()->user()->player_id)
                     ->whereRaw('DATE(created_at) = "' . $player->date . '"')
                     ->first();
                 $player->own_score = $tmp->own_score ?? null;
+                $player->date = Carbon::parse($player->date)->format('d.m.');
 
                 return $player;
             });
