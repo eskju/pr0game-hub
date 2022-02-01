@@ -33,7 +33,7 @@ class AllianceController extends Controller
             ->orderBy('name')
             ->get();
 
-        $daysDiff = Carbon::parse('2022-01-21')->diffInDays(Carbon::now());
+        $daysDiff = Carbon::parse('2022-01-21')->diffInDays(Carbon::now()) + 1;
         $return = [
             'dates' => [],
             'players' => [],
