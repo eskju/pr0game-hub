@@ -1,16 +1,18 @@
-window.displayChart = function(playerId) {
+window.displayChart = function (playerId) {
     $('head').append('<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>');
-    getJSON('players' + (playerId ? '/' + playerId : '') + '/chart', function(response) {
+    getJSON('players' + (playerId ? '/' + playerId : '') + '/chart', function (response) {
         const chartRespone = JSON.parse(response.responseText);
         const dates = [];
+        const ownScore = [];
         const score = [];
         const scoreBuilding = [];
         const scoreResearch = [];
         const scoreMilitary = [];
         const scoreDefense = [];
 
-        $.each(chartRespone, function(key, obj) {
+        $.each(chartRespone, function (key, obj) {
             dates.push(obj.date);
+            ownScore.push(obj.own_score);
             score.push(obj.score);
             scoreBuilding.push(obj.score_building);
             scoreResearch.push(obj.score_science);
@@ -18,7 +20,7 @@ window.displayChart = function(playerId) {
             scoreDefense.push(obj.score_defense);
         });
 
-        $('body').animate({ opacity: 1}, 500, function() {
+        $('body').animate({opacity: 1}, 500, function () {
             const myChart = new Chart(
                 document.getElementById('playerChart'),
                 {
@@ -32,6 +34,13 @@ window.displayChart = function(playerId) {
                                 borderColor: '#008fff',
                                 borderWidth: 2,
                                 radius: 2
+                            },
+                            {
+                                label: 'Eigene Punkte',
+                                data: ownScore,
+                                borderColor: '#008fff',
+                                borderWidth: 1,
+                                radius: 1
                             },
                             {
                                 label: 'Gebäude',
