@@ -1,11 +1,11 @@
-window.PageHub = function() {
+window.PageHub = function () {
     const $this = this;
     this.container = $('content');
-    this.init = function() {
+    this.init = function () {
     };
 
-    this.loadPage = function(alias) {
-        switch(alias) {
+    this.loadPage = function (alias) {
+        switch (alias) {
             case 'planets':
                 this.clearPage();
                 this.loadPagePlanets();
@@ -31,25 +31,52 @@ window.PageHub = function() {
         }
     };
 
-    this.clearPage = function() {
+    this.clearPage = function () {
         this.container.html('');
     };
 
-    this.loadPagePlanets = function() {
-        getJSON('hub/planets', function(response) {
-            if(response.status !== 200) {
+    this.sortData = function (a, b) {
+        let property = getValue('hub_planets_orderBy') || 'coordinates';
+        const invertSort = getValue('hub_planets_orderDirection') !== 'DESC' ? 1 : -1;
+
+        const offsets = property.split('.');
+        if (offsets.length === 2) {
+            a = a[offsets[0]];
+            b = b[offsets[0]];
+            property = offsets[1];
+        }
+
+        let aVal = a[property] || '';
+        let bVal = b[property] || '';
+
+        if (property !== 'alliance_name' && property !== 'name') {
+            aVal = getInt(aVal);
+            bVal = getInt(bVal);
+        }
+
+        return ((aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0) * invertSort;
+    };
+
+    this.loadPagePlanets = function () {
+        getJSON('hub/planets', function (response) {
+            if (response.status !== 200) {
                 $this.container.html('<p style="color: ' + getRgb(cRed) + ';">Da Wing-Member häufiger die Allianz verlassen, sind Flotteninformationen etc. nur für die Main Allianz einsehbar.</p>');
             }
 
-            const data = JSON.parse(response.responseText);
+            let data = JSON.parse(response.responseText);
+            const fn = $this.sortData;
+
+            // sort player list
+            data = data.sort(fn);
+
             let html = '';
 
             html += '<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Gebäudenamen zu sehen.</i></p>';
             html += '<table class="table519">';
             html += '<tr>';
-            html += '<th colspan="3">Koordinaten</th>';
-            html += '<th style="text-align: left;">Spieler</th>';
-            html += '<th style="text-align: left;">Gebäudepunkte</th>';
+            html += '<th class="sortable" colspan="3" data-sort="coordinates" data-direction="ASC">Koordinaten</th>';
+            html += '<th class="sortable" style="text-align: left;" data-sort="name" data-direction="ASC">Spieler</th>';
+            html += '<th class="sortable" style="text-align: left;" data-sort="score_building" data-direction="DESC">Gebäudepunkte</th>';
             html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Metallmine">M</th>';
             html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Kristallmine">K</th>';
             html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Deuteriumsynthetisierer">D</th>';
@@ -71,7 +98,7 @@ window.PageHub = function() {
             html += '<th style="text-align: right; color: ' + getRgb(cRed) + '" title="Raketensilo">R</th>';
             html += '</tr>';
 
-            $.each(data, function(key, obj) {
+            $.each(data, function (key, obj) {
                 html += '<tr>';
                 html += '<td style="text-align: right; width: 35px">' + obj.galaxy + '</td>';
                 html += '<td style="text-align: right; width: 35px">' + obj.system + '</td>';
@@ -103,11 +130,27 @@ window.PageHub = function() {
             html += '</table>';
 
             $this.container.html(html);
+            $('th.sortable').click(function () {
+                if ($(this).attr('data-sort')) {
+                    setValue('hub_planets_orderDirection', $(this).attr('data-direction'));
+                    setValue('hub_planets_orderBy', $(this).attr('data-sort'));
+                    $this.loadPagePlanets();
+                }
+            });
+
+            $('th.sortable').each(function (key, obj) {
+                $(obj).css('cursor', 'pointer');
+
+                if ($(obj).attr('data-sort') == (getValue('hub_planets_orderBy') || 'coordinates') && $(obj).attr('data-direction') == (getValue('hub_planets_orderDirection') || 'ASC')) {
+                    $(obj).prepend($(obj).attr('data-direction') === 'ASC' ? '<i class="fa fa-caret-up"></i> ' : '<i class="fa fa-caret-down"></i> ');
+                    $(obj).css('white-space', 'nowrap');
+                }
+            });
         });
     };
 
-    this.loadPageResearch = function() {
-        getJSON('hub/research', function(response) {
+    this.loadPageResearch = function () {
+        getJSON('hub/research', function (response) {
             const data = JSON.parse(response.responseText);
             let html = '';
 
@@ -149,7 +192,7 @@ window.PageHub = function() {
             html += '<th style="text-align: right;" title="Gravitonforschung">G</th>';
             html += '</tr>';
 
-            $.each(data, function(key, obj) {
+            $.each(data, function (key, obj) {
                 html += '<tr>';
                 html += '<td style="text-align: left;">' + obj.name + '</td>';
                 html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.score_science || 0) / getMaxValue(data, 'score_science'), cRed) + '">' + obj.score_science + '</td>';
@@ -181,8 +224,8 @@ window.PageHub = function() {
         });
     };
 
-    this.loadPageFleet = function() {
-        getJSON('hub/fleet', function(response) {
+    this.loadPageFleet = function () {
+        getJSON('hub/fleet', function (response) {
             const data = JSON.parse(response.responseText);
             let html = '';
 
@@ -209,7 +252,7 @@ window.PageHub = function() {
             html += '</tr>';
 
             let style;
-            $.each(data, function(key, obj) {
+            $.each(data, function (key, obj) {
                 style = obj.name === 'Gesamt' ? 'font-weight: bold; padding-top: 5px; border-top: 1px solid ' + getRgb(cRed) + '; color: ' + getRgb(cRed) : '';
                 html += '<tr>';
                 html += '<td style="text-align: left; ' + style + '">' + obj.name + '</td>';
@@ -238,17 +281,52 @@ window.PageHub = function() {
         });
     };
 
-    this.loadPageChangelog = function() {
+    this.loadPageChangelog = function () {
         let html = '';
 
         const changelog = [
-            {version: '1.0.9', date_time: '2022-02-01 11PM', changes: 'added "observe" function for buildings (visible at overview)'},
+            {
+                version: '1.0.12',
+                date_time: '2022-02-01 11PM',
+                changes: 'made coordinates/player name/score in hub -> planets sortable'
+            },
+            {
+                version: '1.0.11',
+                date_time: '2022-02-01 11PM',
+                changes: 'mark planet\'s production red, when storage limits are exceeded'
+            },
+            {
+                version: '1.0.10',
+                date_time: '2022-02-01 11PM',
+                changes: 'added "observe" function for research (visible at overview)'
+            },
+            {
+                version: '1.0.9',
+                date_time: '2022-02-01 11PM',
+                changes: 'added "observe" function for buildings (visible at overview)'
+            },
             {version: '1.0.8', date_time: '2022-02-01 11AM', changes: 'added last attack/spy to galaxy view'},
-            {version: '1.0.7', date_time: '2022-02-01 4AM', changes: 'added chart for alliance page (score development per member)'},
-            {version: '1.0.6', date_time: '2022-02-01 3AM', changes: 'added own score as a reference to player score charts'},
-            {version: '1.0.5', date_time: '2022-02-01 3AM', changes: 'changed button styles at buildings/research page when not affordable'},
+            {
+                version: '1.0.7',
+                date_time: '2022-02-01 4AM',
+                changes: 'added chart for alliance page (score development per member)'
+            },
+            {
+                version: '1.0.6',
+                date_time: '2022-02-01 3AM',
+                changes: 'added own score as a reference to player score charts'
+            },
+            {
+                version: '1.0.5',
+                date_time: '2022-02-01 3AM',
+                changes: 'changed button styles at buildings/research page when not affordable'
+            },
             {version: '1.0.4', date_time: '2022-02-01 2AM', changes: 'added changelog page'},
-            {version: '1.0.3', date_time: '2022-02-01 1AM', changes: 'added resources to overview (visit resource page at planets to update)'},
+            {
+                version: '1.0.3',
+                date_time: '2022-02-01 1AM',
+                changes: 'added resources to overview (visit resource page at planets to update)'
+            },
             {version: '1.0.2', date_time: '2022-02-01 1AM', changes: 'added "show_galaxy" setting'},
             {version: '1.0.1', date_time: '2022-01-31 6PM', changes: 'security bypasses / bugfix'},
             {version: '1.0.0', date_time: '2022-01-31 5PM', changes: 'stable release with auto updater'},
@@ -262,12 +340,12 @@ window.PageHub = function() {
         html += '<th class="text-left">Changes</th>';
         html += '</tr>';
 
-        $.each(changelog, function(key, obj) {
-           html += '<tr>';
-           html += '<td class="text-right">' + obj.version + '</td>';
-           html += '<td class="text-left">' + obj.date_time + '</td>';
-           html += '<td class="text-left">' + obj.changes + '</td>';
-           html += '</tr>';
+        $.each(changelog, function (key, obj) {
+            html += '<tr>';
+            html += '<td class="text-right">' + obj.version + '</td>';
+            html += '<td class="text-left">' + obj.date_time + '</td>';
+            html += '<td class="text-left">' + obj.changes + '</td>';
+            html += '</tr>';
         });
 
         html += '</table>';

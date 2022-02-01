@@ -20,17 +20,24 @@ window.Resources = function () {
         });
 
         $('#current_metal').stop().animate({left: 0}, 1000, () => {
-           $this.updateVars();
+            $this.updateVars();
         });
     };
 
     this.updateVar = function (coords, alias) {
         const initValue = getInt(getValue(coords + '_' + alias));
         const production = getInt(getValue(coords + '_production_' + alias));
+        const limit = getInt(getValue(coords + '_limit_' + alias));
         const timeDiff = getValue(coords + '_resource_update') ? new Date().getTime() - getInt(getValue(coords + '_resource_update')) : null;
         const currentValue = !timeDiff ? initValue : initValue + production / 86400 * timeDiff / 1000;
 
-        $('.ress_production_' + alias + '_' + coords.replace(/\:/g, '_')).html(production ? numberFormat(production / 86400 * 3600) + '/h' : '---');
+        if(currentValue > limit) {
+            $('.ress_production_' + alias + '_' + coords.replace(/\:/g, '_')).html('<span class="text-red" title="Die Lager sind vermutlich voll. Produktion gestoppt.">' + (production ? numberFormat(production / 86400 * 3600) + '/h' : '---') + '</span>');
+        }
+        else {
+            $('.ress_production_' + alias + '_' + coords.replace(/\:/g, '_')).html(production ? numberFormat(production / 86400 * 3600) + '/h' : '---');
+        }
+
         $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html(numberFormat(currentValue));
     }
 };

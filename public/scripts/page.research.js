@@ -49,14 +49,57 @@ window.PageResearch = function()
         });
     };
 
-    this.disableButtons = function(cell) {
-        if($(cell).find('.text-red').length > 0) {
+    this.disableButtons = function (cell) {
+        if ($(cell).find('.text-red').length > 0) {
             $($(cell).find('.build_submit')).addClass('text-gray');
-            $($(cell).parent()).css({ opacity: $(cell).find('.build_submit').length === 0 ? 0.25 : 0.75 });
+            $(cell).parent().addClass('fade-' + ($(cell).find('.build_submit').length === 0 ? '25' : '75'));
+
+            let buildingRight = $($(cell).parent().find('.building-right'));
+            let ressList = $(buildingRight.find('> span:first-child')).html();
+            let coords = ownGalaxy + ':' + ownSystem + ':' + ownPlanet;
+            let resourceId = $($(cell).parent().find('.buildn > a')).attr('onclick').match(/\(([0-9]+)\)/)[1];
+
+            let metal = $this.getCost('Metall', ressList);
+            let crystal = $this.getCost('Kristall', ressList);
+            let deuterium = $this.getCost('Deuterium', ressList);
+
+            // show notification button
+            if (new PlanetResourceNotification().hasNotification(coords, resourceId)) {
+                const timestamp = new PlanetResourceNotification().getFinishTime(coords);
+                buildingRight.append('<br><button onclick="(new PlanetResourceNotification().removeNotification(\'' + coords + '\'))" style="color: ' + getRgb(cRed) + '"><i class="fa fa-bell-slash"></i> baubar in <span class="notification-timer" data-timestamp="' + timestamp + '">' + formatTimeDiff(timestamp) + '</span></button>');
+            } else {
+                buildingRight.append('<br><button onclick="(new PlanetResourceNotification().addNotification(\'' + coords + '\', \'' + resourceId + '\',' + metal + ',' + crystal + ',' + deuterium + '))" style="color: ' + getRgb(cGreen) + '"><i class="fa fa-bell"></i> benachrichtigen, wenn baubar</button>');
+            }
         }
+
+        window.setInterval(function () {
+            $('.notification-timer').each(function () {
+                $(this).text(formatTimeDiff($(this).attr('data-timestamp')));
+            });
+        }, 1000);
     }
 
     this.changeBuildTimeStyle = function(cell) {
         $(cell).html($(cell).html().replace(/(.*)Bauzeit\:(.*)/,'$1<span class="text-gray">Bauzeit: $2</span>'));
+    }
+
+    this.getCost = function (label, html) {
+        let tmp;
+
+        switch (label) {
+            case 'Metall':
+                tmp = html.match(/\<a (.*)\>(Metall)\<\/a\>(.*)\<b(.*)\<span(.*)\>([.0-9]+)\<\//);
+                break;
+
+            case 'Kristall':
+                tmp = html.match(/\<a (.*)\>(Kristall)\<\/a\>(.*)\<b(.*)\<span(.*)\>([.0-9]+)\<\//);
+                break;
+
+            case 'Deuterium':
+                tmp = html.match(/\<a (.*)\>(Deuterium)\<\/a\>(.*)\<b(.*)\<span(.*)\>([.0-9]+)\<\//);
+                break;
+        }
+
+        return tmp ? getInt(tmp[6]) : 0;
     }
 };
