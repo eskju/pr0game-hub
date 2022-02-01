@@ -357,6 +357,7 @@ class PlayerController extends Controller
                 $tmp = LogPlayer::query()
                     ->select(DB::raw('MAX(score) as own_score'))
                     ->where('external_id', auth()->user()->player_id)
+                    ->whereRaw('DATE(created_at) = "' . $player->date . '"')
                     ->first();
                 $player->own_score = $tmp->own_score ?? null;
 
