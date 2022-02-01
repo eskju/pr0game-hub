@@ -1,5 +1,5 @@
 window.parsePageAlliance = function () {
-    var allianceId = window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1];
+    var allianceId = window.location.href.match(/[\?\&]id=([(0-9]+)/i)[1] || 0;
     var tbl = $($('content table')[0]);
     tbl.append('<tr><th colspan="2">Planeten</th></tr>');
     getJSON('alliances/' + allianceId + '/planets', function(response) {

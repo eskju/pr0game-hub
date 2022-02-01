@@ -26,7 +26,7 @@ class AllianceController extends Controller
             ->get();
     }
 
-    public function getChart(Alliance $alliance): object
+    public function getChart(Alliance $alliance): array
     {
         $players = Player::query()
             ->where('alliance_id', $alliance->id)
@@ -34,7 +34,7 @@ class AllianceController extends Controller
             ->get();
 
         $daysDiff = Carbon::parse('2022-01-18')->diffInDays(Carbon::now());
-        $return = (object)[
+        $return = [
             'dates' => []
         ];
 
@@ -55,7 +55,7 @@ class AllianceController extends Controller
                 $return[$player->id][] = $score ?? null;
             }
 
-            $return->dates[] = $date;
+            $return['dates'][] = $date;
         }
 
         return $return;
