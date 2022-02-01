@@ -28,7 +28,9 @@ import './util.get-player-attribute-style';
 import './util.get-player-row-id-style';
 import './util.get-player-row-style';
 import './util.get-rgb';
+import './util.number-format';
 import './util.replace-fix-colors';
+import './util.resources';
 import './util.save-ph-value';
 import './util.show-message';
 import './util.version-check';
@@ -45,6 +47,7 @@ import './page.messages';
 import './page.overview';
 import './page.playercard';
 import './page.research';
+import './page.resources';
 import './page.stats';
 import './queue.process';
 import './queue.progressbar';
@@ -247,6 +250,9 @@ window.showSpyReportHistoryBox = function (spyReportHistory, offset) {
 window.parseUrl = function () {
     replaceFixColors();
 
+    let resources = new Resources();
+    resources.init();
+
     $('head').append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');
     const url = window.location.href.replace('www.', '');
 
@@ -304,6 +310,12 @@ window.parseUrl = function () {
     else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=fleetTable/) === 0) {
         window.pageFleet = new PageFleet();
         pageFleet.init();
+    }
+
+    // fleet page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=resources/) === 0) {
+        window.pageResources = new PageResources();
+        pageResources.init();
     }
 
     window.pageHub = new PageHub();

@@ -252,6 +252,48 @@ window.PageOverview = function()
         });
 
         html += '</tr>';
+
+        html += '<tr>';
+        html += '<td class="text-left">Metall</td>';
+
+        $('#planetSelector option').each(function(key, obj) {
+            coords = getCoordinates(obj.innerHTML);
+            html += '<td class="text-right"><span class="ress_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td class="text-right"><span class="ress_production_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+        });
+
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="text-left">Kristall</td>';
+
+        $('#planetSelector option').each(function(key, obj) {
+            coords = getCoordinates(obj.innerHTML);
+            html += '<td class="text-right"><span class="ress_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td class="text-right"><span class="ress_production_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+        });
+
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="text-left">Deuterium</td>';
+
+        $('#planetSelector option').each(function(key, obj) {
+            coords = getCoordinates(obj.innerHTML);
+            html += '<td class="text-right"><span class="ress_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td class="text-right"><span class="ress_production_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+        });
+
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="text-left">Energie</td>';
+
+        $('#planetSelector option').each(function(key, obj) {
+            coords = getCoordinates(obj.innerHTML);
+            html += '<td class="text-right">---</td>';
+            html += '<td class="text-right" style="color: ' + getRgb(parseInt(getValue(coords[0] + '_production_energy')) > 0 ? cGreen : cRed) + '">' + getValue(coords[0] + '_production_energy') + '</td>';
+        });
+
+        html += '</tr>';
+
         html += '</table>';
         $($('.infos')[2]).addClass('noPadding');
         $($('.infos')[2]).html(html);
