@@ -65,7 +65,7 @@ class AllianceController extends Controller
                 $row[] = $score ? $score->score : null;
             }
 
-            $return['data'][] = $row;
+            $return['datasets'][] = $row;
         }
 
         return $return;

@@ -10,7 +10,7 @@ window.displayAllianceChart = function (allianceId) {
         $.each(chartRespone, function (key, obj) {
             dates.push(obj.date);
             labels.push(obj.players);
-            data.push(obj.data);
+            data.push(obj.datasets);
 
             for (var i = 0; i < data.length; i++) {
                 console.log(i, data[i]);
