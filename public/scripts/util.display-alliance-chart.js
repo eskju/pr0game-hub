@@ -13,6 +13,7 @@ window.displayAllianceChart = function (allianceId) {
             data.push(obj.data);
 
             $.each(data, function(key, obj) {
+                console.log(key,obj);
                dataSets.push({
                    label: labels[key],
                    data: obj,
