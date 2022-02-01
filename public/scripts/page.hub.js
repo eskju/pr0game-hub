@@ -242,6 +242,7 @@ window.PageHub = function() {
         let html = '';
 
         const changelog = [
+            {version: '1.0.9', date_time: '2022-02-01 11PM', changes: 'added "observe" function for buildings (visible at overview)'},
             {version: '1.0.8', date_time: '2022-02-01 11AM', changes: 'added last attack/spy to galaxy view'},
             {version: '1.0.7', date_time: '2022-02-01 4AM', changes: 'added chart for alliance page (score development per member)'},
             {version: '1.0.6', date_time: '2022-02-01 3AM', changes: 'added own score as a reference to player score charts'},
