@@ -55,6 +55,7 @@ window.PageBuildings = function()
     this.disableButtons = function(cell) {
         if($(cell).find('.text-red').length > 0) {
             $($(cell).find('.build_submit')).addClass('text-gray');
+            $($(cell).parent()).css({ opacity: $(cell).find('.build_submit').length === 0 ? 0.25 : 0.75 });
         }
     }
 
