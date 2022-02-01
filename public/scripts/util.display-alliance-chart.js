@@ -23,8 +23,8 @@ window.displayAllianceChart = function (allianceId) {
             });
         });
 
+        $('#content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 300px"></canvas>');
         $('body').animate({opacity: 1}, 500, function () {
-            $('#content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 300px"></canvas>');
             const myChart = new Chart(
                 document.getElementById('chart'),
                 {
