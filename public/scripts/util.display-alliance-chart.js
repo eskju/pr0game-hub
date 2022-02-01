@@ -23,7 +23,7 @@ window.displayAllianceChart = function (allianceId) {
             });
         });
 
-        $('#content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 300px"></canvas>');
+        $('content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 300px"></canvas>');
         $('body').animate({opacity: 1}, 500, function () {
             const myChart = new Chart(
                 document.getElementById('chart'),
