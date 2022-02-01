@@ -42,7 +42,7 @@ class GalaxyController extends Controller
         foreach ($planets as $planet) {
             $planet = $planet->toArray();
 
-            $return[$planet['planet']] = [
+            $return[$planet['planet'] - 1] = [
                 'planet' => $planet['planet'],
                 'external_id' => $planet['external_id'],
                 'last_battle_report' => $planet['last_battle_report'] ? $this->getDateTime(Carbon::parse($planet['last_battle_report'])->subMinute()->subHour()) : '',
