@@ -60,7 +60,7 @@ class PlayerController extends Controller
             ->update(['on_vacation' => 1, 'updated_at' => DB::raw('updated_at')]);
 
         return [
-            'players' => Player::query()->where('is_deleted',0)->whereIn('id', $request->get('ids'))->get(),
+            'players' => Player::query()->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->get(),
             'missing_ids' => Player::query()->select('id')->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->whereNull('name')->get()->pluck('id'),
             'outdated_ids' => Player::query()->select('id')->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->where('updated_at', '<', time() - 3600 * 8)->get()->pluck('id')
         ];
@@ -354,6 +354,11 @@ class PlayerController extends Controller
             ->get()
             ->map(function (LogPlayer $player) {
                 $player->date = Carbon::parse($player->date)->format('d.m.');
+                $player->own_score = LogPlayer::query()
+                        ->select(DB::raw('MAX(score) as own_score'))
+                        ->where('external_id', auth()->id())
+                        ->where(DB::raw('DATE(created_at)'), $player->date)
+                        ->first('own_score');
 
                 return $player;
             });
