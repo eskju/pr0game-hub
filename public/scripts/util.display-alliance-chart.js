@@ -1,4 +1,4 @@
-window.displayChart = function (allianceId) {
+window.displayAllianceChart = function (allianceId) {
     $('head').append('<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>');
     getJSON('alliances/' + allianceId + '/chart', function(response) {
         const chartRespone = JSON.parse(response.responseText);
