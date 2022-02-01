@@ -36,6 +36,7 @@ Route::post('/players/{playerId}', PlayerController::class . '@store');
 Route::post('/players/{playerId}/delete', PlayerController::class . '@delete');
 
 Route::get('/alliances/{alliance}/planets', AllianceController::class . '@getPlanets');
+Route::get('/alliances/{alliance}/chart', AllianceController::class . '@getChart');
 
 Route::post('/spy-reports', SpyReportController::class . '@store');
 Route::get('/spy-reports/{galaxy}/{system}/{planet}', SpyReportController::class . '@history');
