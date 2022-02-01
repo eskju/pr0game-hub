@@ -5,6 +5,7 @@ window.Menu = function() {
         html += '<li data-hub-page="planets"><a href="javascript:void(0)"><i class="fa fa-globe-asia"></i> Planeten</a></li>';
         html += '<li data-hub-page="research"><a href="javascript:void(0)"><i class="fa fa-flask"></i> Forschung</a></li>';
         html += '<li data-hub-page="fleet"><a href="javascript:void(0)"><i class="fa fa-fighter-jet"></i> Flotte</a></li>';
+        html += '<li data-hub-page="changelog"><a href="javascript:void(0)"><i class="fa fa-history"></i> Changelog</a></li>';
 
         $('ul#menu').prepend(html);
 

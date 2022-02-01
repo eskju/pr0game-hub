@@ -1,4 +1,5 @@
 window.PageHub = function() {
+    const $this = this;
     this.container = $('content');
     this.init = function() {
     };
@@ -20,6 +21,11 @@ window.PageHub = function() {
                 this.loadPageFleet();
                 break;
 
+            case 'changelog':
+                this.clearPage();
+                this.loadPageChangelog();
+                break;
+
             default:
                 alert('unknown page ' + alias);
         }
@@ -30,8 +36,6 @@ window.PageHub = function() {
     };
 
     this.loadPagePlanets = function() {
-        const $this = this;
-
         getJSON('hub/planets', function(response) {
             if(response.status !== 200) {
                 $this.container.html('<p style="color: ' + getRgb(cRed) + ';">Da Wing-Member häufiger die Allianz verlassen, sind Flotteninformationen etc. nur für die Main Allianz einsehbar.</p>');
@@ -103,8 +107,6 @@ window.PageHub = function() {
     };
 
     this.loadPageResearch = function() {
-        const $this = this;
-
         getJSON('hub/research', function(response) {
             const data = JSON.parse(response.responseText);
             let html = '';
@@ -180,8 +182,6 @@ window.PageHub = function() {
     };
 
     this.loadPageFleet = function() {
-        const $this = this;
-
         getJSON('hub/fleet', function(response) {
             const data = JSON.parse(response.responseText);
             let html = '';
@@ -236,5 +236,37 @@ window.PageHub = function() {
 
             $this.container.html(html);
         });
+    };
+
+    this.loadPageChangelog = function() {
+        let html = '';
+
+        const changelog = [
+            {version: '1.0.4', date_time: '2022-02-01 2AM', changes: 'added changelog page'},
+            {version: '1.0.3', date_time: '2022-02-01 1AM', changes: 'added resources to overview (visit resource page at planets to update)'},
+            {version: '1.0.2', date_time: '2022-02-01 1AM', changes: 'added "show_galaxy" setting'},
+            {version: '1.0.1', date_time: '2022-01-31 6PM', changes: 'security bypasses / bugfix'},
+            {version: '1.0.0', date_time: '2022-01-31 5PM', changes: 'stable release with auto updater'},
+        ];
+
+        html += '<p>coded with <i class="fa fa-heart"></i></p>';
+        html += '<table class="table519">';
+        html += '<tr>';
+        html += '<th class="text-right">Version</th>';
+        html += '<th class="text-left">DateTime</th>';
+        html += '<th class="text-left">Changes</th>';
+        html += '</tr>';
+
+        $.each(changelog, function(key, obj) {
+           html += '<tr>';
+           html += '<td class="text-right">' + obj.version + '</td>';
+           html += '<td class="text-left">' + obj.date_time + '</td>';
+           html += '<td class="text-left">' + obj.changes + '</td>';
+           html += '</tr>';
+        });
+
+        html += '</table>';
+
+        $this.container.html(html);
     };
 };
