@@ -36,7 +36,8 @@ class AllianceController extends Controller
         $daysDiff = Carbon::parse('2022-01-18')->diffInDays(Carbon::now());
         $return = [
             'dates' => [],
-            'players' => []
+            'players' => [],
+            'data' => []
         ];
 
         foreach($players as $player) {
@@ -47,8 +48,8 @@ class AllianceController extends Controller
             $date = Carbon::parse('2022-01-18')->addDays($i)->toDateString();
 
             foreach ($players as $player) {
-                if (!isset($return[$player->id])) {
-                    $return[$player->id] = [];
+                if (!isset($return['data'][$player->id])) {
+                    $return['data'][$player->id] = [];
                 }
 
                 $score = LogPlayer::query()
@@ -57,7 +58,7 @@ class AllianceController extends Controller
                     ->whereRaw('DATE(created_at) = "' . $date . '"')
                     ->first();
 
-                $return[$player->id][] = $score ? $score->score : null;
+                $return['data'][$player->id][] = $score ? $score->score : null;
             }
 
             $return['dates'][] = $date;

@@ -12,6 +12,7 @@
 // Redstar       option to switch galaxies dynamically
 
 import './config.colors';
+import './util.display-alliance-chart';
 import './util.display-chart';
 import './util.display-overview-settings';
 import './util.display-overview-settings-highlight';
