@@ -1,5 +1,6 @@
 window.PageResearch = function()
 {
+    const $this = this;
     this.data = [];
 
     this.convertHtml = function() {
@@ -9,13 +10,15 @@ window.PageResearch = function()
             $(obj).addClass('building');
             $($(obj).find('div:nth-child(2)')).addClass('building-left');
             $($(obj).find('div:nth-child(3)')).addClass('building-right');
+
+            $this.disableButtons($($(obj).find('div:nth-child(3)')));
+            $this.changeBuildTimeStyle($($(obj).find('div:nth-child(3)')));
         });
 
         $('content').html($('content').html().replace(/\(Stufe ([0-9]+)\)/g, '<br><span class="highlight">Stufe $1</span><br>'));
     };
 
     this.init = function() {
-        const $this = this;
         const research = [];
         let info;
         let level;
@@ -45,4 +48,14 @@ window.PageResearch = function()
             });
         });
     };
+
+    this.disableButtons = function(cell) {
+        if($(cell).find('.text-red').length > 0) {
+            $($(cell).find('.build_submit')).addClass('text-gray');
+        }
+    }
+
+    this.changeBuildTimeStyle = function(cell) {
+        $(cell).html($(cell).html().replace(/(.*)Bauzeit\:(.*)/,'$1<span class="text-gray">Bauzeit: $2</span>'));
+    }
 };
