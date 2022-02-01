@@ -6,7 +6,7 @@ window.displayAllianceChart = function (allianceId) {
         const labels = chartRespone.players;
         const data = [];
         const dataSets = [];
-        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette'];
+        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette', 'white', 'lightgreen', 'lightblue'];
 
         for (let i = 0; i < chartRespone.datasets.length; i++) {
             dataSets.push({
