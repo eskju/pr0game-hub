@@ -49,7 +49,7 @@ window.PageGalaxy = function () {
 
                     planet = parseInt(firstCell.html());
 
-                    if (!isNaN(planet)) {
+                    if (!isNaN(planet) && json[planet]) {
                         $(obj).append('<td class="text-right">' + (json[planet].last_battle_report || '') + '</td>');
                         $(obj).append('<td class="text-right">' + (json[planet].last_spy_report || '') + '</td>');
                         $(obj).append('<td class="text-right">' + (json[planet].last_spy_crystal || '') + '</td>');
