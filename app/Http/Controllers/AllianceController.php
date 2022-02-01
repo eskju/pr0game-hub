@@ -35,8 +35,13 @@ class AllianceController extends Controller
 
         $daysDiff = Carbon::parse('2022-01-18')->diffInDays(Carbon::now());
         $return = [
-            'dates' => []
+            'dates' => [],
+            'players' => []
         ];
+
+        foreach($players as $player) {
+            $return['players'][] = $player->name;
+        }
 
         for ($i = 0; $i < $daysDiff; $i++) {
             $date = Carbon::parse('2022-01-18')->addDays($i)->toDateString();
