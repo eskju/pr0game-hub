@@ -38,8 +38,9 @@ window.displayChart = function (playerId) {
                             {
                                 label: 'Eigene Punkte',
                                 data: ownScore,
-                                borderColor: '#008fff',
+                                borderColor: '#ffffff',
                                 borderWidth: 1,
+                                borderDash: [5, 5],
                                 radius: 1
                             },
                             {
