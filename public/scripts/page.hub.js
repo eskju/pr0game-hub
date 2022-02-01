@@ -242,6 +242,7 @@ window.PageHub = function() {
         let html = '';
 
         const changelog = [
+            {version: '1.0.5', date_time: '2022-02-01 3AM', changes: 'changed button styles at buildings page when not affordable'},
             {version: '1.0.4', date_time: '2022-02-01 2AM', changes: 'added changelog page'},
             {version: '1.0.3', date_time: '2022-02-01 1AM', changes: 'added resources to overview (visit resource page at planets to update)'},
             {version: '1.0.2', date_time: '2022-02-01 1AM', changes: 'added "show_galaxy" setting'},
