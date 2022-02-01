@@ -24,8 +24,9 @@ window.displayAllianceChart = function (allianceId) {
         });
 
         $('body').animate({opacity: 1}, 500, function () {
+            $('#content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 300px"></canvas>');
             const myChart = new Chart(
-                document.getElementById('playerChart'),
+                document.getElementById('chart'),
                 {
                     type: 'line',
                     data: {
