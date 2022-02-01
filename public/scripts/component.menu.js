@@ -1,7 +1,7 @@
 window.Menu = function() {
     this.init = function() {
         let html = '';
-        html += '<li><a style="color: #ee4d2e !important">pr0game Hub v' + version + '</a></li>';
+        html += '<li><a style="color: #ee4d2e !important; font-size: 11px">pr0game Hub v' + version + '</a></li>';
         html += '<li data-hub-page="planets"><a href="javascript:void(0)"><i class="fa fa-globe-asia"></i> Planeten</a></li>';
         html += '<li data-hub-page="research"><a href="javascript:void(0)"><i class="fa fa-flask"></i> Forschung</a></li>';
         html += '<li data-hub-page="fleet"><a href="javascript:void(0)"><i class="fa fa-fighter-jet"></i> Flotte</a></li>';
