@@ -6,16 +6,17 @@ window.displayAllianceChart = function (allianceId) {
         const labels = chartRespone.players;
         const data = [];
         const dataSets = [];
+        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette'];
 
-            for (let i = 0; i < chartRespone.datasets.length; i++) {
-                dataSets.push({
-                    label: labels[i],
-                    data: chartRespone.datasets[i],
-                    borderColor: '#008fff',
-                    borderWidth: 1,
-                    radius: 1
-                });
-            }
+        for (let i = 0; i < chartRespone.datasets.length; i++) {
+            dataSets.push({
+                label: labels[i],
+                data: chartRespone.datasets[i],
+                borderColor: colors[i % colors.length],
+                borderWidth: 1,
+                radius: 1
+            });
+        }
 
         $('content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 500px"></canvas>');
         $('body').animate({opacity: 1}, 500, function () {
