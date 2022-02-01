@@ -12,12 +12,12 @@ window.displayAllianceChart = function (allianceId) {
                     label: labels[i],
                     data: chartRespone.datasets[i],
                     borderColor: '#008fff',
-                    borderWidth: 2,
-                    radius: 2
+                    borderWidth: 1,
+                    radius: 1
                 });
             }
 
-        $('content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 300px"></canvas>');
+        $('content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 500px"></canvas>');
         $('body').animate({opacity: 1}, 500, function () {
             const myChart = new Chart(
                 document.getElementById('chart'),
