@@ -37,7 +37,7 @@ class AllianceController extends Controller
         $return = [
             'dates' => [],
             'players' => [],
-            'data' => []
+            'datasets' => []
         ];
 
         for ($i = 0; $i < $daysDiff; $i++) {
