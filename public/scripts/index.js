@@ -1,15 +1,12 @@
 // == feature requests / ideas ==
 // Klarname      add a simulator link to spy report history
 // ???           exploration counter
-// ???           exploration tracker/stats
 // eichhorn      flying times in overview
 // eichhorn      mileage in overview
-// eichhorn      resource production in overview
 // Klarname      show last spy, last attack, etc. in galaxy view
 // Redstar       filter for coordinates (start / end)
 // Redstar       colorize ally partners in green
 // Redstar       colorize players from buddylist
-// Redstar       option to switch galaxies dynamically
 
 import './config.colors';
 import './util.display-alliance-chart';
@@ -276,7 +273,8 @@ window.parseUrl = function () {
 
     // galaxy page
     else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=galaxy/) === 0) {
-        parsePageGalaxy();
+        window.pageGalaxy = new PageGalaxy();
+        pageGalaxy.init();
     }
 
     // player page
