@@ -343,7 +343,6 @@ class PlayerController extends Controller
             ->select([
                 DB::raw('DATE(`created_at`) AS `date`'),
                 DB::raw('MAX(`score`) AS `score`'),
-                DB::raw('(SELECT MAX(`score`) FROM `log_players` AS `m` WHERE `m`.`external_id` = ' . (int)auth()->user()->player_id . ' AND DATE(`log_players`.`created_at`) = DATE(`m`.`created_at`)) AS `own_score`'),
                 DB::raw('MAX(`score_building`) AS `score_building`'),
                 DB::raw('MAX(`score_science`) AS `score_science`'),
                 DB::raw('MAX(`score_military`) AS `score_military`'),
