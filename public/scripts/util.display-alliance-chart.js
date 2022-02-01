@@ -1,6 +1,6 @@
 window.displayAllianceChart = function (allianceId) {
     $('head').append('<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>');
-    getJSON('alliances/' + allianceId + '/chart', function(response) {
+    getJSON('alliances/' + allianceId + '/chart', function (response) {
         const chartRespone = JSON.parse(response.responseText);
         const dates = [];
         const labels = [];
@@ -12,16 +12,16 @@ window.displayAllianceChart = function (allianceId) {
             labels.push(obj.players);
             data.push(obj.data);
 
-            $.each(data, function(key, obj) {
-                console.log(key,obj);
-               dataSets.push({
-                   label: labels[key],
-                   data: obj,
-                   borderColor: '#008fff',
-                   borderWidth: 2,
-                   radius: 2
-               },)
-            });
+            for (var i = 0; i < data.length; i++) {
+                console.log(i, data[i]);
+                dataSets.push({
+                    label: labels[i],
+                    data: data[i],
+                    borderColor: '#008fff',
+                    borderWidth: 2,
+                    radius: 2
+                });
+            }
         });
 
         $('content').append('<canvas id="chart" style="width: 95%; margin: 15px auto; height: 300px"></canvas>');
@@ -36,12 +36,10 @@ window.displayAllianceChart = function (allianceId) {
                     },
                     options: {
                         scales: {
-                            x: {
-                            }
+                            x: {}
                         },
                         plugins: {
-                            legend: {
-                            }
+                            legend: {}
                         }
                     }
                 }
