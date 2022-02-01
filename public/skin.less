@@ -446,3 +446,17 @@ menu .fixed {
     background: #888;
     color: @colorBackground;
 }
+
+.fade-25,
+.fade-75 {
+    opacity: 0.25 !important;
+    transition: opacity 250ms ease-in-out;
+
+    &.fade-75 {
+        opacity: 0.75 !important;
+    }
+
+    &:hover {
+        opacity: 0.9 !important;
+    }
+}

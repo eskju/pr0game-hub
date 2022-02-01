@@ -1,12 +1,11 @@
-window.PageOverview = function()
-{
+window.PageOverview = function () {
     this.isLoading = false;
     this.cacheKey = 'overviewData';
     this.container = null;
     this.request = null;
     this.fleetQueue = [];
 
-    this.init = function() {
+    this.init = function () {
         this.parseOwnAttacks();
         this.prepareHtml();
         this.renderHtml();
@@ -14,7 +13,7 @@ window.PageOverview = function()
         this.bindHotkeys();
     };
 
-    this.bindHotkeys = function() {
+    this.bindHotkeys = function () {
         const $this = this;
         const mappingFilters = {
             i: 'filter_inactive',
@@ -39,14 +38,14 @@ window.PageOverview = function()
             e: 'filter_deuterium_enable',
         };
 
-        $(window).keypress(function(e) {
+        $(window).keypress(function (e) {
             const key = e.key.toLowerCase();
             let newValue = null;
 
-            if($('*:focus').length === 0) {
-                if(!e.shiftKey) {
-                    if(mappingFilters[key]) {
-                        switch(getValue(mappingFilters[key])) {
+            if ($('*:focus').length === 0) {
+                if (!e.shiftKey) {
+                    if (mappingFilters[key]) {
+                        switch (getValue(mappingFilters[key])) {
                             case 'HIDE':
                                 newValue = 'ONLY';
                                 break;
@@ -65,8 +64,8 @@ window.PageOverview = function()
 
                 // thresholds
                 else {
-                    if(mappingThresholds[key]) {
-                        switch(getValue(mappingThresholds[key])) {
+                    if (mappingThresholds[key]) {
+                        switch (getValue(mappingThresholds[key])) {
                             case '0':
                                 newValue = '1';
                                 break;
@@ -84,28 +83,28 @@ window.PageOverview = function()
         });
     }
 
-    this.setLoading = function(value) {
+    this.setLoading = function (value) {
         this.isLoading = value;
     };
 
-    this.prepareHtml = function() {
+    this.prepareHtml = function () {
         let infos;
 
         $($('content .infos')[1]).html($($('content .infos')[1]).html().replace(/\&nbsp\;/, '')); // remove trailing space
 
-        $('span.fleets').each(function(key, obj) {
+        $('span.fleets').each(function (key, obj) {
             $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /, ''));
         });
 
-        $('span.fleets').each(function(key, obj) {
+        $('span.fleets').each(function (key, obj) {
             $(obj).parent().html($(obj).parent().html().replace(/Flotten/, 'Flotte'));
         });
 
-        $('span.fleets').each(function(key, obj) {
+        $('span.fleets').each(function (key, obj) {
             $(obj).parent().html($(obj).parent().html().replace(/\. Mission\: /, '</span><span>'));
         });
 
-        $('span.fleets').each(function(key, obj) {
+        $('span.fleets').each(function (key, obj) {
             var end = new Date($(obj).attr('data-fleet-end-time') * 1000);
 
             $(obj).parent().append(' <span>' + end.toLocaleTimeString("de-DE") + '</span>');
@@ -121,7 +120,7 @@ window.PageOverview = function()
             hangar: $('.infos')[2].innerHTML.match(/Schiffswerft\: <\/a\>([^<>]+)\<br\>\<([^>]+)data\-time\=\"([0-9]+)\"/m)
         };
 
-        $.each(queues, function(key, obj) {
+        $.each(queues, function (key, obj) {
             setValue(ownGalaxy + ':' + ownSystem + ':' + ownPlanet + '_' + key + '_item', obj ? obj[1] : ''); // active queue item with level/amount
             setValue(ownGalaxy + ':' + ownSystem + ':' + ownPlanet + '_' + key + '_timestamp', obj ? timestamp + parseInt(obj[3]) : ''); // end timestamp
         });
@@ -175,8 +174,9 @@ window.PageOverview = function()
         let coords;
         let time;
         let value;
+        let dateTime;
         let tdWidth = (90 / $('#planetSelector option').length);
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             html += '<th colspan="2" class="text-center" width="' + tdWidth + '%">' + coords[1] + ':' + coords[2] + ':' + coords[3] + '</th>';
         });
@@ -185,26 +185,25 @@ window.PageOverview = function()
         html += '<tr>';
         html += '<td class="text-left">Gebäude</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_timestamp');
             html += '<td class="text-left">' + (getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_item') || '---') + '</td>';
-            html += '<td class="text-left">' + (time && time !== typeof(undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
+            html += '<td class="text-left">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
         });
 
         html += '</tr>';
         html += '<tr>';
         html += '<td class="text-left">Forschung</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
-            if(key === 0) {
+        $('#planetSelector option').each(function (key, obj) {
+            if (key === 0) {
                 coords = getCoordinates(obj.innerHTML);
                 time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_timestamp');
                 value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_item');
-                html += '<td class="text-left">' + (value && value !== typeof(undefined) && value !== '' ? value : '---') + '</td>';
-                html += '<td class="text-left">' + (time && time !== typeof(undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
-            }
-            else {
+                html += '<td class="text-left">' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '</td>';
+                html += '<td class="text-left">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
+            } else {
                 html += '<td colspan="2" class="disabled text-left" style="color: #333">nur auf Main</td>';
             }
         });
@@ -213,26 +212,26 @@ window.PageOverview = function()
         html += '<tr>';
         html += '<td class="text-left">Hangar</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_timestamp');
             value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_item');
-            html += '<td class="text-left">' + (value && value !== typeof(undefined) && value !== '' ? value : '---') + '</td>';
-            html += '<td class="text-left">' + (time && time !== typeof(undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
+            html += '<td class="text-left">' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '</td>';
+            html += '<td class="text-left">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
         });
 
         html += '</tr>';
         html += '<tr>';
         html += '<td class="text-left">Felder</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_fieldsTotal');
             value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_fieldsUsed');
             html += '<td class="text-left" colspan="2">';
-            html += (value && value !== typeof(undefined) && value !== '' ? value : '---');
+            html += (value && value !== typeof (undefined) && value !== '' ? value : '---');
             html += ' / ';
-            html += (time && time !== typeof(undefined) && time !== '' ? time : '---');
+            html += (time && time !== typeof (undefined) && time !== '' ? time : '---');
             html += '</td>';
         });
 
@@ -240,14 +239,14 @@ window.PageOverview = function()
         html += '<tr>';
         html += '<td class="text-left">Temperatur</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_temperatureMax');
             value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_temperatureMin');
             html += '<td class="text-left" colspan="2">';
-            html += (value && value !== typeof(undefined) && value !== '' ? value + '°C' : '---');
+            html += (value && value !== typeof (undefined) && value !== '' ? value + '°C' : '---');
             html += ' bis ';
-            html += (time && time !== typeof(undefined) && time !== '' ? time + '°C' : '---');
+            html += (time && time !== typeof (undefined) && time !== '' ? time + '°C' : '---');
             html += '</td>';
         });
 
@@ -256,7 +255,7 @@ window.PageOverview = function()
         html += '<tr>';
         html += '<td class="text-left">Metall</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             html += '<td class="text-right"><span class="ress_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
             html += '<td class="text-right"><span class="ress_production_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
@@ -266,7 +265,7 @@ window.PageOverview = function()
         html += '<tr>';
         html += '<td class="text-left">Kristall</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             html += '<td class="text-right"><span class="ress_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
             html += '<td class="text-right"><span class="ress_production_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
@@ -276,7 +275,7 @@ window.PageOverview = function()
         html += '<tr>';
         html += '<td class="text-left">Deuterium</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             html += '<td class="text-right"><span class="ress_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
             html += '<td class="text-right"><span class="ress_production_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
@@ -286,10 +285,38 @@ window.PageOverview = function()
         html += '<tr>';
         html += '<td class="text-left">Energie</td>';
 
-        $('#planetSelector option').each(function(key, obj) {
+        $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             html += '<td class="text-right">---</td>';
             html += '<td class="text-right" style="color: ' + getRgb(parseInt(getValue(coords[0] + '_production_energy')) > 0 ? cGreen : cRed) + '">' + getValue(coords[0] + '_production_energy') + '</td>';
+        });
+
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="text-left">Beobachtung</td>';
+
+        $('#planetSelector option').each(function (key, obj) {
+            coords = getCoordinates(obj.innerHTML);
+            dateTime = new PlanetResourceNotification().getFinishTime(coords[0]);
+
+            if (!dateTime) {
+                html += '<td class="text-right">---</td>';
+                html += '<td class="text-right">---</td>';
+            } else {
+                html += '<td class="text-right"><span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
+                html += '<td class="text-right" onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"><i class="fa fa-bell-slash"></i> ' + (getInt(getValue(coords[0] + '_notification_resourceId')) < 100 ? 'Gebäude' : 'Forschung') + '</td>';
+            }
+
+            window.setInterval(function () {
+                $('.notification-timer').each(function () {
+                    if ($(this).attr('data-timestamp') <= new Date().getTime() / 1000) {
+                        $(this).html('<span style="color: ' + getRgb(cGreen) + '">BEREIT</span>');
+                        return;
+                    }
+
+                    $(this).text(formatTimeDiff($(this).attr('data-timestamp')));
+                });
+            }, 1000);
         });
 
         html += '</tr>';
@@ -299,7 +326,7 @@ window.PageOverview = function()
         $($('.infos')[2]).html(html);
     };
 
-    this.checkVersion = function() {
+    this.checkVersion = function () {
         var data = this.getData();
 
         if (data && isNewerVersionAvailable(data.version)) {
@@ -307,30 +334,30 @@ window.PageOverview = function()
         }
     };
 
-    this.parseOwnAttacks = function() {
+    this.parseOwnAttacks = function () {
         var $this = this;
         let coordinates = null;
 
-        $('#hidden-div2 > li > span:nth-child(2)').each(function(key, obj) {
+        $('#hidden-div2 > li > span:nth-child(2)').each(function (key, obj) {
             obj = $(obj);
 
-            if(obj.hasClass('ownattack')) {
+            if (obj.hasClass('ownattack')) {
                 coordinates = $(obj).find('.ownattack');
 
                 $this.fleetQueue.push({
-                    from: $(coordinates[1]).html().replace(/\[(.*)\]/,'$1'),
-                    to: $(coordinates[2]).html().replace(/\[(.*)\]/,'$1'),
+                    from: $(coordinates[1]).html().replace(/\[(.*)\]/, '$1'),
+                    to: $(coordinates[2]).html().replace(/\[(.*)\]/, '$1'),
                     type: obj.attr('class'),
                     time: $(obj).parent().find('span.fleets')
                 });
             }
 
-            if(obj.hasClass('ownespionage')) {
+            if (obj.hasClass('ownespionage')) {
                 coordinates = $(obj).find('.ownespionage');
 
                 $this.fleetQueue.push({
-                    from: $(coordinates[1]).html().replace(/\[(.*)\]/,'$1'),
-                    to: $(coordinates[2]).html().replace(/\[(.*)\]/,'$1'),
+                    from: $(coordinates[1]).html().replace(/\[(.*)\]/, '$1'),
+                    to: $(coordinates[2]).html().replace(/\[(.*)\]/, '$1'),
                     type: obj.attr('class'),
                     time: $(obj).parent().find('span.fleets')
                 });
@@ -338,10 +365,10 @@ window.PageOverview = function()
         });
     },
 
-        this.loadData = function() {
+        this.loadData = function () {
             var $this = this;
 
-            if(this.request !== null) {
+            if (this.request !== null) {
                 this.request.abort();
             }
 
@@ -362,7 +389,7 @@ window.PageOverview = function()
             });
         };
 
-    this.getData = function() {
+    this.getData = function () {
         var $this = this;
         var content = getValue(this.cacheKey);
 
@@ -374,31 +401,30 @@ window.PageOverview = function()
             data.players = data.players.sort(fn);
 
             return data;
-        }
-        catch(msg) {
+        } catch (msg) {
             return {
                 players: [],
                 outdated_ids: [],
                 version: version,
                 player: null
             };
-        };
+        }
+        ;
     };
 
-    this.bindFilters = function() {
-        $('.phFilter').each(function(key, obj) {
-            $(obj).on('change', function() {
-                if($(this).attr('type') === 'checkbox') {
+    this.bindFilters = function () {
+        $('.phFilter').each(function (key, obj) {
+            $(obj).on('change', function () {
+                if ($(this).attr('type') === 'checkbox') {
                     savePhOption($(this).attr('data-alias'), $(this)[0].checked ? '1' : '0');
-                }
-                else {
+                } else {
                     savePhOption($(this).attr('data-alias'), $(this).val());
                 }
             });
         });
     };
 
-    this.bindHeadlineSort = function() {
+    this.bindHeadlineSort = function () {
         var $this = this;
 
         $('th.sortable').each(function (key, obj) {
@@ -415,18 +441,18 @@ window.PageOverview = function()
         });
     };
 
-    this.orderBy = function(orderBy, orderDirection) {
+    this.orderBy = function (orderBy, orderDirection) {
         setValue('orderBy', orderBy);
         setValue('orderDirection', orderDirection);
 
     }
 
-    this.sortData = function(a, b) {
+    this.sortData = function (a, b) {
         let property = getValue('orderBy') || 'distance';
         const invertSort = getValue('orderDirection') !== 'DESC' ? 1 : -1;
 
         const offsets = property.split('.');
-        if(offsets.length === 2) {
+        if (offsets.length === 2) {
             a = a[offsets[0]];
             b = b[offsets[0]];
             property = offsets[1];
@@ -435,7 +461,7 @@ window.PageOverview = function()
         let aVal = a[property] || '';
         let bVal = b[property] || '';
 
-        if(property !== 'alliance_name' && property !== 'name') {
+        if (property !== 'alliance_name' && property !== 'name') {
             aVal = getInt(aVal);
             bVal = getInt(bVal);
         }
@@ -443,20 +469,20 @@ window.PageOverview = function()
         return ((aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0) * invertSort;
     };
 
-    this.applyRowStyles = function(response) {
+    this.applyRowStyles = function (response) {
         $(response.players).each(function (key, obj) {
             var selector = $('#row' + obj.id);
             var columns = $(selector).find('td');
             var links = selector.find('td a');
-            if(response.player) selector.css(getPlayerRowStyle(obj.player, response.player.score));
+            if (response.player) selector.css(getPlayerRowStyle(obj.player, response.player.score));
             $(columns[6]).css(getPlayerScoreStyle(obj.player, response.player));
             $(columns[7]).css(getPlayerScoreStyle(obj.player, response.player));
             $(columns[8]).css(getPlayerScoreBuildingStyle(obj.player, response.player));
             $(columns[9]).css(getPlayerScoreScienceStyle(obj.player, response.player));
             $(columns[10]).css(getPlayerScoreMilitaryStyle(obj.player, response.player));
             $(columns[11]).css(getPlayerScoreDefenseStyle(obj.player, response.player));
-            if(response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
-            if(response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
+            if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
+            if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
 
             $('#lastSpyReport' + obj.id).click(function () {
                 getJSON('spy-reports/' + obj.galaxy + '/' + obj.system + '/' + obj.planet, function (spyReports) {
@@ -467,23 +493,23 @@ window.PageOverview = function()
         });
     };
 
-    this.bindSettingsLink = function() {
+    this.bindSettingsLink = function () {
         var $this = this;
 
-        $('#showSettings').click(function() {
+        $('#showSettings').click(function () {
             setValue('hideSettings', '0');
             $('#phSettings').show();
             $this.renderHtml();
         });
 
-        $('#hideSettings').click(function() {
+        $('#hideSettings').click(function () {
             setValue('hideSettings', '1');
             $('#phSettings').show();
             $this.renderHtml();
         });
     };
 
-    this.bindSpyLinks = function() {
+    this.bindSpyLinks = function () {
         $('.spio-link').click(function () {
             $.getJSON("game.php?page=fleetAjax&ajax=1&mission=6&planetID=" + $(this).attr('data-id'), function (data) {
                 showMessage(data.mess, (data.code === 600 ? 'success' : 'danger'));
@@ -491,7 +517,7 @@ window.PageOverview = function()
         });
     };
 
-    this.checkUpdatableIds = function(response) {
+    this.checkUpdatableIds = function (response) {
         if (response.outdated_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227 && ownPlanet == 10) {
             this.container.prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
             $('#fetchMissingIdsBtn').click(function () {
@@ -503,15 +529,14 @@ window.PageOverview = function()
         }
     };
 
-    this.renderHtml = function()
-    {
+    this.renderHtml = function () {
         var $this = this;
         var html = '<table id="hubOverview" width="100%" style="max-width: 100% !important"><tr>';
         var response = this.getData();
 
         updateConfigVars();
 
-        if(!response) {
+        if (!response) {
             return;
         }
 
@@ -538,11 +563,12 @@ window.PageOverview = function()
 
         let counter = 0;
         $(response.players).each(function (key, obj) {
-            if(filterTableRow(obj, response.player)) {
+            if (filterTableRow(obj, response.player)) {
                 counter++;
                 html += '<tr id="row' + obj.id + '">';
                 html += '<td>' + counter + '</td>';
-                html += '<td style="text-align: left; max-width: 50px"><div style="max-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (obj.alliance_name || '---') + '</div></td>';;
+                html += '<td style="text-align: left; max-width: 50px"><div style="max-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (obj.alliance_name || '---') + '</div></td>';
+                ;
                 html += '<td style="text-align: left; max-width: 100px"><div style="max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
 
                 if (obj.inactive_since !== null && obj.inactive_since < 48) {
@@ -562,9 +588,9 @@ window.PageOverview = function()
                 html += '<td style="text-align: right">';
 
                 var fleetQueueItemsDisplayed = 0;
-                $.each($this.fleetQueue, function(i, fleetQueueItem) {
-                    if(fleetQueueItem.to == obj.coordinates || fleetQueueItem.from == obj.coordinates) {
-                        switch(fleetQueueItem.type) {
+                $.each($this.fleetQueue, function (i, fleetQueueItem) {
+                    if (fleetQueueItem.to == obj.coordinates || fleetQueueItem.from == obj.coordinates) {
+                        switch (fleetQueueItem.type) {
                             case 'flight ownattack':
                                 html += '<div style="text-align: center; background: ' + getRgb(cRed) + '; margin-bottom: -1px; color: ' + getRgb(cWhite) + '; border-radius: 2px; padding: 2px 5px; font-size: 10px;">' + fleetQueueItem.time[0].outerHTML + '</div>';
                                 fleetQueueItemsDisplayed++;
@@ -589,7 +615,7 @@ window.PageOverview = function()
                 });
 
                 html += (fleetQueueItemsDisplayed === 0 ? (obj.last_battle_report || '') : '');
-                html +=' </td>';
+                html += ' </td>';
                 html += '<td style="text-align: right; cursor: pointer" id="lastSpyReport' + obj.id + '">' + (obj.last_spy_report || '') + '</td>';
                 html += '<td>';
 

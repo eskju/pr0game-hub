@@ -380,4 +380,17 @@ menu .fixed {
   background: #888;
   color: #161618;
 }
+.fade-25,
+.fade-75 {
+  opacity: 0.25 !important;
+  transition: opacity 250ms ease-in-out;
+}
+.fade-25.fade-75,
+.fade-75.fade-75 {
+  opacity: 0.75 !important;
+}
+.fade-25:hover,
+.fade-75:hover {
+  opacity: 0.9 !important;
+}
 /*# sourceMappingURL=skin.css.map */

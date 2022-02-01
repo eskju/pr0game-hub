@@ -52,8 +52,8 @@ window.PageGalaxy = function () {
                     if (!isNaN(planet) && json[planet]) {
                         $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_battle_report || '') + '</td>');
                         $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_report || '') + '</td>');
+                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_metal || '') + '</td>');
                         $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_crystal || '') + '</td>');
-                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_deuterium || '') + '</td>');
                         $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_deuterium || '') + '</td>');
                     }
                 });
