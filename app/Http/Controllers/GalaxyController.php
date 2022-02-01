@@ -53,8 +53,6 @@ class GalaxyController extends Controller
                 'last_spy_report_hours' => $planet['last_spy_report'] ? abs(Carbon::parse($planet['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '',
                 'last_battle_report_hours' => $planet['last_battle_report'] ? abs(Carbon::parse($planet['last_battle_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '',
             ];
-
-            return $return;
         }
 
         return $return;
