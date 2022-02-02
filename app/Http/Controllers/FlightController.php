@@ -21,6 +21,7 @@ class FlightController extends Controller
         PlanetService::getPlanetExternalId($request->get('planet_start_coordinates'));
         PlanetService::getPlanetExternalId($request->get('planet_target_coordinates'));
 
+        $flight->type = $request->get('type');
         $flight->outbound_flight_id = $request->get('outbound_flight_id');
         $flight->timestamp_departure = (int)$request->get('timestamp_departure') / 1000;
         $flight->timestamp_arrival = $request->get('timestamp_arrival');
