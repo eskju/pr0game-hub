@@ -648,31 +648,29 @@ window.PageOverview = function () {
     }
 
     this.analyzeFleetMovement = function () {
-        return;
         let columns;
         let activityData;
+        let coordinates;
 
         $('.fleet-movement ul li').each(function (key, obj) {
             columns = $(obj).children();
+            coordinates = $(columns[1]).html().match(/\[([:0-9]+)\](.*)\[([:0-9]+)\]/);
             activityData = {
                 external_id: $(columns[0]).attr('id').replace(/fleettime\_/, ''), // fleet time
-                outbound_flight_id: $(columns[1]).hasClass('return') ? $(columns[0]).attr('id').replace(/fleettime\_/, '') : null, // set by API; search for same departure time
-                timestamp_departure: $(columns[0]).attr('id').replace(/fleettime\_/, ''), // fleet_time
-                timestamp_arrival: $(columns[0]).attr('data-fleet-end-time'), // fleet_end_time
                 is_return: $(columns[1]).hasClass('return'), // if true try to assign an outbound flight by coords and timestamps
+                outbound_flight_id: $(columns[1]).hasClass('return') ? $(columns[0]).attr('id').replace(/fleettime\_/, '') : null, // set by API; search for same departure time
+                timestamp_departure: parseInt($(columns[0]).attr('id').replace(/fleettime\_/, '') / 1000), // fleet_time
+                timestamp_arrival: parseInt($(columns[0]).attr('data-fleet-end-time')), // fleet_end_time
                 type: $(columns[2]).find('a').length > 0 ? $($(columns[2]).find('a')).html() : $(columns[2]).html(), // e.g. 'attack', 'transport', ..
-                planet_start_coordinates: null, // start-planet's coordinates
-                planet_target_coordinates: null, // target-planet's coordinates
-                resources_outbound: null, // resources carried at outbound flight
-                resources_inbound: null, // resources carried at inbound flight
-                fleet_outbound: null, // ship amounts at outbound flight (in case spio tech is sufficient to provide info)
-                fleet_inbound: null // ship amounts at inbound flight
+                planet_start_coordinates: coordinates[1], // start-planet's coordinates
+                planet_target_coordinates: coordinates[3], // target-planet's coordinates
+                resources: null, // resources carried
+                fleet: null, // ship amounts
             };
 
-            // fleettime_1643833584202582
-            // fleettime_1643840436202582
-
-            console.log(activityData);
+            postJSON('flights', activityData, function(response) {
+                console.log(response.responseText);
+            });
         });
     };
 };

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AllianceController;
 use App\Http\Controllers\BattleReportController;
 use App\Http\Controllers\ExpeditionController;
+use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GalaxyController;
 use App\Http\Controllers\HubController;
 use App\Http\Controllers\PlanetController;
@@ -54,3 +55,5 @@ Route::post('/planets/fleet', PlanetController::class . '@storeFleet');
 Route::get('/galaxy/{galaxy}/{system}', GalaxyController::class . '@show');
 
 Route::post('/expeditions', ExpeditionController::class . '@store');
+
+Route::post('/flights', FlightController::class . '@store');
