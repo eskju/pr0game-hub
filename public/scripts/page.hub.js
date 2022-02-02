@@ -286,6 +286,11 @@ window.PageHub = function () {
 
         const changelog = [
             {
+                version: '1.0.13',
+                date_time: '2022-02-02 10PM',
+                changes: 'added the black hole event for expeditions (for Sky/Mama) <3'
+            },
+            {
                 version: '1.0.12',
                 date_time: '2022-02-01 11PM',
                 changes: 'made coordinates/player name/score in hub -> planets sortable'

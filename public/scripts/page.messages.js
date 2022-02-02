@@ -247,6 +247,16 @@ window.PageMessages = function () {
             expeditionSize = 'LARGE';
         }
 
+        if (message.match(/Von der Expedition ist nur noch folgender Funkspruch übrig geblieben: Zzzrrt Oh Gott! Krrrzzzzt das zrrrtrzt sieht krgzzzz ja aus wie Krzzzzzzzztzzzz.../)
+            || message.match(/Das Letzte, was von dieser Expedition noch gesendet wurde, waren einige unglaublich gut gelungene Nahaufnahmen eines sich öffnenden, schwarzen Loches./)
+            || message.match(/Ein Kernbruch des Führungsschiffes führte zu einer Kettenreaktion, die in einer durchaus spektakulären Explosion die gesamte Expedition vernichtete./)
+            || message.match(/Die Expeditionsflotte ist nicht mehr aus dem Sprung in den Normalraum zurückgekehrt. Unsere Wissenschaftler rätseln noch immer, was geschehen sein könnte, jedoch scheint die Flotte endgültig verloren zu sein./)
+        ) {
+            $($(obj).find('td')[3]).html('<span class="badge badge-black-hole">Schwarzes Loch</span>');
+            expeditionType = 'BLACK_HOLE';
+            expeditionSize = null;
+        }
+
         postJSON('expeditions', {
             external_id: messageId,
             date_time: dateTime,

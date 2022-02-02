@@ -380,6 +380,10 @@ menu .fixed {
   background: #888;
   color: #161618;
 }
+.badge-black-hole {
+  background: #000;
+  color: #ee4d2e;
+}
 .fade-25,
 .fade-75 {
   opacity: 0.25 !important;
