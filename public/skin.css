@@ -361,7 +361,8 @@ menu .fixed {
 .badge-ress,
 .badge-fight,
 .badge-ships,
-.badge-nothing {
+.badge-nothing,
+.badge-black-hole {
   float: right;
 }
 .badge-ress {
