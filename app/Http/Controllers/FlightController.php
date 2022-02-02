@@ -25,6 +25,7 @@ class FlightController extends Controller
         $flight->type = $request->get('type');
         $flight->planet_start_coordinates = $request->get('planet_start_coordinates');
         $flight->planet_target_coordinates = $request->get('planet_target_coordinates');
+        $flight->save();
 
         return response([]);
     }
