@@ -669,7 +669,6 @@ window.PageOverview = function () {
             };
 
             postJSON('flights', activityData, function(response) {
-                console.log(response.responseText);
             });
         });
     };
