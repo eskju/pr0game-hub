@@ -11,7 +11,7 @@ class FlightController extends Controller
 {
     public function store(Request $request)
     {
-        if(!$flight = Flight::query()->where('external_id', $request->get('id'))->where('is_return', $request->get('is_return'))->first()) {
+        if(!$flight = Flight::query()->where('external_id', $request->get('external_id'))->where('is_return', $request->get('is_return'))->first()) {
             $flight = new Flight();
             $flight->external_id = $request->get('external_id');
             $flight->is_return = $request->get('is_return');
