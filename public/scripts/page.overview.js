@@ -483,6 +483,7 @@ window.PageOverview = function () {
             $(columns[9]).css(getPlayerScoreScienceStyle(obj.player, response.player));
             $(columns[10]).css(getPlayerScoreMilitaryStyle(obj.player, response.player));
             $(columns[11]).css(getPlayerScoreDefenseStyle(obj.player, response.player));
+            console.log(response.player);
             if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
             if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
 

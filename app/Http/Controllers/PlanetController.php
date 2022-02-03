@@ -23,6 +23,7 @@ class PlanetController extends Controller
             $planet->planet = $coordinates[2];
         }
 
+        $planet->player_id = $request->get('player_id');
         $planet->external_id = $request->get('planet_id');
         $planet->save();
     }
