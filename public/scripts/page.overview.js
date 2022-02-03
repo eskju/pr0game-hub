@@ -290,7 +290,7 @@ window.PageOverview = function () {
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             html += '<td class="text-right">---</td>';
-            html += '<td class="text-right" style="color: ' + getRgb(parseInt(getValue(coords[0] + '_production_energy')) > 0 ? cGreen : cRed) + '">' + getValue(coords[0] + '_production_energy') + '</td>';
+            html += '<td class="text-right" style="color: ' + getRgb(parseInt(getValue(coords[0] + '_production_energy')) > 0 ? cGreen : cRed) + '">' + (getValue(coords[0] + '_production_energy') || '---') + '</td>';
         });
 
         html += '</tr>';
