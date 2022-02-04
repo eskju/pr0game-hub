@@ -236,6 +236,54 @@ class FlightController extends Controller
             $return[$coord->planet_target_coordinates]->score_diff = number_format($return[$coord->planet_target_coordinates]->score_diff, 0, '', '.');
         }
 
+        $return['Raids'] = $this->getRaidStats();
+
+        return $return;
+    }
+
+    private function getRaidStats()
+    {
+        $return = (object)[
+            'count' => 0,
+            'count_24' => Flight::query()
+                ->select('planet_target_coordinates')
+                ->where('user_id', auth()->id())
+                ->where('player_start_id', auth()->user()->player_id)
+                ->where('type', 'Angreifen')
+                ->where('is_return', 1)
+                ->where('timestamp_arrival', '>', time() - 86400)
+                ->count(),
+            'resources_diff' => [],
+            'ships_diff' => [],
+            'metal_diff' => 0,
+            'crystal_diff' => 0,
+            'deuterium_diff' => 0,
+            'score_diff' => 0
+        ];
+
+        $raids = Flight::query()
+            ->where('user_id', auth()->id())
+            ->where('player_start_id', auth()->user()->player_id)
+            ->where('type', 'Angreifen')
+            ->where('is_return', 1)
+            ->get();
+
+        foreach ($raids as $raid) {
+            $absDiff = $this->getAbsDiff($raid->resources_diff, $raid->ships_diff);
+            $return->count++;
+            $return->metal_diff += $absDiff['Metall']['diff'];
+            $return->crystal_diff += $absDiff['Kristall']['diff'];
+            $return->deuterium_diff += $absDiff['Deuterium']['diff'];
+            $return->score_diff += round($absDiff['Punkte']);
+        }
+
+        $return->count = number_format($return->count, 0, '', '.');
+        $return->count_24 = number_format($return->count_24, 0, '', '.');
+        $return->metal_diff = number_format($return->metal_diff, 0, '', '.');
+        $return->crystal_diff = number_format($return->crystal_diff, 0, '', '.');
+        $return->deuterium_diff = number_format($return->deuterium_diff, 0, '', '.');
+        $return->score_diff = number_format($return->score_diff, 0, '', '.');
+
         return $return;
     }
 }
