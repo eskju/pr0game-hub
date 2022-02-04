@@ -727,7 +727,7 @@ window.PageOverview = function () {
                 html = '<span style="width: 5%" class="text-right">';
                 html += '<a class="tooltip" data-tooltip-content="' + escape(tooltipContent) + '">';
 
-                tooltipContent = '<table style="width: 700px" cellspacing="0">';
+                tooltipContent = '<table style="width: 700px; border: 1px solid ' + getRgb(cWhite) + '; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5)" cellspacing="0">';
                 tooltipContent += '<tr>';
                 tooltipContent += '<th class="text-left">&nbsp;</th>';
                 tooltipContent += '<th class="text-right">Anzahl</th>';
