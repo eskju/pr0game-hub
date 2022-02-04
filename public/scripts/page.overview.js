@@ -672,6 +672,8 @@ window.PageOverview = function () {
             response = JSON.parse(response.responseText);
             let infoTooltip;
 
+            $('.fleet-movement').append('<div style="border-top: 1px solid #222; border-bottom: 1px solid #222; padding: 10px 0; margin: 10px 0"><b>' + response.slots_used + ' Slots genutzt</b></div>');
+
             $.each(response.flights, function (key, obj) {
                 if (obj.ships_diff) {
                     html = '<table style="width: 250px">'
@@ -725,7 +727,7 @@ window.PageOverview = function () {
                     infoTooltip = $('#fleet' + obj.external_id + '-' + obj.is_return + ' > span:nth-child(2)').prepend('<i class="fa fa-backward"></i> ');
                 }
 
-                html = '<span style="width: 5%" class="text-right">';
+                html = '<span style="width: 4%" class="text-right">';
                 html += '<a class="tooltip" data-tooltip-content="' + escape(tooltipContent) + '">';
 
                 tooltipContent = '<table style="width: 700px; border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5)" cellspacing="0">';
@@ -798,6 +800,34 @@ window.PageOverview = function () {
                 $('#fleet' + obj.external_id + '-' + obj.is_return).append(html);
                 $('#fleet' + obj.external_id + '-' + obj.is_return + ' span:last-child a.tooltip').attr('data-tooltip-content', tooltipContent);
             });
+
+            html = '<table class="borderless" style="padding: 0; margin: 0"><tr><td width="50%" style="padding: 0" >';
+            html += '<tr>';
+            html += '<th style="white-space: nowrap">Planet</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Expos gesamt</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Letzte 24 Std</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Metall</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Kristall</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Deuterium</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Punkte</th>';
+            html += '</tr>';
+
+            $.each(response.expeditions, function (key, obj) {
+                html += '<tr>';
+                html += '<td style="white-space: nowrap" class="text-left">' + key + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right">' + obj.count + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right">' + obj.count_24 + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + $this.getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + $this.getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + $this.getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + $this.getStyle(obj.score_diff) + '">' + obj.score_diff + '</td>';
+                html += '</tr>';
+
+            });
+
+            html += '</table>';
+            html += '<small class="text-left" style="display: block; color: ' + getRgb(cRed) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Die Expos werden erst seit dem 04.04. getrackt. Bis zum 06.04. kann es somit zu falschen Angaben kommen. Metall/Kristall/Deuterium/Punkte berechnen den Ressourcengewinn, sowie Schiffsgewinn und -verlust (Produktionskosten) mit ein. Komplettverluste (depleted/black hole) werden <u>NICHT</u> erfasst.</small>';
+            $('.fleet-movement').append(html);
         });
     };
 

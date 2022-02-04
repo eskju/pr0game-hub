@@ -286,6 +286,11 @@ window.PageHub = function () {
 
         const changelog = [
             {
+                version: '1.0.16',
+                date_time: '2022-02-04 08PM',
+                changes: 'show fleet slot usage & expedition stats'
+            },
+            {
                 version: '1.0.15',
                 date_time: '2022-02-04 01PM',
                 changes: 'show score differenz and details at flight overview'
