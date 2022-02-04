@@ -667,6 +667,7 @@ window.PageOverview = function () {
         postJSON('flights', {activities}, function (response) {
             let html;
             let tooltipContent;
+            let i;
 
             response = JSON.parse(response.responseText);
             let infoTooltip;
@@ -739,41 +740,45 @@ window.PageOverview = function () {
                 tooltipContent += '</tr>';
 
                 if (obj.resources_diff) {
+                    i = 0;
                     $.each(obj.resources_diff, function (skey, ship) {
                         tooltipContent += '<tr>';
-                        tooltipContent += '<td class="text-left">' + skey + '</td>';
-                        tooltipContent += '<td class="text-right">' + ship.after + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.diff) + '">+' + ship.diff + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.metal) + '">+' + ship.metal + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.score) + '">+' + ship.score + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-left">' + skey + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right">' + ship.after + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.diff) + '">+' + ship.diff + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.metal) + '">+' + ship.metal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.score) + '">+' + ship.score + '</td>';
                         tooltipContent += '</tr>';
+                        i++;
                     });
                 }
 
                 if (obj.ships_diff) {
+                    i = 0;
                     $.each(obj.ships_diff, function (skey, ship) {
                         tooltipContent += '<tr>';
-                        tooltipContent += '<td class="text-left">' + skey + '</td>';
-                        tooltipContent += '<td class="text-right">' + ship.after + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.diff) + '">+' + ship.diff + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.metal) + '">+' + ship.metal + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
-                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.score) + '">+' + ship.score + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-left">' + skey + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right">' + ship.after + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.diff) + '">+' + ship.diff + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.metal) + '">+' + ship.metal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.score) + '">+' + ship.score + '</td>';
                         tooltipContent += '</tr>';
+                        i++;
                     });
                 }
 
                 tooltipContent += '<tr>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-left"><b>Gesamt</b></th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right text-gray">---</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right text-gray"></th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right ' + $this.getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right ' + $this.getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right ' + $this.getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right ' + $this.getStyle(obj.score_diff) + '">' + obj.score_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-left"><b>Gesamt</b></th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right text-gray">---</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right text-gray"></th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + $this.getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + $this.getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + $this.getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + $this.getStyle(obj.score_diff) + '">' + obj.score_diff + '</th>';
                 tooltipContent += '</tr>';
                 tooltipContent += '</table>';
 
