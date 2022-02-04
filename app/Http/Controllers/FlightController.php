@@ -194,6 +194,7 @@ class FlightController extends Controller
             ->get();
 
         foreach ($coords as $coord) {
+            $coord->planet_target_coordinates = 'Expo ' . $coord->planet_target_coordinates;
             $return[$coord->planet_target_coordinates] = (object)[
                 'count' => 0,
                 'count_24' => Flight::query()
