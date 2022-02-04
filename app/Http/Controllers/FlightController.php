@@ -236,12 +236,13 @@ class FlightController extends Controller
             $return[$coord->planet_target_coordinates]->score_diff = number_format($return[$coord->planet_target_coordinates]->score_diff, 0, '', '.');
         }
 
-        $return['Raids'] = $this->getRaidStats();
+        $return['Raids'] = $this->getRaidStats('Angreifen');
+        $return['Recycling'] = $this->getRaidStats('Abbauen');
 
         return $return;
     }
 
-    private function getRaidStats()
+    private function getRaidStats($type)
     {
         $return = (object)[
             'count' => 0,
@@ -249,7 +250,7 @@ class FlightController extends Controller
                 ->select('planet_target_coordinates')
                 ->where('user_id', auth()->id())
                 ->where('player_target_id', auth()->user()->player_id)
-                ->where('type', 'Angreifen')
+                ->where('type', $type)
                 ->where('is_return', 1)
                 ->where('timestamp_arrival', '>', time() - 86400)
                 ->count(),
@@ -264,7 +265,7 @@ class FlightController extends Controller
         $raids = Flight::query()
             ->where('user_id', auth()->id())
             ->where('player_target_id', auth()->user()->player_id)
-            ->where('type', 'Angreifen')
+            ->where('type', $type)
             ->where('is_return', 1)
             ->get();
 
