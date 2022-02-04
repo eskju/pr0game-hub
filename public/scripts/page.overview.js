@@ -826,7 +826,7 @@ window.PageOverview = function () {
             });
 
             html += '</table>';
-            html += '<small class="text-left" style="display: block; color: ' + getRgb(cRed) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Die Expos werden erst seit dem 04.04. getrackt. Bis zum 06.04. kann es somit zu falschen Angaben kommen. Metall/Kristall/Deuterium/Punkte berechnen den Ressourcengewinn, sowie Schiffsgewinn und -verlust (Produktionskosten) mit ein. Komplettverluste (depleted/black hole) werden <u>NICHT</u> erfasst.</small>';
+            html += '<small class="text-left" style="display: block; color: ' + getRgb(cRed) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Die Expos werden erst seit dem 04.04. getrackt. Bis zum 06.04. kann es somit zu falschen Angaben kommen. Metall/Kristall/Deuterium/Punkte berechnen den Ressourcengewinn, sowie Schiffsgewinn und -verlust (Produktionskosten) mit ein. Komplettverluste (depleted/black hole) sowie Expo-Abbrüche werden <u>NICHT</u> erfasst.</small>';
             $('.fleet-movement').append(html);
         });
     };
