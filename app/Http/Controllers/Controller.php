@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -24,6 +25,12 @@ class Controller extends BaseController
         if (!$user = User::query()->where('api_key', $apiKey)->first()) {
             abort(422);
         }
+
+        $userRequest = new UserRequest();
+        $userRequest->user_id = auth()->id();
+        $userRequest->ip_address = request()->ip();
+        $userRequest->user_agent = request()->userAgent();
+        $userRequest->save();
 
         Auth::login($user);
     }
