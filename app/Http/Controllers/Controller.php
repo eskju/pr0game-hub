@@ -27,7 +27,7 @@ class Controller extends BaseController
         }
 
         $userRequest = new UserRequest();
-        $userRequest->user_id = auth()->id();
+        $userRequest->user_id = $user->id();
         $userRequest->ip_address = request()->ip();
         $userRequest->user_agent = request()->userAgent();
         $userRequest->save();
