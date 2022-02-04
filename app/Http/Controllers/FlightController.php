@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Flight;
 use App\Models\Planet;
+use App\Models\Player;
 use App\Models\Pr0gameVar;
 use App\Services\PlanetService;
 use App\Services\ResourceService;
@@ -82,12 +83,15 @@ class FlightController extends Controller
             ->update(['is_active' => 0]);
 
         return response([
-            'slots_used' => Flight::query()
+            'slots_used' => (Flight::query()
                     ->select(DB::raw('COUNT(DISTINCT external_id) AS `count`'))
                     ->where('user_id', auth()->id())
                     ->where('is_active', 1)
                     ->first()
-                    ->count ?? 0,
+                    ->count ?? 0) . ' / ' . ((Player::query()
+                        ->select('computer_tech')
+                        ->find(auth()->user()->player_id)
+                        ->computer_tech ?? 0) + 1),
             'flights' => Flight::query()
                 ->where('user_id', auth()->id())
                 ->where('is_active', 1)
@@ -215,7 +219,7 @@ class FlightController extends Controller
                 ->where('planet_target_coordinates', $coord->planet_target_coordinates)
                 ->get();
 
-            foreach($expeditions as $expedition) {
+            foreach ($expeditions as $expedition) {
                 $absDiff = $this->getAbsDiff($expedition->resources_diff, $expedition->ships_diff);
                 $return[$coord->planet_target_coordinates]->count++;
                 $return[$coord->planet_target_coordinates]->metal_diff += $absDiff['Metall']['diff'];
