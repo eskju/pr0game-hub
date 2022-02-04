@@ -248,7 +248,7 @@ class FlightController extends Controller
             'count_24' => Flight::query()
                 ->select('planet_target_coordinates')
                 ->where('user_id', auth()->id())
-                ->where('player_start_id', auth()->user()->player_id)
+                ->where('player_target_id', auth()->user()->player_id)
                 ->where('type', 'Angreifen')
                 ->where('is_return', 1)
                 ->where('timestamp_arrival', '>', time() - 86400)
@@ -263,7 +263,7 @@ class FlightController extends Controller
 
         $raids = Flight::query()
             ->where('user_id', auth()->id())
-            ->where('player_start_id', auth()->user()->player_id)
+            ->where('player_target_id', auth()->user()->player_id)
             ->where('type', 'Angreifen')
             ->where('is_return', 1)
             ->get();
