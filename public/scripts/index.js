@@ -27,6 +27,7 @@ import './util.get-player-attribute-style';
 import './util.get-player-row-id-style';
 import './util.get-player-row-style';
 import './util.get-rgb';
+import './util.hotkeys';
 import './util.number-format';
 import './util.planet-resource-notification';
 import './util.replace-fix-colors';
@@ -324,6 +325,8 @@ window.parseUrl = function () {
 
     window.menu = new Menu();
     menu.init();
+
+    hotkeys();
 };
 
 // colors

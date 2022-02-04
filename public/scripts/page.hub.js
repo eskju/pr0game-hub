@@ -286,6 +286,11 @@ window.PageHub = function () {
 
         const changelog = [
             {
+                version: '1.0.14',
+                date_time: '2022-02-04 09AM',
+                changes: 'added fleet tracking and overview enhancement (show ship/res diffs)'
+            },
+            {
                 version: '1.0.13',
                 date_time: '2022-02-02 10PM',
                 changes: 'added the black hole event for expeditions (for Sky/Mama) <3'
@@ -313,28 +318,28 @@ window.PageHub = function () {
             {version: '1.0.8', date_time: '2022-02-01 11AM', changes: 'added last attack/spy to galaxy view'},
             {
                 version: '1.0.7',
-                date_time: '2022-02-01 4AM',
+                date_time: '2022-02-01 04AM',
                 changes: 'added chart for alliance page (score development per member)'
             },
             {
                 version: '1.0.6',
-                date_time: '2022-02-01 3AM',
+                date_time: '2022-02-01 03AM',
                 changes: 'added own score as a reference to player score charts'
             },
             {
                 version: '1.0.5',
-                date_time: '2022-02-01 3AM',
+                date_time: '2022-02-01 03AM',
                 changes: 'changed button styles at buildings/research page when not affordable'
             },
             {version: '1.0.4', date_time: '2022-02-01 2AM', changes: 'added changelog page'},
             {
                 version: '1.0.3',
-                date_time: '2022-02-01 1AM',
+                date_time: '2022-02-01 01AM',
                 changes: 'added resources to overview (visit resource page at planets to update)'
             },
-            {version: '1.0.2', date_time: '2022-02-01 1AM', changes: 'added "show_galaxy" setting'},
-            {version: '1.0.1', date_time: '2022-01-31 6PM', changes: 'security bypasses / bugfix'},
-            {version: '1.0.0', date_time: '2022-01-31 5PM', changes: 'stable release with auto updater'},
+            {version: '1.0.2', date_time: '2022-02-01 01AM', changes: 'added "show_galaxy" setting'},
+            {version: '1.0.1', date_time: '2022-01-31 06PM', changes: 'security bypasses / bugfix'},
+            {version: '1.0.0', date_time: '2022-01-31 05PM', changes: 'stable release with auto updater'},
         ];
 
         html += '<p>coded with <i class="fa fa-heart"></i></p>';

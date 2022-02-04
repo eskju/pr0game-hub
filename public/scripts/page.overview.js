@@ -1,4 +1,6 @@
 window.PageOverview = function () {
+    const $this = this;
+
     this.isLoading = false;
     this.cacheKey = 'overviewData';
     this.container = null;
@@ -15,7 +17,6 @@ window.PageOverview = function () {
     };
 
     this.bindHotkeys = function () {
-        const $this = this;
         const mappingFilters = {
             i: 'filter_inactive',
             n: 'filter_noobs',
@@ -180,7 +181,7 @@ window.PageOverview = function () {
         let tdWidth = (90 / $('#planetSelector option').length);
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
-            html += '<th colspan="2" class="text-center" width="' + tdWidth + '%">' + coords[1] + ':' + coords[2] + ':' + coords[3] + '</th>';
+            html += '<th colspan="2" class="text-right" width="' + tdWidth + '%">' + coords[1] + ':' + coords[2] + ':' + coords[3] + '</th>';
         });
 
         html += '</tr>';
@@ -190,8 +191,7 @@ window.PageOverview = function () {
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_timestamp');
-            html += '<td class="text-left">' + (getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_item') || '---') + '</td>';
-            html += '<td class="text-left">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
+            html += '<td class="text-right" colspan="2" title="' + (getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_item') || '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
         });
 
         html += '</tr>';
@@ -203,10 +203,9 @@ window.PageOverview = function () {
                 coords = getCoordinates(obj.innerHTML);
                 time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_timestamp');
                 value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_item');
-                html += '<td class="text-left">' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '</td>';
-                html += '<td class="text-left">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
+                html += '<td class="text-right" colspan="2" title="' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
             } else {
-                html += '<td colspan="2" class="disabled text-left" style="color: #333">nur auf Main</td>';
+                html += '<td colspan="2" class="disabled text-right" style="color: #333">nur auf Main</td>';
             }
         });
 
@@ -218,8 +217,7 @@ window.PageOverview = function () {
             coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_timestamp');
             value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_item');
-            html += '<td class="text-left">' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '</td>';
-            html += '<td class="text-left">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
+            html += '<td class="text-right" colspan="2" title="' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
         });
 
         html += '</tr>';
@@ -230,7 +228,7 @@ window.PageOverview = function () {
             coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_fieldsTotal');
             value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_fieldsUsed');
-            html += '<td class="text-left" colspan="2">';
+            html += '<td class="text-right" colspan="2">';
             html += (value && value !== typeof (undefined) && value !== '' ? value : '---');
             html += ' / ';
             html += (time && time !== typeof (undefined) && time !== '' ? time : '---');
@@ -245,7 +243,7 @@ window.PageOverview = function () {
             coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_temperatureMax');
             value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_temperatureMin');
-            html += '<td class="text-left" colspan="2">';
+            html += '<td class="text-right" colspan="2">';
             html += (value && value !== typeof (undefined) && value !== '' ? value + '°C' : '---');
             html += ' bis ';
             html += (time && time !== typeof (undefined) && time !== '' ? time + '°C' : '---');
@@ -305,8 +303,7 @@ window.PageOverview = function () {
                 html += '<td class="text-right">---</td>';
                 html += '<td class="text-right">---</td>';
             } else {
-                html += '<td class="text-right"><span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
-                html += '<td class="text-right" onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"><i class="fa fa-bell-slash"></i> ' + (getInt(getValue(coords[0] + '_notification_resourceId')) < 100 ? 'Gebäude' : 'Forschung') + '</td>';
+                html += '<td class="text-right" colspan="2"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
             }
 
             window.setInterval(function () {
@@ -337,7 +334,6 @@ window.PageOverview = function () {
     };
 
     this.parseOwnAttacks = function () {
-        var $this = this;
         let coordinates = null;
 
         $('#hidden-div2 > li > span:nth-child(2)').each(function (key, obj) {
@@ -368,8 +364,6 @@ window.PageOverview = function () {
     },
 
         this.loadData = function () {
-            var $this = this;
-
             if (this.request !== null) {
                 this.request.abort();
             }
@@ -392,7 +386,6 @@ window.PageOverview = function () {
         };
 
     this.getData = function () {
-        var $this = this;
         var content = getValue(this.cacheKey);
 
         try {
@@ -427,8 +420,6 @@ window.PageOverview = function () {
     };
 
     this.bindHeadlineSort = function () {
-        var $this = this;
-
         $('th.sortable').each(function (key, obj) {
             $(obj).css('cursor', 'pointer');
 
@@ -483,7 +474,6 @@ window.PageOverview = function () {
             $(columns[9]).css(getPlayerScoreScienceStyle(obj.player, response.player));
             $(columns[10]).css(getPlayerScoreMilitaryStyle(obj.player, response.player));
             $(columns[11]).css(getPlayerScoreDefenseStyle(obj.player, response.player));
-            console.log(response.player);
             if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
             if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
 
@@ -497,8 +487,6 @@ window.PageOverview = function () {
     };
 
     this.bindSettingsLink = function () {
-        var $this = this;
-
         $('#showSettings').click(function () {
             setValue('hideSettings', '0');
             $('#phSettings').show();
@@ -533,7 +521,6 @@ window.PageOverview = function () {
     };
 
     this.renderHtml = function () {
-        var $this = this;
         var html = '<table id="hubOverview" width="100%" style="max-width: 100% !important"><tr>';
         var response = this.getData();
 
@@ -650,27 +637,124 @@ window.PageOverview = function () {
 
     this.analyzeFleetMovement = function () {
         let columns;
-        let activityData;
+        let activities = [];
         let coordinates;
+        let timeAndId;
+        let id;
 
         $('.fleet-movement ul li').each(function (key, obj) {
             columns = $(obj).children();
             coordinates = $(columns[1]).html().match(/\[([:0-9]+)\](.*)\[([:0-9]+)\]/);
-            activityData = {
-                external_id: $(columns[0]).attr('id').replace(/fleettime\_/, ''), // fleet time
+            timeAndId = $(columns[0]).attr('id').replace(/fleettime\_/, '');
+            id = timeAndId.substring(10, timeAndId.length);
+
+            $(obj).attr('id', 'fleet' + id + '-' + ($(columns[1]).hasClass('return') ? '1' : '0'));
+
+            activities.push({
+                external_id: id, // fleet time
                 is_return: $(columns[1]).hasClass('return'), // if true try to assign an outbound flight by coords and timestamps
-                outbound_flight_id: $(columns[1]).hasClass('return') ? $(columns[0]).attr('id').replace(/fleettime\_/, '') : null, // set by API; search for same departure time
-                timestamp_departure: parseInt($(columns[0]).attr('id').replace(/fleettime\_/, '') / 1000), // fleet_time
+                outbound_flight_id: $(columns[1]).hasClass('return') ? id : null, // set by API; search for same departure time
+                timestamp_departure: null,
                 timestamp_arrival: parseInt($(columns[0]).attr('data-fleet-end-time')), // fleet_end_time
                 type: $(columns[2]).find('a').length > 0 ? $($(columns[2]).find('a')).html() : $(columns[2]).html(), // e.g. 'attack', 'transport', ..
                 planet_start_coordinates: coordinates[1], // start-planet's coordinates
                 planet_target_coordinates: coordinates[3], // target-planet's coordinates
-                resources: null, // resources carried
-                fleet: null, // ship amounts
-            };
+                resources: $this.getResources($(columns[2]).find('span.textForBlind')), // resources carried
+                ships: $this.getShips($(columns[1]).find('span.textForBlind')), // ship amounts
+            });
+        });
 
-            postJSON('flights', activityData, function(response) {
+        postJSON('flights', {activities}, function (response) {
+            let html;
+
+            response = JSON.parse(response.responseText);
+            let infoTooltip;
+
+            $.each(response.flights, function (key, obj) {
+                if (obj.ships_diff) {
+                    html = '<table style="width: 250px">'
+                    $.each(obj.ships_diff, function (skey, ship) {
+                        html += '<tr>';
+                        html += '<td class="text-left">' + skey + '</td>';
+                        html += '<td class="text-right">' + ship.after + '</td>';
+
+                        if (ship.diff > 0) {
+                            html += '<td class="text-right text-green">+' + ship.diff + '</td>';
+                        } else if (ship.diff < 0) {
+                            html += '<td class="text-right text-red">' + ship.diff + '</td>';
+                        } else {
+                            html += '<td class="text-right text-gray">---</td>';
+                        }
+
+                        html += '</tr>';
+                    });
+
+                    html += '</table>';
+
+                    infoTooltip = $('#fleet' + obj.external_id + '-' + obj.is_return + ' > span:nth-child(2) a');
+                    infoTooltip.attr('data-tooltip-content', html);
+                }
+
+                if (obj.resources_diff) {
+                    html = '<table style="width: 250px">'
+                    $.each(obj.resources_diff, function (skey, resource) {
+                        html += '<tr>';
+                        html += '<td class="text-left">' + skey + '</td>';
+                        html += '<td class="text-right">' + resource.after + '</td>';
+
+                        if (resource.diff > 0) {
+                            html += '<td class="text-right text-green">+' + resource.diff + '</td>';
+                        } else if (resource.diff < 0) {
+                            html += '<td class="text-right text-red">' + resource.diff + '</td>';
+                        } else {
+                            html += '<td class="text-right text-gray">---</td>';
+                        }
+
+                        html += '</tr>';
+                    });
+
+                    html += '</table>';
+
+                    infoTooltip = $('#fleet' + obj.external_id + '-' + obj.is_return + ' > span:nth-child(3) a');
+                    infoTooltip.attr('data-tooltip-content', html);
+                }
+
+                if(obj.is_return) {
+                    infoTooltip = $('#fleet' + obj.external_id + '-' + obj.is_return + ' > span:nth-child(2)').prepend('<i class="fa fa-backward"></i> ');
+                }
             });
         });
     };
+
+    this.getResources = function (cell) {
+        if (cell.length === 0) {
+            return [];
+        }
+
+        const cellContent = $(cell).html();
+        const resources = cellContent.match(/([.0-9]+) Metall\; ([.0-9]+) Kristall\; ([.0-9]+) Deuterium/);
+
+        return {
+            metal: resources[1],
+            crystal: resources[2],
+            deuterium: resources[3]
+        };
+    }
+
+    this.getShips = function (cell) {
+        if (cell.length === 0) {
+            return [];
+        }
+
+        const returnArray = {};
+        const ships = $(cell).html().replace(/([\(\)]+)/g, '').split(/;/);
+        let parsedShip;
+
+        $.each(ships, function (key, obj) {
+            parsedShip = obj.match(/([0-9]+) (.*)$/);
+            returnArray[parsedShip[2]] = parsedShip[1];
+        });
+
+        return returnArray;
+    }
 };
