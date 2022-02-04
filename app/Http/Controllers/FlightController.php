@@ -217,7 +217,7 @@ class FlightController extends Controller
                 ->where('user_id', auth()->id())
                 ->where('type', 'Expedition')
                 ->where('is_return', 1)
-                ->where('planet_target_coordinates', $coord->planet_target_coordinates)
+                ->where('planet_target_coordinates', str_replace('Expo ','',$coord->planet_target_coordinates))
                 ->get();
 
             foreach ($expeditions as $expedition) {
