@@ -666,6 +666,7 @@ window.PageOverview = function () {
 
         postJSON('flights', {activities}, function (response) {
             let html;
+            let tooltipContent;
 
             response = JSON.parse(response.responseText);
             let infoTooltip;
@@ -719,9 +720,78 @@ window.PageOverview = function () {
                     infoTooltip.attr('data-tooltip-content', html);
                 }
 
-                if(obj.is_return) {
+                if (obj.is_return) {
                     infoTooltip = $('#fleet' + obj.external_id + '-' + obj.is_return + ' > span:nth-child(2)').prepend('<i class="fa fa-backward"></i> ');
                 }
+
+                html = '<span style="width: 5%" class="text-right">';
+                html += '<a class="tooltip" data-tooltip-content="' + escape(tooltipContent) + '">';
+
+                tooltipContent = '<table style="width: 700px" cellspacing="0">';
+                tooltipContent += '<tr>';
+                tooltipContent += '<th class="text-left">&nbsp;</th>';
+                tooltipContent += '<th class="text-right">Anzahl</th>';
+                tooltipContent += '<th class="text-right">Differenz</th>';
+                tooltipContent += '<th class="text-right">Metall</th>';
+                tooltipContent += '<th class="text-right">Kristall</th>';
+                tooltipContent += '<th class="text-right">Deuterium</th>';
+                tooltipContent += '<th class="text-right">Punkte</th>';
+                tooltipContent += '</tr>';
+
+                if (obj.resources_diff) {
+                    $.each(obj.resources_diff, function (skey, ship) {
+                        tooltipContent += '<tr>';
+                        tooltipContent += '<td class="text-left">' + skey + '</td>';
+                        tooltipContent += '<td class="text-right">' + ship.after + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.diff) + '">+' + ship.diff + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.metal) + '">+' + ship.metal + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.score) + '">+' + ship.score + '</td>';
+                        tooltipContent += '</tr>';
+                    });
+                }
+
+                if (obj.ships_diff) {
+                    $.each(obj.ships_diff, function (skey, ship) {
+                        tooltipContent += '<tr>';
+                        tooltipContent += '<td class="text-left">' + skey + '</td>';
+                        tooltipContent += '<td class="text-right">' + ship.after + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.diff) + '">+' + ship.diff + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.metal) + '">+' + ship.metal + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
+                        tooltipContent += '<td class="text-right ' + $this.getStyle(ship.score) + '">+' + ship.score + '</td>';
+                        tooltipContent += '</tr>';
+                    });
+                }
+
+                tooltipContent += '<tr>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-left"><b>Gesamt</b></th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right text-gray">---</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right text-gray"></th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right ' + $this.getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right ' + $this.getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right ' + $this.getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cWhite) + '" class="text-right ' + $this.getStyle(obj.score_diff) + '">' + obj.score_diff + '</th>';
+                tooltipContent += '</tr>';
+                tooltipContent += '</table>';
+
+                if (obj.is_return) {
+                    if (getInt(obj.score_diff) > 0) {
+                        html += '<span class="text-green">+' + obj.score_diff + '</span>';
+                    } else if (getInt(obj.score_diff) === 0) {
+                        html += '<span style="color: #444"><small>+/-</small> 0</span>';
+                    } else {
+                        html += '<span class="text-red">+' + obj.score_diff + '</span>';
+                    }
+                } else {
+                    html += '<span style="color: #444">---</span>';
+                }
+                html += '</a>';
+                html += '</span>';
+                $('#fleet' + obj.external_id + '-' + obj.is_return).append(html);
+                $('#fleet' + obj.external_id + '-' + obj.is_return + ' span:last-child a.tooltip').attr('data-tooltip-content', tooltipContent);
             });
         });
     };
@@ -756,5 +826,17 @@ window.PageOverview = function () {
         });
 
         return returnArray;
+    }
+
+    this.getStyle = function (value) {
+        if (value === '0') {
+            return 'text-gray';
+        }
+
+        if (value < 0) {
+            return 'text-red';
+        }
+
+        return 'text-green';
     }
 };

@@ -286,6 +286,11 @@ window.PageHub = function () {
 
         const changelog = [
             {
+                version: '1.0.15',
+                date_time: '2022-02-04 01PM',
+                changes: 'show score differenz and details at flight overview'
+            },
+            {
                 version: '1.0.14',
                 date_time: '2022-02-04 09AM',
                 changes: 'added fleet tracking and overview enhancement (show ship/res diffs)'

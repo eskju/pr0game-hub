@@ -398,4 +398,7 @@ menu .fixed {
 .fade-75:hover {
   opacity: 0.9 !important;
 }
+#tooltip {
+  max-width: 750px !important;
+}
 /*# sourceMappingURL=skin.css.map */
