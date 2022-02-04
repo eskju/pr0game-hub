@@ -788,7 +788,7 @@ window.PageOverview = function () {
                     } else if (getInt(obj.score_diff) === 0) {
                         html += '<span style="color: #444"><small>+/-</small> 0</span>';
                     } else {
-                        html += '<span class="text-red">+' + obj.score_diff + '</span>';
+                        html += '<span class="text-red">' + obj.score_diff + '</span>';
                     }
                 } else {
                     html += '<span style="color: #444">---</span>';
