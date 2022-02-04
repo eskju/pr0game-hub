@@ -829,11 +829,11 @@ window.PageOverview = function () {
     }
 
     this.getStyle = function (value) {
-        if (value === '0') {
+        if (getInt(value) === 0) {
             return 'text-gray';
         }
 
-        if (value < 0) {
+        if (getInt(value) < 0) {
             return 'text-red';
         }
 
