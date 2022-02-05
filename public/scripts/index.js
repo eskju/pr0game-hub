@@ -27,6 +27,7 @@ import './util.get-player-attribute-style';
 import './util.get-player-row-id-style';
 import './util.get-player-row-style';
 import './util.get-rgb';
+import './util.get-style';
 import './util.hotkeys';
 import './util.number-format';
 import './util.planet-resource-notification';
@@ -249,16 +250,22 @@ window.showSpyReportHistoryBox = function (spyReportHistory, offset) {
 };
 
 window.parseUrl = function () {
-    replaceFixColors();
-
-    let resources = new Resources();
-    resources.init();
-
-    $('head').append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');
     const url = window.location.href.replace('www.', '');
 
+    // custom pages
+    if (location.hash && location.hash.length > 0) {
+        const hash = location.hash.split('.');
+
+        switch (hash[0]) {
+            case '#hub':
+                pageHub = new PageHub();
+                pageHub.loadPage(hash[1]);
+                return;
+        }
+    }
+
     // overview page
-    if (url === 'https://pr0game.com/game.php' || url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=overview/) === 0) {
+    else if (url === 'https://pr0game.com/game.php' || url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=overview/) === 0) {
         window.pageOverview = new PageOverview();
         pageOverview.init();
     }
@@ -319,14 +326,6 @@ window.parseUrl = function () {
         window.pageResources = new PageResources();
         pageResources.init();
     }
-
-    window.pageHub = new PageHub();
-    pageHub.init();
-
-    window.menu = new Menu();
-    menu.init();
-
-    hotkeys();
 };
 
 // colors
@@ -400,5 +399,28 @@ let filterCrystalMax = getValue('filter_crystal_max') || '';
 let filterDeuteriumEnabled = getValue('filter_deuterium_enable') || '0';
 let filterDeuteriumMin = getValue('filter_deuterium_min') || '';
 let filterDeuteriumMax = getValue('filter_deuterium_max') || '';
+
+window.alert = function (msg) {
+    window.location.reload();
+};
+
+$(window).on('hashchange', function () {
+    parseUrl();
+});
+
+window.pageHub = new PageHub();
+pageHub.init();
+
+window.menu = new Menu();
+menu.init();
+
+hotkeys();
+
+replaceFixColors();
+
+let resources = new Resources();
+resources.init();
+
+$('head').append('<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>');
 
 parseUrl();

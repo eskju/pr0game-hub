@@ -2,6 +2,7 @@ window.PageHub = function () {
     const $this = this;
     this.container = $('content');
     this.init = function () {
+
     };
 
     this.loadPage = function (alias) {
@@ -21,6 +22,11 @@ window.PageHub = function () {
                 this.loadPageFleet();
                 break;
 
+            case 'expos':
+                this.clearPage();
+                this.loadPageExpos();
+                break;
+
             case 'changelog':
                 this.clearPage();
                 this.loadPageChangelog();
@@ -33,6 +39,7 @@ window.PageHub = function () {
 
     this.clearPage = function () {
         this.container.html('');
+        this.container.addClass('hub');
     };
 
     this.sortData = function (a, b) {
@@ -281,10 +288,106 @@ window.PageHub = function () {
         });
     };
 
+    this.loadPageExpos = function() {
+        let html = '';
+
+        getJSON('flights/stats', function(response) {
+            response = JSON.parse(response.responseText);
+
+            html = '<div class="infos text-left">';
+            html += '<table class="borderless" cellspacing="0">';
+            html += '<tr>';
+            html += '<tr><th colspan="7"><b>Eigene Statistik (gesamte Zeit)</b></th></tr>';
+            html += '<th style="white-space: nowrap">Planet</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Gesamt</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Letzte 24 Std</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Metall</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Kristall</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Deuterium</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Punkte</th>';
+            html += '</tr>';
+
+            $.each(response.own_stats, function (key, obj) {
+                html += '<tr>';
+                html += '<td style="white-space: nowrap" class="text-left">' + key + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right">' + obj.count + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right">' + obj.count_24 + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.score_diff) + '">' + obj.score_diff + '</td>';
+                html += '</tr>';
+            });
+
+            html += '</table>';
+            html += '<small class="text-left" style="display: block; color: ' + getRgb(cRed) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Flottenbewegungen werden nur erfasst, wenn sowohl während Hin- als auch Rückflug die Übersicht mit diesem Plugin geöffnet wurde. Metall/Kristall/Deuterium/Punkte berechnen den Ressourcengewinn, sowie Schiffsgewinn und -verlust (Produktionskosten) mit ein. Komplettverluste (depleted/black hole) sowie Expo-Abbrüche werden <u>NICHT</u> erfasst.</small>';
+            html += '</div>';
+
+            html += '<div class="infos text-left">';
+            html += '<table class="borderless" cellspacing="0">';
+            html += '<tr>';
+            html += '<tr><th colspan="7"><b>Expos (letzte 24 Std)</b></th></tr>';
+            html += '<th style="white-space: nowrap">Planet</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Gesamt</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Metall</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Kristall</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Deuterium</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Punkte</th>';
+            html += '</tr>';
+
+            $.each(response.stats_per_player, function (key, obj) {
+                html += '<tr>';
+                html += '<td style="white-space: nowrap" class="text-left">' + obj.name + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right">' + obj.expeditions.count + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.expeditions.metal_diff) + '">' + obj.expeditions.metal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.expeditions.crystal_diff) + '">' + obj.expeditions.crystal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.expeditions.deuterium_diff) + '">' + obj.expeditions.deuterium_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.expeditions.score_diff) + '">' + obj.expeditions.score_diff + '</td>';
+                html += '</tr>';
+            });
+
+            html += '</table>';
+            html += '</div>';
+
+            html += '<div class="infos text-left">';
+            html += '<table class="borderless" cellspacing="0">';
+            html += '<tr>';
+            html += '<tr><th colspan="7"><b>Raids (letzte 24 Std)</b></th></tr>';
+            html += '<th style="white-space: nowrap">Planet</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Gesamt</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Metall</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Kristall</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Deuterium</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Punkte</th>';
+            html += '</tr>';
+
+            $.each(response.stats_per_player, function (key, obj) {
+                html += '<tr>';
+                html += '<td style="white-space: nowrap" class="text-left">' + obj.name + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right">' + obj.raids.count + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.raids.metal_diff) + '">' + obj.raids.metal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.raids.crystal_diff) + '">' + obj.raids.crystal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.raids.deuterium_diff) + '">' + obj.raids.deuterium_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.raids.score_diff) + '">' + obj.raids.score_diff + '</td>';
+                html += '</tr>';
+            });
+
+            html += '</table>';
+            html += '</div>';
+
+            $this.container.html(html);
+        })
+    };
+
     this.loadPageChangelog = function () {
         let html = '';
 
         const changelog = [
+            {
+                version: '1.0.17',
+                date_time: '2022-02-05 08AM',
+                changes: 'added hub page for raids & expos'
+            },
             {
                 version: '1.0.16',
                 date_time: '2022-02-04 08PM',
@@ -352,7 +455,6 @@ window.PageHub = function () {
             {version: '1.0.0', date_time: '2022-01-31 05PM', changes: 'stable release with auto updater'},
         ];
 
-        html += '<p>coded with <i class="fa fa-heart"></i></p>';
         html += '<table class="table519">';
         html += '<tr>';
         html += '<th class="text-right">Version</th>';
@@ -369,6 +471,7 @@ window.PageHub = function () {
         });
 
         html += '</table>';
+        html += '<p class="text-center text-green" style="padding-top: 10px">coded with <i class="fa fa-heart text-red"></i> by eichhorn/esKju</p>';
 
         $this.container.html(html);
     };

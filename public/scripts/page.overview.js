@@ -747,11 +747,11 @@ window.PageOverview = function () {
                         tooltipContent += '<tr>';
                         tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-left">' + skey + '</td>';
                         tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right">' + ship.after + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.diff) + '">+' + ship.diff + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.metal) + '">+' + ship.metal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.score) + '">+' + ship.score + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.diff) + '">+' + ship.diff + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.metal) + '">+' + ship.metal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.score) + '">+' + ship.score + '</td>';
                         tooltipContent += '</tr>';
                         i++;
                     });
@@ -763,11 +763,11 @@ window.PageOverview = function () {
                         tooltipContent += '<tr>';
                         tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-left">' + skey + '</td>';
                         tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right">' + ship.after + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.diff) + '">+' + ship.diff + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.metal) + '">+' + ship.metal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + $this.getStyle(ship.score) + '">+' + ship.score + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.diff) + '">+' + ship.diff + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.metal) + '">+' + ship.metal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.score) + '">+' + ship.score + '</td>';
                         tooltipContent += '</tr>';
                         i++;
                     });
@@ -777,10 +777,10 @@ window.PageOverview = function () {
                 tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-left"><b>Gesamt</b></th>';
                 tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right text-gray">---</th>';
                 tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right text-gray"></th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + $this.getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + $this.getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + $this.getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + $this.getStyle(obj.score_diff) + '">' + obj.score_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</th>';
+                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + getStyle(obj.score_diff) + '">' + obj.score_diff + '</th>';
                 tooltipContent += '</tr>';
                 tooltipContent += '</table>';
 
@@ -817,16 +817,16 @@ window.PageOverview = function () {
                 html += '<td style="white-space: nowrap" class="text-left">' + key + '</td>';
                 html += '<td style="white-space: nowrap" class="text-right">' + obj.count + '</td>';
                 html += '<td style="white-space: nowrap" class="text-right">' + obj.count_24 + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right ' + $this.getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right ' + $this.getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right ' + $this.getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right ' + $this.getStyle(obj.score_diff) + '">' + obj.score_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</td>';
+                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.score_diff) + '">' + obj.score_diff + '</td>';
                 html += '</tr>';
 
             });
 
             html += '</table>';
-            html += '<small class="text-left" style="display: block; color: ' + getRgb(cRed) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Die Expos werden erst seit dem 04.02. getrackt. Bis zum 06.02. kann es somit zu falschen Angaben kommen. Metall/Kristall/Deuterium/Punkte berechnen den Ressourcengewinn, sowie Schiffsgewinn und -verlust (Produktionskosten) mit ein. Komplettverluste (depleted/black hole) sowie Expo-Abbrüche werden <u>NICHT</u> erfasst. Expos werden nur erfasst, wenn nach Erhalt der Expo-Nachricht die Übersicht mit diesem Plugin geöffnet wurde.</small>';
+            html += '<small class="text-left" style="display: block; color: ' + getRgb(cRed) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Flottenbewegungen werden nur erfasst, wenn sowohl während Hin- als auch Rückflug die Übersicht mit diesem Plugin geöffnet wurde. Metall/Kristall/Deuterium/Punkte berechnen den Ressourcengewinn, sowie Schiffsgewinn und -verlust (Produktionskosten) mit ein. Komplettverluste (depleted/black hole) sowie Expo-Abbrüche werden <u>NICHT</u> erfasst.</small>';
             $('.fleet-movement').append(html);
         });
     };
@@ -861,17 +861,5 @@ window.PageOverview = function () {
         });
 
         return returnArray;
-    }
-
-    this.getStyle = function (value) {
-        if (getInt(value) === 0) {
-            return 'text-gray';
-        }
-
-        if (getInt(value) < 0) {
-            return 'text-red';
-        }
-
-        return 'text-green';
     }
 };

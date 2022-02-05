@@ -6,6 +6,7 @@ use App\Models\Flight;
 use App\Models\Planet;
 use App\Models\Player;
 use App\Models\Pr0gameVar;
+use App\Models\User;
 use App\Services\PlanetService;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
@@ -84,14 +85,14 @@ class FlightController extends Controller
 
         return response([
             'slots_used' => (Flight::query()
-                    ->select(DB::raw('COUNT(DISTINCT external_id) AS `count`'))
-                    ->where('user_id', auth()->id())
-                    ->where('is_active', 1)
-                    ->first()
-                    ->count ?? 0) . ' / ' . ((Player::query()
-                        ->select('computer_tech')
-                        ->find(auth()->user()->player_id)
-                        ->computer_tech ?? 0) + 1),
+                        ->select(DB::raw('COUNT(DISTINCT external_id) AS `count`'))
+                        ->where('user_id', auth()->id())
+                        ->where('is_active', 1)
+                        ->first()
+                        ->count ?? 0) . ' / ' . ((Player::query()
+                            ->select('computer_tech')
+                            ->find(auth()->user()->player_id)
+                            ->computer_tech ?? 0) + 1),
             'flights' => Flight::query()
                 ->where('user_id', auth()->id())
                 ->where('is_active', 1)
@@ -106,8 +107,26 @@ class FlightController extends Controller
 
                     return $flight->toArray();
                 }),
-            'expeditions' => $this->getExpeditionStats()
+            'expeditions' => $this->getExpeditionStats(auth()->id())
         ]);
+    }
+
+    public function stats(): array
+    {
+        return [
+            'own_stats' => $this->getExpeditionStats(auth()->id()),
+            'stats_per_player' => User::query()
+                ->whereNotNull('api_key')
+                ->orderBy('name')
+                ->get()
+                ->map(function (User $user) {
+                    $user->expeditions = $this->getRaidStats('Expedition', $user->id);
+                    $user->raids = $this->getRaidStats('Angreifen', $user->id);
+                    $user->recycling = $this->getRaidStats('Abbauen', $user->id);
+
+                    return $user;
+                })
+        ];
     }
 
     private function getDiff(array $before, array $after): array
@@ -182,12 +201,12 @@ class FlightController extends Controller
         return $resources_diff;
     }
 
-    private function getExpeditionStats()
+    private function getExpeditionStats(int $userId): array
     {
         $return = [];
         $coords = Flight::query()
             ->select('planet_target_coordinates')
-            ->where('user_id', auth()->id())
+            ->where('user_id', $userId)
             ->where('type', 'Expedition')
             ->where('is_return', 1)
             ->groupBy('planet_target_coordinates')
@@ -199,7 +218,7 @@ class FlightController extends Controller
                 'count' => 0,
                 'count_24' => Flight::query()
                     ->select('planet_target_coordinates')
-                    ->where('user_id', auth()->id())
+                    ->where('user_id', $userId)
                     ->where('type', 'Expedition')
                     ->where('is_return', 1)
                     ->where('planet_target_coordinates', $coord->planet_target_coordinates)
@@ -214,10 +233,10 @@ class FlightController extends Controller
             ];
 
             $expeditions = Flight::query()
-                ->where('user_id', auth()->id())
+                ->where('user_id', $userId)
                 ->where('type', 'Expedition')
                 ->where('is_return', 1)
-                ->where('planet_target_coordinates', str_replace('Expo ','',$coord->planet_target_coordinates))
+                ->where('planet_target_coordinates', str_replace('Expo ', '', $coord->planet_target_coordinates))
                 ->get();
 
             foreach ($expeditions as $expedition) {
@@ -237,20 +256,20 @@ class FlightController extends Controller
             $return[$coord->planet_target_coordinates]->score_diff = number_format($return[$coord->planet_target_coordinates]->score_diff, 0, '', '.');
         }
 
-        $return['Raids'] = $this->getRaidStats('Angreifen');
-        $return['Recycling'] = $this->getRaidStats('Abbauen');
+        $return['Raids'] = $this->getRaidStats('Angreifen', $userId);
+        $return['Recycling'] = $this->getRaidStats('Abbauen', $userId);
 
         return $return;
     }
 
-    private function getRaidStats($type)
+    private function getRaidStats($type, int $userId): object
     {
         $return = (object)[
             'count' => 0,
             'count_24' => Flight::query()
                 ->select('planet_target_coordinates')
-                ->where('user_id', auth()->id())
-                ->where('player_target_id', auth()->user()->player_id)
+                ->where('user_id', $userId)
+                ->where('player_target_id', User::find($userId)->player_id)
                 ->where('type', $type)
                 ->where('is_return', 1)
                 ->where('timestamp_arrival', '>', time() - 86400)
@@ -264,8 +283,8 @@ class FlightController extends Controller
         ];
 
         $raids = Flight::query()
-            ->where('user_id', auth()->id())
-            ->where('player_target_id', auth()->user()->player_id)
+            ->where('user_id', $userId)
+            ->where('player_target_id', User::find($userId)->player_id)
             ->where('type', $type)
             ->where('is_return', 1)
             ->get();

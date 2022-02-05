@@ -2,18 +2,13 @@ window.Menu = function() {
     this.init = function() {
         let html = '';
         html += '<li><a style="color: #ee4d2e !important; font-size: 11px">pr0game Hub v' + version + '</a></li>';
-        html += '<li data-hub-page="planets"><a href="javascript:void(0)"><i class="fa fa-globe-asia"></i> Planeten</a></li>';
-        html += '<li data-hub-page="research"><a href="javascript:void(0)"><i class="fa fa-flask"></i> Forschung</a></li>';
-        html += '<li data-hub-page="fleet"><a href="javascript:void(0)"><i class="fa fa-fighter-jet"></i> Flotte</a></li>';
-        html += '<li data-hub-page="changelog"><a href="javascript:void(0)"><i class="fa fa-history"></i> Changelog</a></li>';
+        html += '<li><a href="#hub.planets"><i class="fa fa-globe-asia"></i> Planeten</a></li>';
+        html += '<li><a href="#hub.research"><i class="fa fa-flask"></i> Forschung</a></li>';
+        html += '<li><a href="#hub.fleet"><i class="fa fa-fighter-jet"></i> Flotte</a></li>';
+        html += '<li><a href="#hub.expos"><i class="fa fa-skull-crossbones"></i> Raids &amp; Expo</a></li>';
+        html += '<li><a href="#hub.changelog"><i class="fa fa-history"></i> Changelog</a></li>';
 
         $('ul#menu').prepend(html);
-
-        $('*[data-hub-page]').each(function(key, obj) {
-            $(obj).click(function() {
-                pageHub.loadPage($(obj).attr('data-hub-page'));
-            });
-        });
 
         let content;
         $('.res_max').each(function(key, obj) {
