@@ -323,5 +323,7 @@ class FlightController extends Controller
             $flight->score_diff = round($absDiff['Punkte']);
             $flight->save();
         }
+
+        return response([]);
     }
 }
