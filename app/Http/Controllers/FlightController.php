@@ -310,6 +310,7 @@ class FlightController extends Controller
     public function fixDiffs()
     {
         foreach (Flight::query()->where('is_return', 1)->get() as $flight) {
+            exit;
             $outboundFlight = Flight::query()
                 ->where('external_id', $flight->outbound_flight_id)
                 ->where('is_return', '=', 0)
