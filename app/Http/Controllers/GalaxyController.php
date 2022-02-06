@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GalaxyView;
 use App\Models\Planet;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,15 @@ class GalaxyController extends Controller
 {
     public function show($galaxy, $system)
     {
+        if (!$view = GalaxyView::query()->where('galaxy', $galaxy)->where('system', $system)->first()) {
+            $view = new GalaxyView();
+            $view->galaxy = $galaxy;
+            $view->system = $system;
+        }
+
+        $view->last_viewed_at = Carbon::now();
+        $view->save();
+
         $return = [];
         for ($i = 1; $i <= 16; $i++) {
             $return[$i] = [

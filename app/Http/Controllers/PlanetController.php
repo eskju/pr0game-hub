@@ -25,15 +25,6 @@ class PlanetController extends Controller
             $planet->planet = $coordinates[2];
         }
 
-        if (!$view = GalaxyView::query()->where('galaxy', $coordinates[0])->where('system', $coordinates[1])->first()) {
-            $view = new GalaxyView();
-            $view->galaxy = $coordinates[0];
-            $view->system = $coordinates[1];
-        }
-
-        $view->last_viewed_at = Carbon::now();
-        $view->save();
-
         $planet->player_id = $request->get('player_id');
         $planet->external_id = $request->get('planet_id');
         $planet->save();

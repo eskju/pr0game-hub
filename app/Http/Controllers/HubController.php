@@ -110,7 +110,7 @@ class HubController extends Controller
         foreach (GalaxyView::query()->get() as $galaxyView) {
             $return[$galaxyView->galaxy][$galaxyView->system] = [
                 'last_viewed_at' => $galaxyView->last_viewed_at,
-                'intensity' => Carbon::parse($galaxyView->last_viewed_at)->diffInHours(Carbon::now()) / 24 * 3
+                'intensity' => Carbon::parse($galaxyView->last_viewed_at)->diffInHours(Carbon::now()) / 24 * 7
             ];
         }
 
