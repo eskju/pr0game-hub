@@ -307,7 +307,7 @@ class FlightController extends Controller
         return $return;
     }
 
-    public function fixDiffs()
+    public function fixFlightDiffs()
     {
         foreach (Flight::query()->where('is_return', 1)->get() as $flight) {
             exit;

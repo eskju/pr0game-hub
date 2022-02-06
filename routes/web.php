@@ -59,5 +59,4 @@ Route::post('/expeditions', ExpeditionController::class . '@store');
 
 Route::post('/flights', FlightController::class . '@store');
 Route::get('/flights/stats', FlightController::class . '@stats');
-
-Route::get('/debug/flights', FlightController::class . '@fixDiffs');
+Route::get('/debug/flights', FlightController::class . '@fixFlightDiffs');
