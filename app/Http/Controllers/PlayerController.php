@@ -166,7 +166,7 @@ class PlayerController extends Controller
                 }),
             'outdated_ids' => Player::query()
                 ->select('id')
-                ->where('updated_at', '<', Carbon::now()->subHours(8))
+                ->where('updated_at', '<', Carbon::now()->subHours(2))
                 ->where('is_deleted', 0)
                 ->orderBy('name')
                 ->get()
