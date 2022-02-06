@@ -814,6 +814,7 @@ window.PageOverview = function () {
             html += '</tr>';
 
             $.each(response.expeditions, function (key, obj) {
+                console.log(obj);
                 html += '<tr>';
                 html += '<td style="white-space: nowrap" class="text-left">' + key + '</td>';
                 html += '<td style="white-space: nowrap" class="text-right">' + obj.count + '</td>';
