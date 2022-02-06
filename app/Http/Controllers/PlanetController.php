@@ -6,6 +6,7 @@ use App\Models\GalaxyView;
 use App\Models\Planet;
 use App\Models\User;
 use App\Services\ResourceService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +31,7 @@ class PlanetController extends Controller
             $view->system = $coordinates[1];
         }
 
-        $view->last_viewed_at = time();
+        $view->last_viewed_at = Carbon::now();
         $view->save();
 
         $planet->player_id = $request->get('player_id');
