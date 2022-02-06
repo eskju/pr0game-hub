@@ -62,7 +62,7 @@ class PlayerController extends Controller
         return [
             'players' => Player::query()->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->get(),
             'missing_ids' => Player::query()->select('id')->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->whereNull('name')->get()->pluck('id'),
-            'outdated_ids' => Player::query()->select('id')->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->where('updated_at', '<', time() - 3600 * 2)->get()->pluck('id')
+            'outdated_ids' => Player::query()->select('id')->where('is_deleted', 0)->whereIn('id', $request->get('ids'))->where('updated_at', '<', time() - 3600)->get()->pluck('id')
         ];
     }
 
