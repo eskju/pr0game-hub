@@ -217,11 +217,10 @@ class FlightController extends Controller
             $return[$coord->planet_target_coordinates] = (object)[
                 'count' => 0,
                 'count_24' => Flight::query()
-                    ->select('planet_target_coordinates')
                     ->where('user_id', $userId)
                     ->where('type', 'Expedition')
                     ->where('is_return', 1)
-                    ->where('planet_target_coordinates', $coord->planet_target_coordinates)
+                    ->where('planet_start_coordinates', $coord->planet_target_coordinates)
                     ->where('timestamp_arrival', '>', time() - 86400)
                     ->count(),
                 'resources_diff' => [],
