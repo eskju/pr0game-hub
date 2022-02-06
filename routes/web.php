@@ -48,12 +48,12 @@ Route::post('/battle-reports', BattleReportController::class . '@store');
 Route::get('/hub/planets', HubController::class . '@getBuildings');
 Route::get('/hub/research', HubController::class . '@getResearch');
 Route::get('/hub/fleet', HubController::class . '@getFleet');
+Route::get('/hub/galaxy', HubController::class . '@getGalaxyViewStatus');
 
 Route::post('/planets', PlanetController::class . '@storePlanetId');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');
 Route::post('/planets/fleet', PlanetController::class . '@storeFleet');
 Route::get('/galaxy/{galaxy}/{system}', GalaxyController::class . '@show');
-Route::get('/galaxy/overview', GalaxyController::class . '@getGalaxyViewStatus');
 
 Route::post('/expeditions', ExpeditionController::class . '@store');
 
