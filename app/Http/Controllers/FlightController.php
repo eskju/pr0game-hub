@@ -220,7 +220,7 @@ class FlightController extends Controller
                     ->where('user_id', $userId)
                     ->where('type', 'Expedition')
                     ->where('is_return', 1)
-                    ->where('planet_start_coordinates', str_replace('Expo ', '', $coord->planet_target_coordinates))
+                    ->where('planet_start_coordinates', str_replace('Expo ', '', $coord->planet_start_coordinates))
                     ->where('timestamp_arrival', '>', time() - 86400)
                     ->count(),
                 'resources_diff' => [],
