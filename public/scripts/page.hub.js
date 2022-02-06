@@ -384,6 +384,11 @@ window.PageHub = function () {
 
         const changelog = [
             {
+                version: '1.0.18',
+                date_time: '2022-02-06 03PM',
+                changes: 'added link to rename/delete planet (overview)'
+            },
+            {
                 version: '1.0.17',
                 date_time: '2022-02-05 08AM',
                 changes: 'added hub page for raids & expos'

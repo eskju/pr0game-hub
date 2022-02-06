@@ -149,7 +149,7 @@ window.PageOverview = function () {
         const admins = infos[1].split(/\:\:\&nbsp\;/);
         let html = '';
 
-        html += '<table class="borderless" style="padding: 0; margin: 0"><tr><td width="50%" style="padding: 0">';
+        html += '<table class="borderless" style="padding: 0; margin: 0"><tr><td class="text-left" width="50%" style="padding: 0">';
         html += '<table class="borderless">';
         html += '<tr>';
         html += '<td class="text-left" width="10%">Serverzeit</td>';
@@ -164,6 +164,7 @@ window.PageOverview = function () {
         html += '<td class="text-left">' + infos[3].replace(/Punkte /, '') + '</td>';
         html += '</tr>';
         html += '</table>';
+        html += '<a style="margin-left: 12px; margin-top: 10px; color: #888; font-size: 10px;" href="javascript:void(0)" onclick="return Dialog.PlanetAction();">Planet umbenennen/aufgeben</a>';
         html += '</td><td style="padding: 0"><canvas id="playerChart" style="height: 100px; width: 100%"></canvas></td></table>';
         $($('.infos')[0]).html(html);
 
