@@ -113,6 +113,8 @@ class HubController extends Controller
                 'intensity' => Carbon::parse($galaxyView->last_viewed_at)->diffInHours(Carbon::now()) / 24 * 3
             ];
         }
+
+        return $return;
     }
 
     private function checkPermission(string $string)
