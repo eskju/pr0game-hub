@@ -171,7 +171,7 @@ class PlayerController extends Controller
                 ->orderBy('name')
                 ->get()
                 ->pluck('id'),
-            'version' => '1.0.18',
+            'version' => '1.0.19',
             'player' => $planet ? $planet->player : []
         ];
     }

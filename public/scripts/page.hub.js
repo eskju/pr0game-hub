@@ -27,6 +27,11 @@ window.PageHub = function () {
                 this.loadPageExpos();
                 break;
 
+            case 'galaxy':
+                this.clearPage();
+                this.loadPageGalaxy();
+                break;
+
             case 'changelog':
                 this.clearPage();
                 this.loadPageChangelog();
@@ -288,10 +293,10 @@ window.PageHub = function () {
         });
     };
 
-    this.loadPageExpos = function() {
+    this.loadPageExpos = function () {
         let html = '';
 
-        getJSON('flights/stats', function(response) {
+        getJSON('flights/stats', function (response) {
             response = JSON.parse(response.responseText);
 
             html = '<div class="infos text-left">';
@@ -379,10 +384,49 @@ window.PageHub = function () {
         })
     };
 
+    this.loadPageGalaxy = function () {
+        let html = '';
+
+        getJSON('hub/galaxy', function (response) {
+            response = JSON.parse(response.responseText);
+
+            html = '<div class="infos text-left">';
+            html += '<table class="borderless" cellspacing="0">';
+            html += '<tr>';
+            html += '<th style="white-space: nowrap; width: 10%">Galaxie</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Systeme 1-400</th>';
+            html += '</tr>';
+
+            $.each(response, function (galaxy, data) {
+                html += '<tr>';
+                html += '<td style="white-space: nowrap" class="text-left">Galaxie ' + galaxy + '</td>';
+                html += '<td style="white-space: nowrap" class="text-left">';
+                html += '<div style="display: flex; width: 100%; justify-content: stretch">';
+                $.each(data, function (system, obj) {
+                    html += '<div title="System ' + system + ': ' + (obj.last_viewed_at || '---') + '" style="height: 25px; background: ' + getColorAlt([92, 184, 92], obj.intensity, [238, 77, 46]) + '; min-width: 1px; flex-grow: 1"></div>';
+                });
+                html += '</div>';
+                html += '</td>';
+                html += '</tr>';
+            });
+
+            html += '</table>';
+            html += '<small class="text-left" style="display: block; color: ' + getRgb(cWhite) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Für jedes System wird ein schmaler Balken abgebildet. Die Farbe ist grün, sofern das System erst kürzlich angeschaut wurde und rot, wenn die letzte Überprüfung 7 Tage oder länger her ist.</small>';
+            html += '</div>';
+
+            $this.container.html(html);
+        });
+    };
+
     this.loadPageChangelog = function () {
         let html = '';
 
         const changelog = [
+            {
+                version: '1.0.19',
+                date_time: '2022-02-06 05PM',
+                changes: 'added galaxy update check page'
+            },
             {
                 version: '1.0.18',
                 date_time: '2022-02-06 03PM',
