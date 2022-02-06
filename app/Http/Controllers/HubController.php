@@ -99,7 +99,7 @@ class HubController extends Controller
     {
         $return = [];
 
-        for ($galaxy = 1; $galaxy <= 6; $galaxy++) {
+        for ($galaxy = 1; $galaxy <= 9; $galaxy++) {
             $return[$galaxy] = [];
 
             for ($system = 1; $system <= 400; $system++) {
