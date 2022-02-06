@@ -307,11 +307,13 @@ class FlightController extends Controller
         return $return;
     }
 
-    public function fixDiffs() {
-        foreach(Flight::query()->where('is_return', 1)->get() as $flight) {
+    public function fixDiffs()
+    {
+        foreach (Flight::query()->where('is_return', 1)->get() as $flight) {
             $outboundFlight = Flight::query()
                 ->where('external_id', $flight->outbound_flight_id)
                 ->where('is_return', '=', 0)
+                ->whereIn('type', ['Angreifen', 'Expedition'])
                 ->first();
 
             $flight->resources_diff = $flight->is_return ? $this->getDiff((array)($outboundFlight ? ($outboundFlight->resources ?? []) : ($flight->resources ?? [])), (array)($flight->resources ?? [])) : null;
