@@ -205,16 +205,16 @@ class FlightController extends Controller
     {
         $return = [];
         $coords = Flight::query()
-            ->select('planet_target_coordinates')
+            ->select('planet_start_coordinates')
             ->where('user_id', $userId)
             ->where('type', 'Expedition')
             ->where('is_return', 1)
-            ->groupBy('planet_target_coordinates')
+            ->groupBy('planet_start_coordinates')
             ->get();
 
         foreach ($coords as $coord) {
-            $coord->planet_target_coordinates = 'Expo ' . $coord->planet_target_coordinates;
-            $return[$coord->planet_target_coordinates] = (object)[
+            $coord->planet_start_coordinates = 'Expo ' . $coord->planet_start_coordinates;
+            $return[$coord->planet_start_coordinates] = (object)[
                 'count' => 0,
                 'count_24' => Flight::query()
                     ->where('user_id', $userId)
@@ -235,24 +235,24 @@ class FlightController extends Controller
                 ->where('user_id', $userId)
                 ->where('type', 'Expedition')
                 ->where('is_return', 1)
-                ->where('planet_target_coordinates', str_replace('Expo ', '', $coord->planet_target_coordinates))
+                ->where('planet_start_coordinates', str_replace('Expo ', '', $coord->planet_start_coordinates))
                 ->get();
 
             foreach ($expeditions as $expedition) {
                 $absDiff = $this->getAbsDiff($expedition->resources_diff, $expedition->ships_diff);
-                $return[$coord->planet_target_coordinates]->count++;
-                $return[$coord->planet_target_coordinates]->metal_diff += $absDiff['Metall']['diff'];
-                $return[$coord->planet_target_coordinates]->crystal_diff += $absDiff['Kristall']['diff'];
-                $return[$coord->planet_target_coordinates]->deuterium_diff += $absDiff['Deuterium']['diff'];
-                $return[$coord->planet_target_coordinates]->score_diff += round($absDiff['Punkte']);
+                $return[$coord->planet_start_coordinates]->count++;
+                $return[$coord->planet_start_coordinates]->metal_diff += $absDiff['Metall']['diff'];
+                $return[$coord->planet_start_coordinates]->crystal_diff += $absDiff['Kristall']['diff'];
+                $return[$coord->planet_start_coordinates]->deuterium_diff += $absDiff['Deuterium']['diff'];
+                $return[$coord->planet_start_coordinates]->score_diff += round($absDiff['Punkte']);
             }
 
-            $return[$coord->planet_target_coordinates]->count = number_format($return[$coord->planet_target_coordinates]->count, 0, '', '.');
-            $return[$coord->planet_target_coordinates]->count_24 = number_format($return[$coord->planet_target_coordinates]->count_24, 0, '', '.');
-            $return[$coord->planet_target_coordinates]->metal_diff = number_format($return[$coord->planet_target_coordinates]->metal_diff, 0, '', '.');
-            $return[$coord->planet_target_coordinates]->crystal_diff = number_format($return[$coord->planet_target_coordinates]->crystal_diff, 0, '', '.');
-            $return[$coord->planet_target_coordinates]->deuterium_diff = number_format($return[$coord->planet_target_coordinates]->deuterium_diff, 0, '', '.');
-            $return[$coord->planet_target_coordinates]->score_diff = number_format($return[$coord->planet_target_coordinates]->score_diff, 0, '', '.');
+            $return[$coord->planet_start_coordinates]->count = number_format($return[$coord->planet_start_coordinates]->count, 0, '', '.');
+            $return[$coord->planet_start_coordinates]->count_24 = number_format($return[$coord->planet_start_coordinates]->count_24, 0, '', '.');
+            $return[$coord->planet_start_coordinates]->metal_diff = number_format($return[$coord->planet_start_coordinates]->metal_diff, 0, '', '.');
+            $return[$coord->planet_start_coordinates]->crystal_diff = number_format($return[$coord->planet_start_coordinates]->crystal_diff, 0, '', '.');
+            $return[$coord->planet_start_coordinates]->deuterium_diff = number_format($return[$coord->planet_start_coordinates]->deuterium_diff, 0, '', '.');
+            $return[$coord->planet_start_coordinates]->score_diff = number_format($return[$coord->planet_start_coordinates]->score_diff, 0, '', '.');
         }
 
         $return['Raids'] = $this->getRaidStats('Angreifen', $userId);
