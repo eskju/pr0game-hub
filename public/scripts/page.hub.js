@@ -411,7 +411,7 @@ window.PageHub = function () {
             });
 
             html += '</table>';
-            html += '<small class="text-left" style="display: block; color: ' + getRgb(cWhite) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Für jedes System wird ein schmaler Balken abgebildet. Die Farbe ist grün, sofern das System erst kürzlich angeschaut wurde und rot, wenn die letzte Überprüfung 7 Tage oder länger her ist.</small>';
+            html += '<small class="text-left" style="display: block; color: ' + getRgb(cWhite) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Für jedes System wird ein schmaler Balken abgebildet. Die Farbe ist grün, sofern das System erst kürzlich angeschaut wurde und rot, wenn die letzte Überprüfung 7 Tage oder länger her ist. Das dargestellte System sowie Zeitpunkt der letzten Aktualisierung sind per Mouseover sichtbar.</small>';
             html += '</div>';
 
             $this.container.html(html);
