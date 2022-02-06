@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GalaxyView;
 use App\Models\Player;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -91,6 +93,26 @@ class HubController extends Controller
         $return[] = $sumRow;
 
         return $return;
+    }
+
+    public function getGalaxyViewStatus()
+    {
+        $return = [];
+
+        for ($galaxy = 1; $galaxy <= 6; $galaxy++) {
+            $return[$galaxy] = [];
+
+            for ($system = 1; $system <= 400; $system++) {
+                $return[$galaxy][$system] = ['last_viewed_at' => null, 'intensity' => 0];
+            }
+        }
+
+        foreach (GalaxyView::query()->get() as $galaxyView) {
+            $return[$galaxyView->galaxy][$galaxyView->system] = [
+                'last_viewed_at' => $galaxyView->last_viewed_at,
+                'intensity' => Carbon::parse($galaxyView->last_viewed_at)->diffInHours(Carbon::now()) / 24 * 3
+            ];
+        }
     }
 
     private function checkPermission(string $string)

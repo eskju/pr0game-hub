@@ -53,6 +53,7 @@ Route::post('/planets', PlanetController::class . '@storePlanetId');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');
 Route::post('/planets/fleet', PlanetController::class . '@storeFleet');
 Route::get('/galaxy/{galaxy}/{system}', GalaxyController::class . '@show');
+Route::get('/galaxy/overview', GalaxyController::class . '@getGalaxyViewStatus');
 
 Route::post('/expeditions', ExpeditionController::class . '@store');
 
