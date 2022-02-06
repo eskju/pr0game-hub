@@ -58,9 +58,9 @@ class FlightController extends Controller
             $flight->planet_target_coordinates = $activity->planet_target_coordinates ?? null;
             $flight->player_target_id = Planet::query()->where('coordinates', $activity->planet_target_coordinates ?? null)->first()->player_id ?? null;
             $flight->resources = $activity->resources ?? [];
-            $flight->resources_diff = $activity->is_return ? $this->getDiff((array)($outboundFlight->resources ?? []), (array)($flight->resources ?? [])) : null;
+            $flight->resources_diff = $activity->is_return ? $this->getDiff((array)($outboundFlight ? ($outboundFlight->resources ?? []) : ($flight->resources ?? [])), (array)($flight->resources ?? [])) : null;
             $flight->ships = $activity->ships ?? [];
-            $flight->ships_diff = $activity->is_return ? $this->getDiff((array)($outboundFlight->ships ?? []), (array)($flight->ships ?? [])) : null;
+            $flight->ships_diff = $activity->is_return ? $this->getDiff((array)($outboundFlight ? ($outboundFlight->ships ?? []) : ($flight->ships ?? [])), (array)($flight->ships ?? [])) : null;
             $absDiff = $this->getAbsDiff($flight->resources_diff, $flight->ships_diff);
             $flight->metal_diff = $absDiff['Metall']['diff'];
             $flight->crystal_diff = $absDiff['Kristall']['diff'];
