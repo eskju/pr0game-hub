@@ -310,8 +310,20 @@ class FlightController extends Controller
     public function fixFlightDiffs()
     {
         foreach (Flight::query()->where('is_return', 1)->get() as $flight) {
-            exit;
+            $outboundFlight = Flight::query()
+                ->where('external_id', $flight->outbound_flight_id)
+                ->where('is_return', '=', 0)
+                ->whereIn('type', ['Angreifen', 'Expedition'])
+                ->first();
 
+            $flight->resources_diff = $flight->is_return ? $this->getDiff((array)($outboundFlight ? ($outboundFlight->resources ?? []) : ($flight->resources ?? [])), (array)($flight->resources ?? [])) : null;
+            $flight->ships_diff = $flight->is_return ? $this->getDiff((array)($outboundFlight ? ($outboundFlight->ships ?? []) : ($flight->ships ?? [])), (array)($flight->ships ?? [])) : null;
+            $absDiff = $this->getAbsDiff($flight->resources_diff, $flight->ships_diff);
+            $flight->metal_diff = $absDiff['Metall']['diff'];
+            $flight->crystal_diff = $absDiff['Kristall']['diff'];
+            $flight->deuterium_diff = $absDiff['Deuterium']['diff'];
+            $flight->score_diff = round($absDiff['Punkte']);
+            $flight->save();
         }
 
         return response([]);
