@@ -43,7 +43,7 @@ window.PageHub = function () {
     };
 
     this.clearPage = function () {
-        this.container.html('');
+        this.container.html('<i class="fa fa-spin fa-spinner"></i> Daten werden geladen.');
         this.container.addClass('hub');
     };
 
@@ -429,6 +429,11 @@ window.PageHub = function () {
         let html = '';
 
         const changelog = [
+            {
+                version: '1.0.23',
+                date_time: '2022-02-07 11PM',
+                changes: 'added loading indicator for hub pages'
+            },
             {
                 version: '1.0.22',
                 date_time: '2022-02-07 11PM',
