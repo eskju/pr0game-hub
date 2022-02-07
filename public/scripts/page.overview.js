@@ -424,8 +424,12 @@ window.PageOverview = function () {
         $('.sortable').each(function (key, obj) {
             $(obj).css('cursor', 'pointer');
 
-            if ($(obj).attr('data-sort') == (getValue('orderBy') || 'distance') && $(obj).attr('data-direction') == (getValue('orderDirection') || 'ASC')) {
-                $(obj).prepend($this.isLoading ? '<i class="fa fa-spin fa-spinner fa"></i> ' : '<i class="fa fa-caret-down"></i> ');
+            if ($(obj).attr('data-sort') == (getValue('orderBy') || 'distance')) {
+                if ((getValue('orderDirection') || 'ASC') === 'ASC') {
+                    $(obj).prepend('<i class="fa fa-caret-up"></i> ');
+                } else {
+                    $(obj).prepend('<i class="fa fa-caret-down"></i> ');
+                }
             }
 
             $(obj).click(function () {
@@ -436,6 +440,10 @@ window.PageOverview = function () {
     };
 
     this.orderBy = function (orderBy, orderDirection) {
+        if (orderBy === getValue('orderBy')) {
+            orderDirection = getValue('orderDirection') === 'ASC' ? 'DESC' : 'ASC';
+        }
+
         setValue('orderBy', orderBy);
         setValue('orderDirection', orderDirection);
 
@@ -458,6 +466,10 @@ window.PageOverview = function () {
         if (property !== 'alliance_name' && property !== 'name') {
             aVal = getInt(aVal);
             bVal = getInt(bVal);
+        }
+        else {
+            aVal = aVal.toLowerCase();
+            bVal = bVal.toLowerCase();
         }
 
         return ((aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0) * invertSort;
