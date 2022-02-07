@@ -340,7 +340,7 @@ window.PageHub = function () {
             html += '<tr>';
             html += '<tr><th colspan="7"><b>Expos (letzte 24 Std)</b></th></tr>';
             html += '<th style="white-space: nowrap">Planet</th>';
-            html += '<th style="white-space: nowrap" class="text-right">Gesamt</th>';
+            html += '<th style="white-space: nowrap" class="text-right">Letzte 24 Std</th>';
             html += '<th style="white-space: nowrap" class="text-right">Metall</th>';
             html += '<th style="white-space: nowrap" class="text-right">Kristall</th>';
             html += '<th style="white-space: nowrap" class="text-right">Deuterium</th>';
