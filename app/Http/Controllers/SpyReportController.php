@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Planet;
 use App\Models\SpyReport;
+use App\Services\PlanetService;
 use App\Services\ResourceService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,6 +32,8 @@ class SpyReportController extends Controller
 
         $spyReport->created_at = Carbon::parse($request->get('timestamp'));
         $spyReport->save();
+
+        PlanetService::updatePlanetBySpyReport($spyReport);
 
         return response([]);
     }

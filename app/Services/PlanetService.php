@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Planet;
+use App\Models\SpyReport;
 
 class PlanetService
 {
@@ -19,5 +20,14 @@ class PlanetService
         }
 
         return $planet->external_id;
+    }
+
+    public static function updatePlanetBySpyReport(SpyReport $spyReport)
+    {
+        if(!$planet = $spyReport->getPlanet()) {
+            return;
+        }
+
+        $scoreDefense = 0;
     }
 }
