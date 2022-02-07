@@ -51,11 +51,20 @@ window.PageGalaxy = function () {
 
                     if (!isNaN(planet) && json[planet]) {
                         $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_battle_report || '') + '</td>');
-                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_report || '') + '</td>');
+                        $(obj).append('<td class="text-right" style="white-space: nowrap;" id="lastSpyReport' + json[planet].id + '">' + (json[planet].last_spy_report || '') + '</td>');
                         $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_metal || '') + '</td>');
                         $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_crystal || '') + '</td>');
                         $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_deuterium || '') + '</td>');
                     }
+                });
+
+                $.each(json, function(key, obj) {
+                    $('#lastSpyReport' + obj.id).click(function () {
+                        getJSON('spy-reports/' + obj.galaxy + '/' + obj.system + '/' + obj.planet, function (spyReports) {
+                            spyReports = JSON.parse(spyReports.responseText);
+                            showSpyReportHistory(spyReports);
+                        });
+                    });
                 });
             }
         });

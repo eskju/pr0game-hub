@@ -36,6 +36,9 @@ class GalaxyController extends Controller
 
         $planets = Planet::query()
             ->select([
+                'id',
+                'galaxy',
+                'system',
                 'planet',
                 'external_id',
                 DB::raw('(SELECT created_at FROM battle_reports WHERE battle_reports.galaxy = planets.galaxy AND battle_reports.system = planets.system AND battle_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) as `last_battle_report`'),
@@ -53,6 +56,9 @@ class GalaxyController extends Controller
             $planet = $planet->toArray();
 
             $return[$planet['planet']] = [
+                'id' => $planet['id'],
+                'galaxy' => $planet['galaxy'],
+                'system' => $planet['system'],
                 'planet' => $planet['planet'],
                 'external_id' => $planet['external_id'],
                 'last_battle_report' => $planet['last_battle_report'] ? $this->getDateTime(Carbon::parse($planet['last_battle_report'])->subMinute()->subHour()) : '',

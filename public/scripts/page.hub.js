@@ -430,6 +430,11 @@ window.PageHub = function () {
 
         const changelog = [
             {
+                version: '1.0.24',
+                date_time: '2022-02-07 11PM',
+                changes: 'added spy report overview for galaxy view'
+            },
+            {
                 version: '1.0.23',
                 date_time: '2022-02-07 11PM',
                 changes: 'added loading indicator for hub pages'
