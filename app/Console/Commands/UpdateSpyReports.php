@@ -45,7 +45,9 @@ class UpdateSpyReports extends Command
                 ->orderBy('created_at', 'DESC')
                 ->first();
 
-            PlanetService::updatePlanetBySpyReport($report);
+            if ($report) {
+                PlanetService::updatePlanetBySpyReport($report);
+            }
         }
 
         $bar->finish();
