@@ -29,13 +29,10 @@ class UpdateSpyReports extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return int
-     */
     public function handle()
     {
         $coords = SpyReport::query()
+            ->select('coordinates')
             ->groupBy('coordinates')
             ->get();
 
