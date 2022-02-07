@@ -209,6 +209,7 @@ class FlightController extends Controller
             ->where('user_id', $userId)
             ->where('type', 'Expedition')
             ->where('is_return', 1)
+            ->where('timestamp_arrival', '>', time() - 86400)
             ->groupBy('planet_start_coordinates')
             ->get();
 
@@ -236,6 +237,7 @@ class FlightController extends Controller
                 ->where('type', 'Expedition')
                 ->where('is_return', 1)
                 ->where('planet_start_coordinates', str_replace('Expo ', '', $coord->planet_start_coordinates))
+                ->where('timestamp_arrival', '>', time() - 86400)
                 ->get();
 
             foreach ($expeditions as $expedition) {
