@@ -286,6 +286,7 @@ class FlightController extends Controller
             ->where('player_target_id', User::find($userId)->player_id)
             ->where('type', $type)
             ->where('is_return', 1)
+            ->where('timestamp_arrival', '>', time() - 86400)
             ->get();
 
         foreach ($raids as $raid) {
