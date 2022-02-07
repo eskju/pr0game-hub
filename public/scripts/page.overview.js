@@ -764,11 +764,11 @@ window.PageOverview = function () {
                         tooltipContent += '<tr>';
                         tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-left">' + skey + '</td>';
                         tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right">' + ship.after + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.diff) + '">+' + ship.diff + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.metal) + '">+' + ship.metal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.crystal) + '">+' + ship.crystal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.deuterium) + '">+' + ship.deuterium + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.score) + '">+' + ship.score + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.diff) + '">' + ship.diff + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.metal) + '">' + ship.metal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.crystal) + '">' + ship.crystal + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.deuterium) + '">' + ship.deuterium + '</td>';
+                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.score) + '">' + ship.score + '</td>';
                         tooltipContent += '</tr>';
                         i++;
                     });
