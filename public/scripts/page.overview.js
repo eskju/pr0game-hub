@@ -421,7 +421,7 @@ window.PageOverview = function () {
     };
 
     this.bindHeadlineSort = function () {
-        $('th.sortable').each(function (key, obj) {
+        $('.sortable').each(function (key, obj) {
             $(obj).css('cursor', 'pointer');
 
             if ($(obj).attr('data-sort') == (getValue('orderBy') || 'distance') && $(obj).attr('data-direction') == (getValue('orderDirection') || 'ASC')) {
@@ -534,7 +534,11 @@ window.PageOverview = function () {
         html += '<th style="text-align: center;">#</th>';
         html += '<th class="sortable" data-sort="alliance_name" data-direction="ASC">Ally</th>';
         html += '<th class="sortable" data-sort="player.name" data-direction="ASC">Spieler</th>';
-        html += '<th class="sortable" data-sort="distance" title="Distanz" data-direction="ASC" style="text-align: center;" id="sortByDistance" colspan="3"><i class="fa fa-map-marker-alt"></i></th>';
+        html += '<th style="text-align: center;" colspan="3">';
+        html += '<span class="sortable" data-sort="distance" title="Distanz" data-direction="ASC" id="sortByDistance"><i class="fa fa-map-marker-alt"></i></span>';
+        html += '&nbsp;';
+        html += '<span class="sortable" data-sort="system" title="System" data-direction="ASC" id="sortBySystem"><i class="fa fa-sort-numeric-down"></i></span>';
+        html += '</th>';
         html += '<th class="sortable" data-sort="player.score" title="Punkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cBlue) + '" id="sortByScore"><i class="fa fa-chart-line"></i></th>';
         html += '<th class="sortable" data-sort="diff" title="Punktedifferenz zum Vortag" data-direction="ASC" style="text-align: center; color: ' + getRgb(cBlue) + '" id="sortByScoreDiff"><i class="fa fa-sort-numeric-up-alt"></i></th>';
         html += '<th class="sortable" data-sort="player.score_building" title="Gebaeudepunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cGreen) + '" id="sortByScoreBuilding"><i class="fa fa-industry"></i></th>';

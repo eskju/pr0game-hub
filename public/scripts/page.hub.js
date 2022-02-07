@@ -430,6 +430,11 @@ window.PageHub = function () {
 
         const changelog = [
             {
+                version: '1.0.22',
+                date_time: '2022-02-07 11PM',
+                changes: 'added second sort item above coordinates in overview (sort by system)'
+            },
+            {
                 version: '1.0.21',
                 date_time: '2022-02-07 03PM',
                 changes: 'changed defense score to planet\'s defense score (player\'s defense score in mouseover)'
