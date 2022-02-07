@@ -24,10 +24,23 @@ class PlanetService
 
     public static function updatePlanetBySpyReport(SpyReport $spyReport)
     {
-        if(!$planet = $spyReport->getPlanet()) {
+        if (!$planet = $spyReport->getPlanet()) {
             return;
         }
 
-        $scoreDefense = 0;
+        if ($spyReport->rocket_launchers !== null) {
+            $scoreDefense = 0;
+            $scoreDefense += (int)$spyReport->rocket_launchers * 2;
+            $scoreDefense += (int)$spyReport->light_laser_turrets * 2;
+            $scoreDefense += (int)$spyReport->heavy_laser_turrets * 8;
+            $scoreDefense += (int)$spyReport->ion_turrets * 8;
+            $scoreDefense += (int)$spyReport->gauss_canons * 35;
+            $scoreDefense += (int)$spyReport->plasma_turrets * 100;
+            $scoreDefense += (int)$spyReport->small_shields * 20;
+            $scoreDefense += (int)$spyReport->large_shields * 100;
+
+            $planet->score_defense = $scoreDefense;
+            $planet->save();
+        }
     }
 }
