@@ -93,7 +93,7 @@ class PlayerController extends Controller
                 DB::raw('`players`.`score_building`'),
                 DB::raw('`players`.`score_science`'),
                 DB::raw('`players`.`score_military`'),
-                DB::raw('`players`.`score_defense`'),
+                DB::raw('`planets`.`score_defense`'),
                 DB::raw('`players`.`is_inactive`'),
                 DB::raw('`players`.`on_vacation`'),
                 DB::raw('`players`.`alliance_id`'),
