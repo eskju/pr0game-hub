@@ -805,7 +805,6 @@ window.PageOverview = function () {
             html = '<table class="borderless" style="padding: 0; margin: 0"><tr><td width="50%" style="padding: 0" >';
             html += '<tr>';
             html += '<th style="white-space: nowrap">Planet</th>';
-            html += '<th style="white-space: nowrap" class="text-right">Gesamt</th>';
             html += '<th style="white-space: nowrap" class="text-right">Letzte 24 Std</th>';
             html += '<th style="white-space: nowrap" class="text-right">Metall</th>';
             html += '<th style="white-space: nowrap" class="text-right">Kristall</th>';
@@ -816,7 +815,6 @@ window.PageOverview = function () {
             $.each(response.expeditions, function (key, obj) {
                 html += '<tr>';
                 html += '<td style="white-space: nowrap" class="text-left">' + key + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right">' + obj.count + '</td>';
                 html += '<td style="white-space: nowrap" class="text-right">' + obj.count_24 + '</td>';
                 html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</td>';
                 html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</td>';
