@@ -94,6 +94,7 @@ class PlayerController extends Controller
                 DB::raw('`players`.`score_science`'),
                 DB::raw('`players`.`score_military`'),
                 DB::raw('`planets`.`score_defense`'),
+                DB::raw('`players`.`score_defense` AS `player_score_defense`'),
                 DB::raw('`players`.`is_inactive`'),
                 DB::raw('`players`.`on_vacation`'),
                 DB::raw('`players`.`alliance_id`'),
@@ -160,6 +161,7 @@ class PlayerController extends Controller
                     $return['player']['score_building'] = number_format($return['score_building'], 0, ',', '.');
                     $return['player']['score_science'] = number_format($return['score_science'], 0, ',', '.');
                     $return['player']['score_military'] = number_format($return['score_military'], 0, ',', '.');
+                    $return['score_defense'] = number_format($return['player_score_defense'], 0, ',', '.');
                     $return['player']['score_defense'] = number_format($return['score_defense'], 0, ',', '.');
 
                     return $return;
@@ -171,7 +173,7 @@ class PlayerController extends Controller
                 ->orderBy('name')
                 ->get()
                 ->pluck('id'),
-            'version' => '1.0.20',
+            'version' => '1.0.21',
             'player' => $planet ? $planet->player : []
         ];
     }

@@ -575,7 +575,7 @@ window.PageOverview = function () {
                 html += '<td id="row' + obj.id + 'ScoreBuilding">' + (obj.player.score_building || '') + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreScience">' + (obj.player.score_science || '') + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreMilitary">' + (obj.player.score_military || '') + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreDefense">' + (obj.player.score_defense || '') + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreDefense" title="Gesamt: ' + (obj.player.score_defense || '???') + '">' + (obj.score_defense || '') + '</td>';
                 html += '<td style="text-align: right; white-space: nowrap">';
 
                 var fleetQueueItemsDisplayed = 0;

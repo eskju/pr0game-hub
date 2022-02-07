@@ -432,6 +432,11 @@ window.PageHub = function () {
 
         const changelog = [
             {
+                version: '1.0.21',
+                date_time: '2022-02-07 03PM',
+                changes: 'changed defense score to planet\'s defense score (player\'s defense score in mouseover)'
+            },
+            {
                 version: '1.0.20',
                 date_time: '2022-02-07 06AM',
                 changes: 'added alliance filter for hub\'s research page'
