@@ -19,20 +19,22 @@ window.PageMessages = function () {
     this.colors = new top.Colors();
     const $this = this;
 
-    this.init = function() {
+    this.init = function () {
         messages.each(function (key, obj) {
             // spy report
             if ($(obj).find('.spyRaport').length > 0) {
                 $this.parseSpyReport(key, obj);
+            } else if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().search(/Spionage\-Aktivität/) !== -1) {
+                $this.parseEnemySpying(key, obj);
             } else if ($(obj).find('.raportMessage').length > 0) {
                 $this.parseBattleReport(key, obj);
-            } else if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().match(/Expeditionsbericht/) !== -1) {
+            } else if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().search(/Expeditionsbericht/) !== -1) {
                 $this.parseExpedition(key, obj);
             }
         });
     }
 
-    this.parseSpyReport = function(key, obj) {
+    this.parseSpyReport = function (key, obj) {
         dateTime = $(messages[key - 1]).find('td:nth-child(2)').html();
 
         headerText = $(obj).find('.spyRaportHead a').html();
@@ -62,7 +64,7 @@ window.PageMessages = function () {
         });
     }
 
-    this.parseBattleReport = function(key, obj) {
+    this.parseBattleReport = function (key, obj) {
         var html = $(obj).html();
         var parseResult = getCoordinates($(obj).find('.raportMessage').html());
 
@@ -83,7 +85,21 @@ window.PageMessages = function () {
         });
     }
 
-    this.parseExpedition = function(key, obj) {
+    this.parseEnemySpying = function (key, obj) {
+        messageId = $(obj).attr('id').replace(/message\_/, '');
+        dateTime = $(obj).hasClass('message_head') && $($(obj).find('td')[1]).html();
+        const coords = $($(messages[key - 1]).find('td')).html().match(/([0-9]+)\:([0-9]+)\:([0-9]+)/g);
+
+        postJSON('hostile-spying', {
+            external_id: messageId,
+            date_time: dateTime,
+            planet_start_coordinates: coords[0],
+            planet_target_coordinates: coords[1]
+        }, function () {
+        });
+    };
+
+    this.parseExpedition = function (key, obj) {
         messageId = $(obj).attr('id').replace(/message\_/, '');
         dateTime = $(obj).hasClass('message_head') && $($(obj).find('td')[1]).html();
 
