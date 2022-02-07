@@ -576,7 +576,7 @@ window.PageOverview = function () {
                 html += '<td id="row' + obj.id + 'ScoreScience">' + (obj.player.score_science || '') + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreMilitary">' + (obj.player.score_military || '') + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreDefense">' + (obj.player.score_defense || '') + '</td>';
-                html += '<td style="text-align: right">';
+                html += '<td style="text-align: right; white-space: nowrap">';
 
                 var fleetQueueItemsDisplayed = 0;
                 $.each($this.fleetQueue, function (i, fleetQueueItem) {
@@ -607,7 +607,7 @@ window.PageOverview = function () {
 
                 html += (fleetQueueItemsDisplayed === 0 ? (obj.last_battle_report || '') : '');
                 html += ' </td>';
-                html += '<td style="text-align: right; cursor: pointer" id="lastSpyReport' + obj.id + '">' + (obj.last_spy_report || '') + '</td>';
+                html += '<td style="text-align: right; cursor: pointer; white-space: nowrap" id="lastSpyReport' + obj.id + '">' + (obj.last_spy_report || '') + '</td>';
                 html += '<td>';
 
                 if (obj.external_id) {
