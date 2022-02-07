@@ -164,8 +164,15 @@ window.PageHub = function () {
     this.loadPageResearch = function () {
         getJSON('hub/research', function (response) {
             const data = JSON.parse(response.responseText);
-            let html = '';
+            const allianceId = getValue('filter_alliance_id') || '';
+            console.log(allianceId);
 
+            let html = '';
+            html += '<select id="allianceIdSelect" onchange="setValue(\'filter_alliance_id\', this.value); pageHub.loadPageResearch()">';
+            html += '<option value="">Alle</option>';
+            html += '<option value="12"' + (allianceId === '12' ? ' selected' : '') + '>FELIDAE FERNICHTER</option>';
+            html += '<option value="95"' + (allianceId === '95' ? ' selected' : '') + '>FELIDAE FERNICHTER WING</option>';
+            html += '</select>';
             html += '<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Technologienamen zu sehen.</i></p>';
             html += '<table class="table519">';
             html += '<tr>';
@@ -205,29 +212,31 @@ window.PageHub = function () {
             html += '</tr>';
 
             $.each(data, function (key, obj) {
-                html += '<tr>';
-                html += '<td style="text-align: left;">' + obj.name + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.score_science || 0) / getMaxValue(data, 'score_science'), cRed) + '">' + obj.score_science + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.spy_tech || 0) / getMaxValue(data, 'spy_tech'), cRed) + '">' + (obj.spy_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.computer_tech || 0) / getMaxValue(data, 'computer_tech'), cRed) + '">' + (obj.computer_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.military_tech || 0) / getMaxValue(data, 'military_tech'), cRed) + '">' + (obj.military_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.shield_tech || 0) / getMaxValue(data, 'shield_tech'), cRed) + '">' + (obj.shield_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.defense_tech || 0) / getMaxValue(data, 'defense_tech'), cRed) + '">' + (obj.defense_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.energy_tech || 0) / getMaxValue(data, 'energy_tech'), cRed) + '">' + (obj.energy_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.hyperspace_tech || 0) / getMaxValue(data, 'hyperspace_tech'), cRed) + '">' + (obj.hyperspace_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.combustion_tech || 0) / getMaxValue(data, 'combustion_tech'), cRed) + '">' + (obj.combustion_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.impulse_motor_tech || 0) / getMaxValue(data, 'impulse_motor_tech'), cRed) + '">' + (obj.impulse_motor_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.hyperspace_motor_tech || 0) / getMaxValue(data, 'hyperspace_motor_tech'), cRed) + '">' + (obj.hyperspace_motor_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.laser_tech || 0) / getMaxValue(data, 'laser_tech'), cRed) + '">' + (obj.laser_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.ion_tech || 0) / getMaxValue(data, 'ion_tech'), cRed) + '">' + (obj.ion_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.buster_tech || 0) / getMaxValue(data, 'buster_tech'), cRed) + '">' + (obj.buster_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.intergalactic_tech || 0) / getMaxValue(data, 'intergalactic_tech'), cRed) + '">' + (obj.intergalactic_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.expedition_tech || 0) / getMaxValue(data, 'expedition_tech'), cRed) + '">' + (obj.expedition_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.metal_proc_tech || 0) / getMaxValue(data, 'metal_proc_tech'), cRed) + '">' + (obj.metal_proc_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.crystal_proc_tech || 0) / getMaxValue(data, 'crystal_proc_tech'), cRed) + '">' + (obj.crystal_proc_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.deuterium_proc_tech || 0) / getMaxValue(data, 'deuterium_proc_tech'), cRed) + '">' + (obj.deuterium_proc_tech || '') + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.graviton_tech || 0) / getMaxValue(data, 'graviton_tech'), cRed) + '">' + (obj.graviton_tech || '') + '</td>';
-                html += '</tr>';
+                if (allianceId === '' || parseInt(allianceId) === obj.alliance_id) {
+                    html += '<tr>';
+                    html += '<td style="text-align: left;">' + obj.name + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.score_science || 0) / getMaxValue(data, 'score_science'), cRed) + '">' + obj.score_science + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.spy_tech || 0) / getMaxValue(data, 'spy_tech'), cRed) + '">' + (obj.spy_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.computer_tech || 0) / getMaxValue(data, 'computer_tech'), cRed) + '">' + (obj.computer_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.military_tech || 0) / getMaxValue(data, 'military_tech'), cRed) + '">' + (obj.military_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.shield_tech || 0) / getMaxValue(data, 'shield_tech'), cRed) + '">' + (obj.shield_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.defense_tech || 0) / getMaxValue(data, 'defense_tech'), cRed) + '">' + (obj.defense_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.energy_tech || 0) / getMaxValue(data, 'energy_tech'), cRed) + '">' + (obj.energy_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.hyperspace_tech || 0) / getMaxValue(data, 'hyperspace_tech'), cRed) + '">' + (obj.hyperspace_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.combustion_tech || 0) / getMaxValue(data, 'combustion_tech'), cRed) + '">' + (obj.combustion_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.impulse_motor_tech || 0) / getMaxValue(data, 'impulse_motor_tech'), cRed) + '">' + (obj.impulse_motor_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.hyperspace_motor_tech || 0) / getMaxValue(data, 'hyperspace_motor_tech'), cRed) + '">' + (obj.hyperspace_motor_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.laser_tech || 0) / getMaxValue(data, 'laser_tech'), cRed) + '">' + (obj.laser_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.ion_tech || 0) / getMaxValue(data, 'ion_tech'), cRed) + '">' + (obj.ion_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.buster_tech || 0) / getMaxValue(data, 'buster_tech'), cRed) + '">' + (obj.buster_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.intergalactic_tech || 0) / getMaxValue(data, 'intergalactic_tech'), cRed) + '">' + (obj.intergalactic_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.expedition_tech || 0) / getMaxValue(data, 'expedition_tech'), cRed) + '">' + (obj.expedition_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.metal_proc_tech || 0) / getMaxValue(data, 'metal_proc_tech'), cRed) + '">' + (obj.metal_proc_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.crystal_proc_tech || 0) / getMaxValue(data, 'crystal_proc_tech'), cRed) + '">' + (obj.crystal_proc_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.deuterium_proc_tech || 0) / getMaxValue(data, 'deuterium_proc_tech'), cRed) + '">' + (obj.deuterium_proc_tech || '') + '</td>';
+                    html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.graviton_tech || 0) / getMaxValue(data, 'graviton_tech'), cRed) + '">' + (obj.graviton_tech || '') + '</td>';
+                    html += '</tr>';
+                }
             });
 
             html += '</table>';
@@ -422,6 +431,11 @@ window.PageHub = function () {
         let html = '';
 
         const changelog = [
+            {
+                version: '1.0.20',
+                date_time: '2022-02-07 06AM',
+                changes: 'added alliance filter for hub\'s research page'
+            },
             {
                 version: '1.0.19',
                 date_time: '2022-02-06 05PM',
