@@ -406,4 +406,7 @@ content.hub .infos:last-child {
   padding: 15px !important;
   margin: 0 0 15px 0 !important;
 }
+#planetSelector {
+  max-width: 125px;
+}
 /*# sourceMappingURL=skin.css.map */
