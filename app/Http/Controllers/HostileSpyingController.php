@@ -2,14 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expedition;
 use App\Models\HostileSpying;
 use App\Models\Planet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HostileSpyingController extends Controller
 {
+    public function index()
+    {
+        return HostileSpying::query()
+            ->select([
+                DB::raw('hostile_spying.*'),
+                DB::raw('a.name AS attacker_name'),
+                DB::raw('alliances.name AS attacker_alliance'),
+                DB::raw('t.name AS target_name'),
+            ])
+            ->join('players AS a', 'a.id', '=', 'hostile_spying.player_start_id')
+            ->join('alliances', 'alliances.id', '=', 'a.alliance_id', 'left outer')
+            ->join('players as t', 't.id', '=', 'hostile_spying.player_target_id')
+            ->orderBy('created_at', 'DESC')
+            ->limit(100)
+            ->get()
+            ->map(function (HostileSpying $hostileSpying) {
+                $hostileSpying->timestamp = $hostileSpying->created_at->diffForHumans();
+
+                return $hostileSpying;
+            });
+    }
+
     public function store(Request $request)
     {
         if (!$spying = HostileSpying::query()->where('external_id', $request->get('external_id'))->first()) {

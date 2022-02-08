@@ -38,6 +38,7 @@ import './util.show-message';
 import './util.version-check';
 import './xhr.get-json';
 import './xhr.post-json';
+import './component.changelog';
 import './component.menu';
 import './page.alliance';
 import './page.buildings';

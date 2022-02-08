@@ -7,6 +7,7 @@ window.Menu = function() {
         html += '<li><a href="#hub.fleet"><i class="fa fa-fighter-jet"></i> Flotte</a></li>';
         html += '<li><a href="#hub.expos"><i class="fa fa-skull-crossbones"></i> Raids &amp; Expo</a></li>';
         html += '<li><a href="#hub.galaxy"><i class="fa fa-sync"></i> Gala-Aktualität</a></li>';
+        html += '<li><a href="#hub.hostile-spying"><i class="fa fa-eye"></i> Fremdspionage</a></li>';
         html += '<li><a href="#hub.changelog"><i class="fa fa-history"></i> Changelog</a></li>';
 
         $('ul#menu').prepend(html);

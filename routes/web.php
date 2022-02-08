@@ -63,3 +63,4 @@ Route::get('/flights/stats', FlightController::class . '@stats');
 Route::get('/debug/flights', FlightController::class . '@fixFlightDiffs');
 
 Route::post('/hostile-spying', HostileSpyingController::class . '@store');
+Route::get('/hostile-spying', HostileSpyingController::class . '@index');

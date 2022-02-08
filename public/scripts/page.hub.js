@@ -32,6 +32,11 @@ window.PageHub = function () {
                 this.loadPageGalaxy();
                 break;
 
+            case 'hostile-spying':
+                this.clearPage();
+                this.loadPageHostileSpying();
+                break;
+
             case 'changelog':
                 this.clearPage();
                 this.loadPageChangelog();
@@ -83,12 +88,13 @@ window.PageHub = function () {
 
             let html = '';
 
-            html += '<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Gebäudenamen zu sehen.</i></p>';
+            html += '<div class="infos text-left">';
+            html += '<p style="padding-left: 10px"><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Gebäudenamen zu sehen.</i></p>';
             html += '<table class="table519">';
             html += '<tr>';
             html += '<th class="sortable" colspan="3" data-sort="coordinates" data-direction="ASC">Koordinaten</th>';
             html += '<th class="sortable" style="text-align: left;" data-sort="name" data-direction="ASC">Spieler</th>';
-            html += '<th class="sortable" style="text-align: left;" data-sort="score_building" data-direction="DESC">Gebäudepunkte</th>';
+            html += '<th class="sortable" style="text-align: left;" data-sort="score_building" data-direction="DESC">Punkte</th>';
             html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Metallmine">M</th>';
             html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Kristallmine">K</th>';
             html += '<th style="text-align: right; color: ' + getRgb(cGreen) + '" title="Deuteriumsynthetisierer">D</th>';
@@ -140,6 +146,7 @@ window.PageHub = function () {
             });
 
             html += '</table>';
+            html += '</div>';
 
             $this.container.html(html);
             $('th.sortable').click(function () {
@@ -165,15 +172,15 @@ window.PageHub = function () {
         getJSON('hub/research', function (response) {
             const data = JSON.parse(response.responseText);
             const allianceId = getValue('filter_alliance_id') || '';
-            console.log(allianceId);
 
             let html = '';
-            html += '<select id="allianceIdSelect" onchange="setValue(\'filter_alliance_id\', this.value); pageHub.loadPageResearch()">';
+            html += '<div class="infos text-left">';
+            html += '<select style="margin-left: 10px" id="allianceIdSelect" onchange="setValue(\'filter_alliance_id\', this.value); pageHub.loadPageResearch()">';
             html += '<option value="">Alle</option>';
             html += '<option value="12"' + (allianceId === '12' ? ' selected' : '') + '>FELIDAE FERNICHTER</option>';
             html += '<option value="95"' + (allianceId === '95' ? ' selected' : '') + '>FELIDAE FERNICHTER WING</option>';
             html += '</select>';
-            html += '<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Technologienamen zu sehen.</i></p>';
+            html += '<p style="padding-left: 10px"><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Technologienamen zu sehen.</i></p>';
             html += '<table class="table519">';
             html += '<tr>';
             html += '<td></td>';
@@ -240,6 +247,7 @@ window.PageHub = function () {
             });
 
             html += '</table>';
+            html += '</div>';
 
             $this.container.html(html);
         });
@@ -250,8 +258,9 @@ window.PageHub = function () {
             const data = JSON.parse(response.responseText);
             let html = '';
 
-            html += '<p><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Schiffsnamen zu sehen.</i></p>';
-            html += '<table class="table519">';
+            html += '<div class="infos text-left">';
+            html += '<p style="padding-left: 10px"><i class="fa fa-info-circle"></i> <i>Halte die Maus über die Buchstaben, um die Schiffsnamen zu sehen.</i></p>';
+            html += '<table class="borderless">';
             html += '<tr>';
             html += '<th style="text-align: left;">Spieler</th>';
             html += '<th style="text-align: right">Punkte</th>';
@@ -297,6 +306,7 @@ window.PageHub = function () {
             });
 
             html += '</table>';
+            html += '</div>';
 
             $this.container.html(html);
         });
@@ -425,139 +435,60 @@ window.PageHub = function () {
         });
     };
 
+    this.loadPageHostileSpying = function () {
+        let html = '';
+
+        getJSON('hostile-spying', function (response) {
+            response = JSON.parse(response.responseText);
+            html += '<div class="infos text-left">';
+            html += '<table class="borderless">';
+            html += '<tr>';
+            html += '<th class="text-left">Allianz</th>';
+            html += '<th class="text-left">Spion</th>';
+            html += '<th class="text-left">Koords</th>';
+            html += '<th class="text-left">Ziel</th>';
+            html += '<th class="text-left">Ziel Koords</th>';
+            html += '<th class="text-left">Zeitpunkt</th>';
+            html += '</tr>';
+            $.each(response, function (key, obj) {
+                html += '<tr>';
+                html += '<td class="text-left">' + (obj.attacker_alliance || '---') + '</td>';
+                html += '<td class="text-left">' + (obj.attacker_name || '---') + '</td>';
+                html += '<td class="text-left">' + obj.planet_start_coordinates + '</td>';
+                html += '<td class="text-left">' + obj.target_name + '</td>';
+                html += '<td class="text-left">' + obj.planet_target_coordinates + '</td>';
+                html += '<td class="text-left">' + obj.timestamp + '</td>';
+                html += '</tr>';
+            });
+            html += '</table>';
+            html += '</div>';
+
+            $this.container.html(html);
+        });
+    };
+
     this.loadPageChangelog = function () {
         let html = '';
 
-        const changelog = [
-            {
-                version: '1.0.25',
-                date_time: '2022-02-07 12PM',
-                changes: 'toggle overview column sorting (ASC/DESC)'
-            },
-            {
-                version: '1.0.24',
-                date_time: '2022-02-07 11PM',
-                changes: 'added spy report overview for galaxy view'
-            },
-            {
-                version: '1.0.23',
-                date_time: '2022-02-07 11PM',
-                changes: 'added loading indicator for hub pages'
-            },
-            {
-                version: '1.0.22',
-                date_time: '2022-02-07 11PM',
-                changes: 'added second sort item above coordinates in overview (sort by system)'
-            },
-            {
-                version: '1.0.21',
-                date_time: '2022-02-07 03PM',
-                changes: 'changed defense score to planet\'s defense score (player\'s defense score in mouseover)'
-            },
-            {
-                version: '1.0.20',
-                date_time: '2022-02-07 06AM',
-                changes: 'added alliance filter for hub\'s research page'
-            },
-            {
-                version: '1.0.19',
-                date_time: '2022-02-06 05PM',
-                changes: 'added galaxy update check page'
-            },
-            {
-                version: '1.0.18',
-                date_time: '2022-02-06 03PM',
-                changes: 'added link to rename/delete planet (overview)'
-            },
-            {
-                version: '1.0.17',
-                date_time: '2022-02-05 08AM',
-                changes: 'added hub page for raids & expos'
-            },
-            {
-                version: '1.0.16',
-                date_time: '2022-02-04 08PM',
-                changes: 'show fleet slot usage & expedition stats'
-            },
-            {
-                version: '1.0.15',
-                date_time: '2022-02-04 01PM',
-                changes: 'show score differenz and details at flight overview'
-            },
-            {
-                version: '1.0.14',
-                date_time: '2022-02-04 09AM',
-                changes: 'added fleet tracking and overview enhancement (show ship/res diffs)'
-            },
-            {
-                version: '1.0.13',
-                date_time: '2022-02-02 10PM',
-                changes: 'added the black hole event for expeditions (for Sky/Mama) <3'
-            },
-            {
-                version: '1.0.12',
-                date_time: '2022-02-01 11PM',
-                changes: 'made coordinates/player name/score in hub -> planets sortable'
-            },
-            {
-                version: '1.0.11',
-                date_time: '2022-02-01 11PM',
-                changes: 'mark planet\'s production red, when storage limits are exceeded'
-            },
-            {
-                version: '1.0.10',
-                date_time: '2022-02-01 11PM',
-                changes: 'added "observe" function for research (visible at overview)'
-            },
-            {
-                version: '1.0.9',
-                date_time: '2022-02-01 11PM',
-                changes: 'added "observe" function for buildings (visible at overview)'
-            },
-            {version: '1.0.8', date_time: '2022-02-01 11AM', changes: 'added last attack/spy to galaxy view'},
-            {
-                version: '1.0.7',
-                date_time: '2022-02-01 04AM',
-                changes: 'added chart for alliance page (score development per member)'
-            },
-            {
-                version: '1.0.6',
-                date_time: '2022-02-01 03AM',
-                changes: 'added own score as a reference to player score charts'
-            },
-            {
-                version: '1.0.5',
-                date_time: '2022-02-01 03AM',
-                changes: 'changed button styles at buildings/research page when not affordable'
-            },
-            {version: '1.0.4', date_time: '2022-02-01 2AM', changes: 'added changelog page'},
-            {
-                version: '1.0.3',
-                date_time: '2022-02-01 01AM',
-                changes: 'added resources to overview (visit resource page at planets to update)'
-            },
-            {version: '1.0.2', date_time: '2022-02-01 01AM', changes: 'added "show_galaxy" setting'},
-            {version: '1.0.1', date_time: '2022-01-31 06PM', changes: 'security bypasses / bugfix'},
-            {version: '1.0.0', date_time: '2022-01-31 05PM', changes: 'stable release with auto updater'},
-        ];
-
-        html += '<table class="table519">';
+        html += '<div class="infos text-left">';
+        html += '<table class="borderless">';
         html += '<tr>';
-        html += '<th class="text-right">Version</th>';
-        html += '<th class="text-left">DateTime</th>';
+        html += '<th class="text-right" style="widtH: 75px">Version</th>';
+        html += '<th class="text-left" style="width: 150px">DateTime</th>';
         html += '<th class="text-left">Changes</th>';
         html += '</tr>';
 
         $.each(changelog, function (key, obj) {
             html += '<tr>';
-            html += '<td class="text-right">' + obj.version + '</td>';
-            html += '<td class="text-left">' + obj.date_time + '</td>';
-            html += '<td class="text-left">' + obj.changes + '</td>';
+            html += '<td class="text-right" style="white-space: nowrap; color: ' + getRgb(version === obj.version ? cGreen : cWhite) + '">' + obj.version + '</td>';
+            html += '<td class="text-left" style="white-space: nowrap; color: ' + getRgb(version === obj.version ? cGreen : cWhite) + '">' + obj.date_time + '</td>';
+            html += '<td class="text-left" style="color: ' + getRgb(version === obj.version ? cGreen : cWhite) + '">' + obj.changes + '</td>';
             html += '</tr>';
         });
 
         html += '</table>';
         html += '<p class="text-center text-green" style="padding-top: 10px">coded with <i class="fa fa-heart text-red"></i> by eichhorn/esKju</p>';
+        html += '</div>';
 
         $this.container.html(html);
     };
