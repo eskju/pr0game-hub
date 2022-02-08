@@ -96,7 +96,7 @@ window.PageOverview = function () {
         $($('content .infos')[1]).html($($('content .infos')[1]).html().replace(/\&nbsp\;/, '')); // remove trailing space
 
         $('span.fleets').each(function (key, obj) {
-            $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /, ''));
+            $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /, '').replace(/zum Planet/, 'zu').replace(/vom Planet/, 'von').replace(/von dem Planet/, 'von').replace(/den Planet/, '').replace(/vom Spieler/, 'von').replace(/ Eine/, 'Eine').replace(/ist im Orbit/, 'hält bei').replace(/(die|der) Position/, ''));
         });
 
         $('span.fleets').each(function (key, obj) {
@@ -466,8 +466,7 @@ window.PageOverview = function () {
         if (property !== 'alliance_name' && property !== 'name') {
             aVal = getInt(aVal);
             bVal = getInt(bVal);
-        }
-        else {
+        } else {
             aVal = aVal.toLowerCase();
             bVal = bVal.toLowerCase();
         }
@@ -665,12 +664,12 @@ window.PageOverview = function () {
             timeAndId = $(columns[0]).attr('id').replace(/fleettime\_/, '');
             id = timeAndId.substring(10, timeAndId.length);
 
-            $(obj).attr('id', 'fleet' + id + '-' + ($(columns[1]).hasClass('return') ? '1' : '0'));
+            $(obj).attr('id', 'fleet' + id + '-' + ($(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? '1' : '0'));
 
             activities.push({
                 external_id: id, // fleet time
-                is_return: $(columns[1]).hasClass('return'), // if true try to assign an outbound flight by coords and timestamps
-                outbound_flight_id: $(columns[1]).hasClass('return') ? id : null, // set by API; search for same departure time
+                is_return: $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1, // if true try to assign an outbound flight by coords and timestamps
+                outbound_flight_id: $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? id : null, // set by API; search for same departure time
                 timestamp_departure: null,
                 timestamp_arrival: parseInt($(columns[0]).attr('data-fleet-end-time')), // fleet_end_time
                 type: $(columns[2]).find('a').length > 0 ? $($(columns[2]).find('a')).html() : $(columns[2]).html(), // e.g. 'attack', 'transport', ..

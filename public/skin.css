@@ -409,4 +409,10 @@ content.hub .infos:last-child {
 #planetSelector {
   max-width: 125px;
 }
+.fleet-movement a:hover {
+  color: #f2f5f4 !important;
+}
+.fleet-movement a.tooltip {
+  font-weight: normal !important;
+}
 /*# sourceMappingURL=skin.css.map */
