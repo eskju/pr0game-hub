@@ -70,6 +70,10 @@ window.PageHub = function () {
             aVal = getInt(aVal);
             bVal = getInt(bVal);
         }
+        else {
+            aVal = aVal.toLowerCase();
+            bVal = bVal.toLowerCase();
+        }
 
         return ((aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0) * invertSort;
     };
