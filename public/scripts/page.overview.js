@@ -108,6 +108,18 @@ window.PageOverview = function () {
         });
 
         $('span.fleets').each(function (key, obj) {
+            if ($($(obj).parent()).html().search(/Verbandsangriff/) !== -1) {
+                var tmp = $($(obj).parent()).find('.flight.federation');
+                $($(obj).parent()).find('br').remove();
+                $(tmp).detach().appendTo($(obj).parent().find('span')[2]);
+                $($($(obj).parent().find('span')[2]).find('span')).css('display', 'block');
+                $($($(obj).parent()).find('span')[1]).remove();
+                $(obj).parent().append('<span style="color: rgb(51, 153, 102)">AKS</span>');
+                $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /, '').replace(/zum Planet/, 'zu').replace(/vom Planet/, 'von').replace(/von dem Planet/, 'von').replace(/den Planet/, '').replace(/vom Spieler/, 'von').replace(/ Eine/, 'Eine').replace(/ist im Orbit/, 'hält bei').replace(/(die|der) Position/, '').replace(/\. Mission\: Angreifen/, '').replace(/\. Mission\: Verbandsangriff/, ''));
+            }
+        });
+
+        $('span.fleets').each(function (key, obj) {
             var end = new Date($(obj).attr('data-fleet-end-time') * 1000);
 
             $(obj).parent().append(' <span>' + end.toLocaleTimeString("de-DE") + '</span>');
@@ -657,12 +669,14 @@ window.PageOverview = function () {
         let coordinates;
         let timeAndId;
         let id;
+        let type;
 
         $('.fleet-movement ul li').each(function (key, obj) {
             columns = $(obj).children();
             coordinates = $(columns[1]).html().match(/\[([:0-9]+)\](.*)\[([:0-9]+)\]/);
             timeAndId = $(columns[0]).attr('id').replace(/fleettime\_/, '');
             id = timeAndId.substring(10, timeAndId.length);
+            type = $(columns[2]).find('a').length > 0 ? $($(columns[2]).find('a')).html() : $(columns[2]).html();
 
             $(obj).attr('id', 'fleet' + id + '-' + ($(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? '1' : '0'));
 
@@ -672,7 +686,7 @@ window.PageOverview = function () {
                 outbound_flight_id: $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? id : null, // set by API; search for same departure time
                 timestamp_departure: null,
                 timestamp_arrival: parseInt($(columns[0]).attr('data-fleet-end-time')), // fleet_end_time
-                type: $(columns[2]).find('a').length > 0 ? $($(columns[2]).find('a')).html() : $(columns[2]).html(), // e.g. 'attack', 'transport', ..
+                type: type, // e.g. 'attack', 'transport', ..
                 planet_start_coordinates: coordinates[1], // start-planet's coordinates
                 planet_target_coordinates: coordinates[3], // target-planet's coordinates
                 resources: $this.getResources($(columns[2]).find('span.textForBlind')), // resources carried

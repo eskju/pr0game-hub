@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.27',
+        date_time: '2022-02-10 2PM',
+        changes: 'formatting/styling for AKS'
+    },
+    {
         version: '1.0.26',
         date_time: '2022-02-07 03AM',
         changes: 'added hostile spying overview'
