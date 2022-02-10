@@ -674,7 +674,6 @@ window.PageOverview = function () {
         console.log('.fleet-movement ul li');
         $('.fleet-movement ul li').each(function (key, obj) {
             columns = $($(obj).children());
-            console.log(columns);
             coordinates = $(columns[1]).html().match(/\[([:0-9]+)\](.*)\[([:0-9]+)\]/);
             timeAndId = $(columns[0]).attr('id').replace(/fleettime\_/, '');
             id = timeAndId.substring(10, timeAndId.length);
@@ -682,18 +681,20 @@ window.PageOverview = function () {
 
             $(obj).attr('id', 'fleet' + id + '-' + ($(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? '1' : '0'));
 
-            activities.push({
-                external_id: id, // fleet time
-                is_return: $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1, // if true try to assign an outbound flight by coords and timestamps
-                outbound_flight_id: $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? id : null, // set by API; search for same departure time
-                timestamp_departure: null,
-                timestamp_arrival: parseInt($(columns[0]).attr('data-fleet-end-time')), // fleet_end_time
-                type: type, // e.g. 'attack', 'transport', ..
-                planet_start_coordinates: coordinates[1], // start-planet's coordinates
-                planet_target_coordinates: coordinates[3], // target-planet's coordinates
-                resources: $this.getResources($(columns[2]).find('span.textForBlind')), // resources carried
-                ships: $this.getShips($(columns[1]).find('span.textForBlind')), // ship amounts
-            });
+            if (coordinates && coordinates.length > 0) {
+                activities.push({
+                    external_id: id, // fleet time
+                    is_return: $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1, // if true try to assign an outbound flight by coords and timestamps
+                    outbound_flight_id: $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? id : null, // set by API; search for same departure time
+                    timestamp_departure: null,
+                    timestamp_arrival: parseInt($(columns[0]).attr('data-fleet-end-time')), // fleet_end_time
+                    type: type, // e.g. 'attack', 'transport', ..
+                    planet_start_coordinates: coordinates[1], // start-planet's coordinates
+                    planet_target_coordinates: coordinates[3], // target-planet's coordinates
+                    resources: $this.getResources($(columns[2]).find('span.textForBlind')), // resources carried
+                    ships: $this.getShips($(columns[1]).find('span.textForBlind')), // ship amounts
+                });
+            }
         });
 
         postJSON('flights', {activities}, function (response) {
