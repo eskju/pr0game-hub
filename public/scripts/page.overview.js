@@ -112,8 +112,8 @@ window.PageOverview = function () {
                 var tmp = $($(obj).parent()).find('.flight.federation');
                 $($(obj).parent()).find('br').remove();
                 $(tmp).detach().appendTo($(obj).parent().find('span')[2]);
-                $($($(obj).parent().find('span')[2]).find('span')).css('display', 'block');
                 $($($(obj).parent()).find('span')[1]).remove();
+                $($($(obj).parent()).find('span')[1]).html($($($(obj).parent()).find('span')[1]).html().replace(/span/g, 'div'));
                 $(obj).parent().append('<span style="color: rgb(51, 153, 102)">AKS</span>');
                 $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
             }
