@@ -672,7 +672,7 @@ window.PageOverview = function () {
         let type;
 
         $('.fleet-movement ul li').each(function (key, obj) {
-            columns = $(obj).children();
+            columns = $($(obj).children());
             coordinates = $(columns[1]).html().match(/\[([:0-9]+)\](.*)\[([:0-9]+)\]/);
             timeAndId = $(columns[0]).attr('id').replace(/fleettime\_/, '');
             id = timeAndId.substring(10, timeAndId.length);
