@@ -671,6 +671,7 @@ window.PageOverview = function () {
         let id;
         let type;
 
+        console.log('.fleet-movement ul li');
         $('.fleet-movement ul li').each(function (key, obj) {
             columns = $($(obj).children());
             console.log(columns);
