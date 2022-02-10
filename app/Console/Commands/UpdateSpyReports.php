@@ -41,7 +41,6 @@ class UpdateSpyReports extends Command
             $bar->advance();
             $report = SpyReport::query()
                 ->where('coordinates', $coord->coordinates)
-                ->whereNotNull('rocket_launchers')
                 ->orderBy('created_at', 'DESC')
                 ->first();
 

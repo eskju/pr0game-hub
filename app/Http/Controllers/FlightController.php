@@ -167,7 +167,7 @@ class FlightController extends Controller
                 'metal' => number_format($diff * $costMetal, 0, '', '.'),
                 'crystal' => number_format($diff * $costCrystal, 0, '', '.'),
                 'deuterium' => number_format($diff * $costDeuterium, 0, '', '.'),
-                'score' => number_format(($diff * $costMetal + $diff * $costCrystal + $diff * $costDeuterium) / 1000, 0, '', '.'),
+                'score' => number_format(($diff * $costMetal + $diff * $costCrystal) / 1000, 0, '', '.'),
             ];
         }
 
