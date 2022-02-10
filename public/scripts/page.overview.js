@@ -872,7 +872,7 @@ window.PageOverview = function () {
         $.each(ships, function (key, obj) {
             parsedShip = obj.match(/([0-9]+) (.*)$/);
 
-            if(parsedShip.length >= 3) {
+            if (parsedShip && parsedShip.length >= 3) {
                 returnArray[parsedShip[2]] = parsedShip[1];
             }
         });
