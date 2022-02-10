@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Services\PlanetService;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class FlightController extends Controller
@@ -84,15 +83,7 @@ class FlightController extends Controller
             ->update(['is_active' => 0]);
 
         return response([
-            'slots_used' => (Flight::query()
-                        ->select(DB::raw('COUNT(DISTINCT external_id) AS `count`'))
-                        ->where('user_id', auth()->id())
-                        ->where('is_active', 1)
-                        ->first()
-                        ->count ?? 0) . ' / ' . ((Player::query()
-                            ->select('computer_tech')
-                            ->find(auth()->user()->player_id)
-                            ->computer_tech ?? 0) + 1),
+            'slots_used' => $this->getUsedSlots(),
             'flights' => Flight::query()
                 ->where('user_id', auth()->id())
                 ->where('is_active', 1)
@@ -329,5 +320,31 @@ class FlightController extends Controller
         }
 
         return response([]);
+    }
+
+    private function getUsedSlots()
+    {
+        $ids = [];
+        $flights = Flight::query()
+            ->where('user_id', auth()->id())
+            ->where('is_active', 1)
+            ->get();
+
+        foreach ($flights as $flight) {
+            if ($flight->is_return) {
+                if ($flight->player_target_id === auth()->user()->player_id) {
+                    $ids[] = $flight->external_id;
+                }
+            } else {
+                if ($flight->player_start_id === auth()->user()->player_id) {
+                    $ids[] = $flight->external_id;
+                }
+            }
+        }
+
+        return count(array_unique($ids)) . ' / ' . ((Player::query()
+                        ->select('computer_tech')
+                        ->find(auth()->user()->player_id)
+                        ->computer_tech ?? 0) + 1);
     }
 }
