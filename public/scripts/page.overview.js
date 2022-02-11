@@ -108,7 +108,7 @@ window.PageOverview = function () {
         });
 
         $('span.fleets').each(function (key, obj) {
-            if ($($(obj).parent()).html().search(/Verbandsangriff/) !== -1) {
+            if ($($(obj).parent()).html().search(/Verbandsanxgriff/) !== -1) {
                 var tmp = $($(obj).parent()).find('.flight.federation');
                 $($(obj).parent()).find('br').remove();
                 $($(obj).parent()).html($($(obj).parent()).html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g, ''));
