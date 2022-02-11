@@ -259,8 +259,7 @@ window.PageHub = function () {
 
                 html = '';
                 html += '<div class="infos text-left">';
-                html += '<b>Flotten-Transfers</b>';
-                html += '<p>Zeig an, ob der Sender (links) dem Empfänger (rechts) Schiffe schicken darf.</p>';
+                html += '<p style="margin-left: 10px"><b>Flotten-Transfers</b><br>Zeig an, ob der Sender (links) dem Empfänger (rechts) Schiffe schicken darf.</p>';
                 html += '<table class="table519">';
                 html += '<tr>';
                 html += '<th class="text-left">Send. / Empf.</th>';
