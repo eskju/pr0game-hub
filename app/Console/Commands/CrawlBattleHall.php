@@ -31,6 +31,7 @@ class CrawlBattleHall extends Command
 
     public function handle()
     {
-        $html = DOM('https://pr0game.com/index.php?page=battleHall');
+        $html = file_get_contents('https://pr0game.com/index.php?page=battleHall');
+
     }
 }

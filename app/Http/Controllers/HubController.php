@@ -38,6 +38,29 @@ class HubController extends Controller
             ->get();
     }
 
+    public function getTransferMatrix()
+    {
+        $this->checkPermission('getTransferMatrix');
+
+        $senders = Player::query()
+            ->whereIn('alliance_id', $this->allianceIds)
+            ->orderBy('name')
+            ->get();
+
+        return $senders->map(function (Player $sender) use ($senders) {
+            $sender = $sender->toArray();
+            $sender['transfer_possible'] = [];
+
+            foreach ($senders as $receiver) {
+                $sender['transfer_possible'][$receiver->id] = $sender['military_tech'] >= $receiver['military_tech']
+                    && $sender['defense_tech'] >= $receiver['defense_tech']
+                    && $sender['shield_tech'] >= $receiver['shield_tech'];
+            }
+
+            return $sender;
+        });
+    }
+
     public function getFleet()
     {
         $this->checkPermission('getFleet');

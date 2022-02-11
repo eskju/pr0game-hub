@@ -69,8 +69,7 @@ window.PageHub = function () {
         if (property !== 'alliance_name' && property !== 'name') {
             aVal = getInt(aVal);
             bVal = getInt(bVal);
-        }
-        else {
+        } else {
             aVal = aVal.toLowerCase();
             bVal = bVal.toLowerCase();
         }
@@ -174,7 +173,7 @@ window.PageHub = function () {
 
     this.loadPageResearch = function () {
         getJSON('hub/research', function (response) {
-            const data = JSON.parse(response.responseText);
+            let data = JSON.parse(response.responseText);
             const allianceId = getValue('filter_alliance_id') || '';
 
             let html = '';
@@ -254,6 +253,41 @@ window.PageHub = function () {
             html += '</div>';
 
             $this.container.html(html);
+
+            getJSON('hub/transfer-matrix', function (response) {
+                data = JSON.parse(response.responseText);
+
+                html = '';
+                html += '<div class="infos text-left">';
+                html += '<table class="table519">';
+                html += '<tr>';
+                html += '<th class="text-left">S / E</th>';
+
+                $.each(data, function (key, obj) {
+                    if (allianceId === '' || parseInt(allianceId) === obj.alliance_id) {
+                        html += '<th class="text-left" style="width: 75px"><div style="width: 75px; overflow: hidden; text-overflow: ellipsis">' + obj.name + '</div></th>';
+                    }
+                });
+
+                html += '</tr>';
+                $.each(data, function (key, sender) {
+                    if (allianceId === '' || parseInt(allianceId) === sender.alliance_id) {
+                        html += '<tr>';
+                        html += '<td style="text-align: left;">' + sender.name + '</td>';
+                        $.each(data, function (key, receiver) {
+                            if (allianceId === '' || parseInt(allianceId) === receiver.alliance_id) {
+                                html += '<td class="text-center text-' + (sender.transfer_possible[receiver.id] ? 'green' : 'red') + '">' + (sender.transfer_possible[receiver.id] ? 'Ja' : 'Nein') + '</td>';
+                            }
+                        });
+                        html += '</tr>';
+                    }
+                });
+
+                html += '</table>';
+                html += '</div>';
+
+                $this.container.append(html);
+            });
         });
     };
 
