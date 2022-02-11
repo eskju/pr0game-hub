@@ -259,9 +259,11 @@ window.PageHub = function () {
 
                 html = '';
                 html += '<div class="infos text-left">';
+                html += '<b>Flotten-Transfers</b>';
+                html += '<p>Zeig an, ob der Sender (links) dem Empfänger (rechts) Schiffe schicken darf.</p>';
                 html += '<table class="table519">';
                 html += '<tr>';
-                html += '<th class="text-left">S / E</th>';
+                html += '<th class="text-left">Send. / Empf.</th>';
 
                 $.each(data, function (key, obj) {
                     if (allianceId === '' || parseInt(allianceId) === obj.alliance_id) {
