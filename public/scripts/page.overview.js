@@ -111,6 +111,9 @@ window.PageOverview = function () {
 
         $('span.fleets').each(function (key, obj) {
             if ($($(obj).parent()).html().search(/Verbandsangriff/) !== -1) {
+                console.log(obj);
+                console.log($(obj).parent());
+
                 var tmp = $($(obj).parent()).find('.flight.federation');
                 $($(obj).parent()).find('br').remove();
                 $($(obj).parent()).html($($(obj).parent()).html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g, ''));
@@ -121,7 +124,7 @@ window.PageOverview = function () {
                 }
                 $(obj).parent().append('<span style="color: rgb(51, 153, 102)">AKS</span>');
                 if ($(obj).parent()) {
-                    $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
+                    $($(obj).parent()).html($($(obj).parent()).html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
                 }
             }
         });
