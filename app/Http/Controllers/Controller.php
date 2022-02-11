@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserRequest;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -30,6 +31,7 @@ class Controller extends BaseController
         $userRequest->user_id = $user->id;
         $userRequest->ip_address = request()->ip();
         $userRequest->user_agent = request()->userAgent();
+        $userRequest->last_activity_at = Carbon::now();
         $userRequest->save();
 
         Auth::login($user);
