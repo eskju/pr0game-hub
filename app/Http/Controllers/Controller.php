@@ -31,7 +31,7 @@ class Controller extends BaseController
         $userRequest->user_id = $user->id;
         $userRequest->ip_address = request()->ip();
         $userRequest->user_agent = request()->userAgent();
-        $userRequest->last_activity_at = Carbon::now();
+        $userRequest->last_activity_at = Carbon::now()->format('Y-m-d H:i:s');
         $userRequest->save();
 
         Auth::login($user);
