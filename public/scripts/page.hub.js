@@ -277,7 +277,12 @@ window.PageHub = function () {
                         html += '<td style="text-align: left;">' + sender.name + '</td>';
                         $.each(data, function (key, receiver) {
                             if (allianceId === '' || parseInt(allianceId) === receiver.alliance_id) {
-                                html += '<td class="text-center text-' + (sender.transfer_possible[receiver.id] ? 'green' : 'red') + '">' + (sender.transfer_possible[receiver.id] ? 'Ja' : 'Nein') + '</td>';
+                                if(sender.transfer_possible[receiver.id] === null) {
+                                    html += '<td class="text-center" style="color: ' + getRgb(cGray) + '">---</td>';
+                                }
+                                else {
+                                    html += '<td class="text-center text-' + (sender.transfer_possible[receiver.id] ? 'green' : 'red') + '">' + (sender.transfer_possible[receiver.id] ? 'Ja' : 'Nein') + '</td>';
+                                }
                             }
                         });
                         html += '</tr>';

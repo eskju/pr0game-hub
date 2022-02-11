@@ -52,6 +52,18 @@ class HubController extends Controller
             $sender['transfer_possible'] = [];
 
             foreach ($senders as $receiver) {
+                if(in_array(null, [
+                    $sender['military_tech'],
+                    $sender['defense_tech'],
+                    $sender['shield_tech'],
+                    $receiver['military_tech'],
+                    $receiver['defense_tech'],
+                    $receiver['shield_tech'],
+                ])) {
+                    $sender['transfer_possible'][$receiver->id] = null;
+                    continue;
+                }
+
                 $sender['transfer_possible'][$receiver->id] = $sender['military_tech'] >= $receiver['military_tech']
                     && $sender['defense_tech'] >= $receiver['defense_tech']
                     && $sender['shield_tech'] >= $receiver['shield_tech'];
