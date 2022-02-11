@@ -27,6 +27,9 @@ class Controller extends BaseController
             abort(422);
         }
 
+        $user->last_activity_at = Carbon::now();
+        $user->save();
+
         $userRequest = new UserRequest();
         $userRequest->user_id = $user->id;
         $userRequest->ip_address = request()->ip();
