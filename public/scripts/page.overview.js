@@ -96,7 +96,7 @@ window.PageOverview = function () {
         $($('content .infos')[1]).html($($('content .infos')[1]).html().replace(/\&nbsp\;/, '')); // remove trailing space
 
         $('span.fleets').each(function (key, obj) {
-            if($(obj).parent()) {
+            if ($(obj).parent()) {
                 $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /, '').replace(/zum Planet/, 'zu').replace(/vom Planet/, 'von').replace(/von dem Planet/, 'von').replace(/den Planet/, '').replace(/vom Spieler/, 'von').replace(/ Eine/, 'Eine').replace(/ist im Orbit/, 'hält bei').replace(/(die|der) Position/, ''));
             }
         });
@@ -113,12 +113,14 @@ window.PageOverview = function () {
             if ($($(obj).parent()).html().search(/Verbandsangriff/) !== -1) {
                 var tmp = $($(obj).parent()).find('.flight.federation');
                 $($(obj).parent()).find('br').remove();
-                $($(obj).parent()).html($($(obj).parent()).html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g,''));
+                $($(obj).parent()).html($($(obj).parent()).html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g, ''));
                 $(tmp).detach().appendTo($(obj).parent().find('span')[2]);
-                $($($(obj).parent()).find('span')[1]).remove();
-                $($($(obj).parent()).find('span')[1]).html($($($(obj).parent()).find('span')[1]).html().replace(/span/g, 'div'));
+                if ($($(obj).parent()).find('span').length > 1) {
+                    $($($(obj).parent()).find('span')[1]).remove();
+                    $($($(obj).parent()).find('span')[1]).html($($($(obj).parent()).find('span')[1]).html().replace(/span/g, 'div'));
+                }
                 $(obj).parent().append('<span style="color: rgb(51, 153, 102)">AKS</span>');
-                if($(obj).parent()) {
+                if ($(obj).parent()) {
                     $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
                 }
             }
