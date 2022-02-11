@@ -265,7 +265,7 @@ window.PageHub = function () {
 
                 $.each(data, function (key, obj) {
                     if (allianceId === '' || parseInt(allianceId) === obj.alliance_id) {
-                        html += '<th class="text-left" style="width: 75px"><div style="width: 75px; overflow: hidden; text-overflow: ellipsis">' + obj.name + '</div></th>';
+                        html += '<th class="text-center" style="width: 75px"><div style="width: 75px; overflow: hidden; text-overflow: ellipsis">' + obj.name + '</div></th>';
                     }
                 });
 
