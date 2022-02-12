@@ -93,10 +93,10 @@ class SpyReportController extends Controller
                         $offset = $i;
                     }
 
-                    if (key_exists((string)$i, $mapping) && $alias = $mapping[(string)$i]) {
+                    if (key_exists((string)$offset, $mapping) && $alias = $mapping[(string)$offset]) {
                         $this->offsets[] = $alias;
                         $values[] = [
-                            'name' => ResourceService::getNameById($i),
+                            'name' => ResourceService::getNameById($offset),
                             'alias' => $alias,
                             'value' => $spyReport->{$alias},
                             'valueBefore' => $this->lastValue[$alias] ?? null,
