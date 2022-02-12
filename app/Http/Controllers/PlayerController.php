@@ -170,7 +170,7 @@ class PlayerController extends Controller
                 ->select('id')
                 ->where('updated_at', '<', Carbon::now()->subHours(2))
                 ->where('is_deleted', 0)
-                ->orderBy('name')
+                ->orderBy('score')
                 ->get()
                 ->pluck('id'),
             'version' => '1.0.29',
