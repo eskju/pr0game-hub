@@ -115,12 +115,14 @@ window.PageOverview = function () {
                 $($(obj).parent()).find('br').remove();
                 $($(obj).parent()).html($($(obj).parent()).html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g, ''));
                 $(tmp).detach().appendTo($(obj).parent().find('span')[2]);
+
                 if ($($(obj).parent()).find('span').length > 1) {
                     $($($(obj).parent()).find('span')[1]).remove();
                     $($($(obj).parent()).find('span')[1]).html($($($(obj).parent()).find('span')[1]).html().replace(/span/g, 'div'));
                 }
+
                 $(obj).parent().append('<span style="color: rgb(51, 153, 102)">AKS</span>');
-                console.log($(obj), $(obj).parent());
+
                 if($($(obj).parent()).length > 0) {
                     $($(obj).parent()).html($($(obj).parent()).html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
                 }
@@ -542,6 +544,7 @@ window.PageOverview = function () {
 
     this.checkUpdatableIds = function (response) {
         if (response.outdated_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227 && ownPlanet == 10) {
+            console.log(response.outdated_ids);
             this.container.prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
             $('#fetchMissingIdsBtn').click(function () {
                 playerUpdateQueue = response.outdated_ids;
@@ -679,7 +682,6 @@ window.PageOverview = function () {
         let id;
         let type;
 
-        console.log('.fleet-movement ul li');
         $('.fleet-movement ul li').each(function (key, obj) {
             columns = $($(obj).children());
             coordinates = $(columns[1]).html().match(/\[([:0-9]+)\](.*)\[([:0-9]+)\]/);

@@ -85,6 +85,14 @@ class SpyReportController extends Controller
                 $values = [];
 
                 for ($i = $offsetStart; $i < $offsetEnd; $i++) {
+                    if ($i === 111) {
+                        $offset = 110;
+                    } else if ($i === 110) {
+                        $offset = 111;
+                    } else {
+                        $offset = $i;
+                    }
+
                     if (key_exists((string)$i, $mapping) && $alias = $mapping[(string)$i]) {
                         $this->offsets[] = $alias;
                         $values[] = [

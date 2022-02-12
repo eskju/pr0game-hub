@@ -14,6 +14,11 @@ window.getJSON = function (url, callback) {
             }
 
             callback(response);
+        },
+        onerror: function (response) {
+            if (debugMode) {
+                console.log(response.status);
+            }
         }
     });
 };
