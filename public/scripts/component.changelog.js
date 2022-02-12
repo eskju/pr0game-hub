@@ -1,6 +1,6 @@
 window.changelog = [
     {
-        version: '1.0.28.1',
+        version: '1.0.29',
         date_time: '2022-02-12 10PM',
         changes: 'useless firework feature for Wile E. Coyote'
     },
