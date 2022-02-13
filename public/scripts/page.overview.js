@@ -123,7 +123,7 @@ window.PageOverview = function () {
 
                 $(obj).parent().append('<span style="color: rgb(51, 153, 102)">AKS</span>');
 
-                if($($(obj).parent()).length > 0) {
+                if ($($(obj).parent()).length > 0) {
                     $($(obj).parent()).html($($(obj).parent()).html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
                 }
             }
@@ -201,12 +201,21 @@ window.PageOverview = function () {
         let time;
         let value;
         let dateTime;
+        let name;
         let tdWidth = (90 / $('#planetSelector option').length);
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             html += '<th colspan="2" class="text-right" width="' + tdWidth + '%">' + coords[1] + ':' + coords[2] + ':' + coords[3] + '</th>';
         });
 
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="text-left">Planet</td>';
+        $('#planetSelector option').each(function (key, obj) {
+            coords = getCoordinates(obj.innerHTML);
+            name = obj.innerHTML.split('[');
+            html += '<td colspan="2" class="text-right" width="' + tdWidth + '%">' + name[0] + '</td>';
+        });
         html += '</tr>';
         html += '<tr>';
         html += '<td class="text-left">Gebäude</td>';
@@ -322,7 +331,7 @@ window.PageOverview = function () {
                 html += '<td class="text-right">---</td>';
                 html += '<td class="text-right">---</td>';
             } else {
-                html += '<td class="text-right tooltip" colspan="2" data-tooltip-content="<b>Es fehlen:</b></br>' + (new PlanetResourceNotification().getDiffForResource(coords[0], 'metal')) + ' Metall, ' + new PlanetResourceNotification().getDiffForResource(coords[0], 'crystal') + ' Kristall, ' + new PlanetResourceNotification().getDiffForResource(coords[0],'deuterium') + ' Deuterium"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
+                html += '<td class="text-right tooltip" colspan="2" data-tooltip-content="<b>Es fehlen:</b></br>' + (new PlanetResourceNotification().getDiffForResource(coords[0], 'metal')) + ' Metall, ' + new PlanetResourceNotification().getDiffForResource(coords[0], 'crystal') + ' Kristall, ' + new PlanetResourceNotification().getDiffForResource(coords[0], 'deuterium') + ' Deuterium"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
             }
 
             window.setInterval(function () {
