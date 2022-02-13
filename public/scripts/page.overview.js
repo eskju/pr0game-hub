@@ -280,8 +280,7 @@ window.PageOverview = function () {
 
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
-            html += '<td class="text-right"><span class="ress_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
-            html += '<td class="text-right"><span class="ress_production_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_metal')) / 86400 * 3600) + ' / Stunde" class="tooltip ress_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
         });
 
         html += '</tr>';
@@ -290,8 +289,7 @@ window.PageOverview = function () {
 
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
-            html += '<td class="text-right"><span class="ress_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
-            html += '<td class="text-right"><span class="ress_production_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_crystal')) / 86400 * 3600) + ' / Stunde" class="tooltip ress_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
         });
 
         html += '</tr>';
@@ -300,8 +298,7 @@ window.PageOverview = function () {
 
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
-            html += '<td class="text-right"><span class="ress_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
-            html += '<td class="text-right"><span class="ress_production_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_deuterium')) / 86400 * 3600) + ' / Stunde" class="tooltip ress_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
         });
 
         html += '</tr>';
@@ -310,8 +307,7 @@ window.PageOverview = function () {
 
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
-            html += '<td class="text-right">---</td>';
-            html += '<td class="text-right" style="color: ' + getRgb(parseInt(getValue(coords[0] + '_production_energy')) > 0 ? cGreen : cRed) + '">' + (getValue(coords[0] + '_production_energy') || '---') + '</td>';
+            html += '<td colspan="2" class="text-right" style="color: ' + getRgb(parseInt(getValue(coords[0] + '_production_energy')) > 0 ? cGreen : cRed) + '">' + (getValue(coords[0] + '_production_energy') || '---') + '</td>';
         });
 
         html += '</tr>';
@@ -326,7 +322,7 @@ window.PageOverview = function () {
                 html += '<td class="text-right">---</td>';
                 html += '<td class="text-right">---</td>';
             } else {
-                html += '<td class="text-right" colspan="2"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
+                html += '<td class="text-right tooltip" colspan="2" data-tooltip-content="<b>Es fehlen:</b></br>' + (new PlanetResourceNotification().getDiffForResource(coords[0], 'metal')) + ' Metall, ' + new PlanetResourceNotification().getDiffForResource(coords[0], 'crystal') + ' Kristall, ' + new PlanetResourceNotification().getDiffForResource(coords[0],'deuterium') + ' Deuterium"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
             }
 
             window.setInterval(function () {
@@ -544,7 +540,6 @@ window.PageOverview = function () {
 
     this.checkUpdatableIds = function (response) {
         if (response.outdated_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227 && ownPlanet == 10) {
-            console.log(response.outdated_ids);
             this.container.prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
             $('#fetchMissingIdsBtn').click(function () {
                 playerUpdateQueue = response.outdated_ids;

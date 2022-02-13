@@ -61,4 +61,12 @@ window.PlanetResourceNotification = function () {
 
         return Math.ceil(lastUpdate / 1000 + secondsLeft);
     };
+
+    this.getDiffForResource = function (coords, resource) {
+        const need = getInt(getValue(coords + '_notification_' + resource));
+        const available = getInt(getValue(coords + '_' + resource));
+        const diff = need - available < 0 ? 0 : need - available;
+
+        return numberFormat(diff);
+    };
 };
