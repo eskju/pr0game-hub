@@ -78,12 +78,10 @@ window.PageFleet = function () {
 
     this.setExpoFleet = function (forFleetOnly = false) {
         const notices = [];
+        this.maxPoints = forFleetOnly ? this.maxFleetPoints : this.maxRessPoints;
         let pointsLeft = $this.maxPoints;
         let ship;
         const localFleet = JSON.parse(JSON.stringify(this.fleet));
-        this.maxPoints = forFleetOnly ? this.maxFleetPoints : this.maxRessPoints;
-
-        console.log(localFleet);
 
         // set 1 spy drone
         ship = this.getShip(210);
@@ -197,7 +195,6 @@ window.PageFleet = function () {
     };
 
     this.subExpoPoints = function (pointsLeft, shipId, amount) {
-        console.log('subExpoPoints', pointsLeft, shipId, amount);
         return pointsLeft - (this.getPointsPerShip(shipId) || 0) * (amount || 0);
     };
 
