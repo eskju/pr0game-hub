@@ -26,7 +26,7 @@ class HostileSpyingController extends Controller
             ->limit(100)
             ->get()
             ->map(function (HostileSpying $hostileSpying) {
-                $hostileSpying->timestamp = $hostileSpying->created_at->subHour()->diffForHumans();
+                $hostileSpying->timestamp = $hostileSpying->created_at->subHour()->shortAbsoluteDiffForHumans();
 
                 return $hostileSpying;
             });

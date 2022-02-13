@@ -110,7 +110,7 @@ class SpyReportController extends Controller
                 }
 
                 return [
-                    'timestamp' => $spyReport->created_at->format('d.m.Y H:i:s') . ' Uhr: ' . $spyReport->created_at->subHour()->diffForHumans(),
+                    'timestamp' => $spyReport->created_at->format('d.m.Y H:i:s') . ' Uhr: ' . $spyReport->created_at->subHour()->shortAbsoluteDiffForHumans(),
                     'values' => $values,
                     'success' => ($values[0]['value'] ?? null) !== null,
                 ];
