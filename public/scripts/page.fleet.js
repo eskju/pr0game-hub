@@ -73,10 +73,12 @@ window.PageFleet = function () {
     };
 
     this.showExpoButton = function () {
-        if ($('content').html().search(/Neuer Auftrag:/) !== -1) {
-            $('.table519 tr th').append('<a class="text-red" href="javascript:void(0)" style="margin-left: 10px" onclick="pageFleet.setExpoFleet()">Expo-Flotte Ress</a> // <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true)">Expo-Flotte Schiffe</a>');
-        }
-    };
+        $('.table519').each(function (key, obj) {
+            if ($(obj).html().search(/Neuer Auftrag:/) !== -1) {
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" style="margin-left: 10px" onclick="pageFleet.setExpoFleet()">Expo-Flotte Ress</a> // <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true)">Expo-Flotte Schiffe</a>');
+            }
+        });
+    }
 
     this.setExpoFleet = function (forFleetOnly = false) {
         const notices = [];
