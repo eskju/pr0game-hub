@@ -322,6 +322,17 @@ window.parseUrl = function () {
         pageFleet.init();
     }
 
+    // fleet steps
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=fleetStep/) === 0) {
+        $(window).keyup(function (e) {
+            if ($('content form').length === 1 && $('*:focus').length === 0) {
+                if (e.key === 'Enter') {
+                    $('content .table519 form').submit();
+                }
+            }
+        });
+    }
+
     // fleet page
     else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=resources/) === 0) {
         window.pageResources = new PageResources();
