@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.30',
+        date_time: '2022-02-13 01AM',
+        changes: 'added expo fleet calculator (thanks to Hyman!)'
+    },
+    {
         version: '1.0.29',
         date_time: '2022-02-12 10PM',
         changes: 'useless firework feature for Wile E. Coyote'

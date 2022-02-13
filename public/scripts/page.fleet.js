@@ -1,17 +1,31 @@
-window.PageFleet = function()
-{
+window.PageFleet = function () {
+    var $this = this;
     this.data = [];
+    this.maxPoints = 2400;
+    this.maxRessPoints = 2400;
+    this.maxFleetPoints = 1250;
+    this.fleet = [];
 
-    this.init = function() {
+    this.init = function () {
+        this.parseShips();
+        this.showExpoButton();
+    };
+
+    this.parseShips = function () {
         const $this = this;
-        const fleet = [];
         let info;
+        let globalFleet = [];
 
-        $('.table519 tr').each(function(key, obj) {
-            info = $(obj).html().replace(/\n/,'').match(/id\=\"ship([0-9]+)\_value\"\>([\.0-9]+)\</);
+        $('.table519 tr').each(function (key, obj) {
+            info = $(obj).html().replace(/\n/, '').match(/id\=\"ship([0-9]+)\_value\"\>([\.0-9]+)\</);
 
-            if(info) {
-                fleet.push({
+            if (info) {
+                $this.fleet.push({
+                    ship_id: getInt(info[1]),
+                    amount: getInt(info[2])
+                });
+
+                globalFleet.push({
                     ship_id: getInt(info[1]),
                     amount: getInt(info[2])
                 });
@@ -21,19 +35,19 @@ window.PageFleet = function()
         let fleetInfo;
         let startPlanet;
         let ships;
-        $('content > table:first-child > tbody > tr').each(function(key, obj) {
-            if($(obj).find('td').length > 1) {
+        $('content > table:first-child > tbody > tr').each(function (key, obj) {
+            if ($(obj).find('td').length > 1) {
                 fleetInfo = $(obj).find('td:nth-child(3)').html();
                 startPlanet = $(obj).find('td:nth-child(4)').html().match(/\[([0-9]+)\:([0-9]+)\:([0-9]+)\]/);
 
                 ships = fleetInfo.match(/\'\>([^<]+)\:\<\/td\>\<td class\=\'transparent\'\>([\.0-9]+)\</g);
 
-                if(ships && startPlanet[1] == ownGalaxy && startPlanet[2] == ownSystem && startPlanet[3] == ownPlanet) {
-                    $.each(ships, function(sKey, sObj) {
+                if (ships && startPlanet[1] == ownGalaxy && startPlanet[2] == ownSystem && startPlanet[3] == ownPlanet) {
+                    $.each(ships, function (sKey, sObj) {
                         info = sObj.match(/\'\>([^<]+)\:\<\/td\>\<td class\=\'transparent\'\>([\.0-9]+)\</);
 
-                        if(info) {
-                            fleet.push({
+                        if (info) {
+                            globalFleet.push({
                                 ship_id: info[1],
                                 amount: getInt(info[2])
                             });
@@ -45,16 +59,155 @@ window.PageFleet = function()
 
         postJSON('planets/fleet', {
             coordinates: ownGalaxy + ':' + ownSystem + ':' + ownPlanet,
-            fleet
-        }, function(response) {
+            fleet: globalFleet
+        }, function (response) {
             $this.data = JSON.parse(response.responseText);
 
             let html = '<br><table class="table 519" style="max-width: 519px !important"><tr><th style="text-align: left">Schiffstyp</th><th style="text-align: right">Anzahl (planetübergreifend)</th></tr>';
-            $.each($this.data, function(key, obj) {
+            $.each($this.data, function (key, obj) {
                 html += '<tr><td style="text-align: left">' + obj.name + '</td><td style="text-align: right">' + obj.sum + '</td></tr>';
             });
 
             $('content').append(html + '</table><p style="max-width: 519px !important; margin: 10px auto"><i>Diese Anzahl der stationierten und in der Luft befindlichen Schiffe (Aktiver Planet = Startplanet) wird aktualisiert, sobald die entsprechende Flottenseite des Planeten geöffnet wird.<br><br>Nach Kampf mit Verlust, werden die verlorenen Schiffe also erst nach Aufruf der Flottenansicht am Startplaneten aktualisiert. Nach Schiffsbau v.v.<br><br>Nach erfolgreicher Stationierung müssen somit die Flottenseiten von Start- und Zielplanet zur Aktualisierung geöffnet werden.</i></p>');
         });
     };
+
+    this.showExpoButton = function () {
+        $('.table519 tr th').append('<a class="text-red" href="javascript:void(0)" style="margin-left: 10px" onclick="pageFleet.setExpoFleet()">Expo-Flotte Ress</a> // <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true)">Expo-Flotte Schiffe</a>');
+    };
+
+    this.setExpoFleet = function (forFleetOnly = false) {
+        const notices = [];
+        let pointsLeft = $this.maxPoints;
+        let ship;
+        const localFleet = JSON.parse(JSON.stringify(this.fleet));
+        this.maxPoints = forFleetOnly ? this.maxFleetPoints : this.maxRessPoints;
+
+        console.log(localFleet);
+
+        // set 1 spy drone
+        ship = this.getShip(210);
+        if (!ship || ship.amount === 0) {
+            notices.push('Es ist keine Spionagesonde vorhanden!');
+        } else {
+            localFleet[ship.offset].used = (localFleet[ship.offset].used || 0) + 1;
+            localFleet[ship.offset].amount--;
+            pointsLeft = $this.subExpoPoints(pointsLeft, 210, 1);
+        }
+
+        // set 1 of the best ship
+        const possibleBattleShipIds = [211, 215, 207, 206, 205, 204];
+        let foundBestShip = false;
+        $.each(possibleBattleShipIds, function (key, possibleShipId) {
+            if (!foundBestShip) {
+                ship = $this.getShip(possibleShipId);
+
+                if (ship) {
+                    pointsLeft = $this.subExpoPoints(pointsLeft, ship.ship_id, 1);
+                    foundBestShip = true;
+
+                    localFleet[ship.offset].used = (localFleet[ship.offset].used || 0) + 1;
+                    localFleet[ship.offset].amount--;
+                }
+            }
+        });
+
+        // fill with transports and trash ships
+        const fillers = [203, 202, 204, 205, 206, 207, 215, 211];
+        let pointsPerShip;
+        let amount;
+        $.each(fillers, function (key, possibleShipId) {
+            ship = $this.getShip(possibleShipId);
+
+            if (ship) {
+                pointsPerShip = $this.getPointsPerShip(ship.ship_id);
+                amount = Math.floor(pointsLeft / pointsPerShip);
+
+                if (amount > localFleet[ship.offset].amount) {
+                    amount = localFleet[ship.offset].amount;
+                }
+
+                pointsLeft = $this.subExpoPoints(pointsLeft, ship.ship_id, amount);
+
+                localFleet[ship.offset].used = (localFleet[ship.offset].used || 0) + amount;
+                localFleet[ship.offset].amount -= amount;
+            }
+        });
+
+        // fill remaining points with spy drones
+        ship = this.getShip(210);
+        if (ship) {
+            pointsPerShip = $this.getPointsPerShip(ship.ship_id);
+            amount = Math.floor(pointsLeft / pointsPerShip);
+
+            if (amount > localFleet[ship.offset].amount) {
+                amount = localFleet[ship.offset].amount;
+            }
+
+            pointsLeft = $this.subExpoPoints(pointsLeft, ship.ship_id, amount);
+
+            localFleet[ship.offset].used = (localFleet[ship.offset].used || 0) + amount;
+            localFleet[ship.offset].amount -= amount;
+        }
+
+        // set input values
+        let input;
+        $.each(localFleet, function (key, obj) {
+            input = $('#ship' + obj.ship_id + '_input');
+            input.val(obj.used || 0);
+            input.attr('disabled', true);
+            input.parent().css('text-align', 'left');
+            $(input.parent().find('.helper')).remove();
+            input.parent().append('<span class="helper" style="margin-left: 10px">' + (Math.abs($this.subExpoPoints(0, obj.ship_id, obj.used))) + ' Expo-Punkte</span>');
+        });
+
+        const textStyle = this.maxPoints - (this.maxPoints - pointsLeft) > 0 ? 'text-red' : 'text-green';
+        $('.table519 tr:nth-child(2) td:nth-child(4)').html('<span class="' + textStyle + '">' + numberFormat(this.maxPoints - pointsLeft) + '</span> / ' + numberFormat(this.maxPoints) + ' Expo-Punkte');
+    };
+
+    this.getShip = function (offset) {
+        for (i = 0; i < this.fleet.length; i++) {
+            if (offset === this.fleet[i].ship_id) {
+                this.fleet[i].offset = i;
+                return this.fleet[i];
+            }
+        }
+
+        return null;
+    }
+
+    this.getPointsPerShip = function (shipId) {
+        const pointsMatrix = {
+            202: 4,
+            203: 12,
+            204: 4,
+            205: 10,
+            206: 27,
+            207: 60,
+            208: 30,
+            209: 16,
+            210: 1,
+            211: 75,
+            213: 110,
+            214: 9000,
+            215: 70
+        };
+
+        return pointsMatrix[shipId] * 5;
+    };
+
+    this.subExpoPoints = function (pointsLeft, shipId, amount) {
+        console.log('subExpoPoints', pointsLeft, shipId, amount);
+        return pointsLeft - (this.getPointsPerShip(shipId) || 0) * (amount || 0);
+    };
+
+    function copy(mainObj) {
+        let objCopy = {}; // objCopy will store a copy of the mainObj
+        let key;
+
+        for (key in mainObj) {
+            objCopy[key] = mainObj[key]; // copies each property to the objCopy object
+        }
+        return objCopy;
+    }
 };

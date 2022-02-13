@@ -54,7 +54,6 @@ import './page.resources';
 import './page.stats';
 import './queue.process';
 import './queue.progressbar';
-import './easteregg.silvester';
 
 window.updateConfigVars = function () {
     cfgHighlight = {

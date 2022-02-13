@@ -608,12 +608,12 @@ window.PageOverview = function () {
                 html += '<td id="row' + obj.id + 'Galaxy">' + (obj.galaxy || '---') + '</td>';
                 html += '<td id="row' + obj.id + 'System"><a href="/game.php?page=galaxy&galaxy=' + (obj.galaxy || '') + '&system=' + (obj.system || '') + '">' + (obj.system || '---') + '</a></td>';
                 html += '<td id="row' + obj.id + 'Planet">' + (obj.planet || '---') + '</td>';
-                html += '<td id="row' + obj.id + 'Score">' + (obj.player.score || '') + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreDiff">' + ((obj.diff && obj.diff > 0 ? '+' + obj.diff : obj.diff) || '0') + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreBuilding">' + (obj.player.score_building || '') + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreScience">' + (obj.player.score_science || '') + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreMilitary">' + (obj.player.score_military || '') + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreDefense" title="Gesamt: ' + (obj.player.score_defense || '???') + '">' + (obj.score_defense || '') + '</td>';
+                html += '<td id="row' + obj.id + 'Score">' + numberFormat(obj.player.score, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreDiff">' + numberFormat((obj.diff && obj.diff > 0 ? '+' + obj.diff : obj.diff) || '0', true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreBuilding">' + numberFormat(obj.player.score_building, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreScience">' + numberFormat(obj.player.score_science, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreMilitary">' + numberFormat(obj.player.score_military, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreDefense" title="Gesamt: ' + (obj.player.score_defense !== null ? numberFormat(obj.player.score_defense, false) : '???') + '">' + numberFormat(obj.score_defense, false) + '</td>';
                 html += '<td style="text-align: right; white-space: nowrap">';
 
                 var fleetQueueItemsDisplayed = 0;
@@ -657,10 +657,10 @@ window.PageOverview = function () {
                 html += ' [<a  href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=1" style="cursor: pointer">A</a>]';
 
                 html += '</td>';
-                html += '<td style="text-align: right;">' + (obj.last_spy_metal || '') + '</td>';
-                html += '<td style="text-align: right;">' + (obj.last_spy_crystal || '') + '</td>';
+                html += '<td style="text-align: right;">' + numberFormat(obj.last_spy_metal, true) + '</td>';
+                html += '<td style="text-align: right;">' + numberFormat(obj.last_spy_crystal, true) + '</td>';
                 var ressSum = Math.ceil(getInt(obj.last_spy_metal) / 2 + getInt(obj.last_spy_crystal) / 2 + getInt(obj.last_spy_deuterium) / 2);
-                html += '<td style="text-align: right;" title="' + Math.ceil(ressSum / 5000) + ' KT, ' + ressSum + ' raidable">' + (obj.last_spy_deuterium || '') + '</td>';
+                html += '<td style="text-align: right;" title="' + Math.ceil(ressSum / 5000) + ' KT, ' + ressSum + ' raidable">' + numberFormat(obj.last_spy_deuterium, true) + '</td>';
                 html += '</tr>';
             }
         });
