@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.31',
+        date_time: '2022-02-13 09AM',
+        changes: 'added mouseover for notifications/timers'
+    },
+    {
         version: '1.0.30',
         date_time: '2022-02-13 01AM',
         changes: 'added expo fleet calculator (thanks to Hyman!)'
