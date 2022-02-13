@@ -280,7 +280,7 @@ window.PageOverview = function () {
 
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
-            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_metal')) / 86400 * 3600) + ' / Stunde" class="tooltip ress_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_metal')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_metal'))) + '" class="tooltip ress_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
         });
 
         html += '</tr>';
@@ -289,7 +289,7 @@ window.PageOverview = function () {
 
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
-            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_crystal')) / 86400 * 3600) + ' / Stunde" class="tooltip ress_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_crystal')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_crystal'))) + '" class="tooltip ress_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
         });
 
         html += '</tr>';
@@ -298,7 +298,7 @@ window.PageOverview = function () {
 
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
-            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_deuterium')) / 86400 * 3600) + ' / Stunde" class="tooltip ress_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_deuterium')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_deuterium'))) + '" class="tooltip ress_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
         });
 
         html += '</tr>';
