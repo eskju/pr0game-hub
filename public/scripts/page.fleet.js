@@ -155,12 +155,13 @@ window.PageFleet = function () {
             input.val(obj.used || 0);
             input.attr('disabled', true);
             input.parent().css('text-align', 'left');
-            $(input.parent().find('.helper')).remove();
-            input.parent().append('<span class="helper" style="margin-left: 10px">' + (Math.abs($this.subExpoPoints(0, obj.ship_id, obj.used))) + ' Expo-Punkte</span>');
+            $(input.parent().parent().find('.helper')).remove();
+            input.parent().parent().append('<td class="helper text-right" style="margin-left: 10px; width: 200px">' + (Math.abs($this.subExpoPoints(0, obj.ship_id, obj.used))) + ' Expo-Punkte</td>');
         });
 
         const textStyle = this.maxPoints - (this.maxPoints - pointsLeft) > 0 ? 'text-red' : 'text-green';
-        $('.table519 tr:nth-child(2) td:nth-child(4)').html('<span class="' + textStyle + '">' + numberFormat(this.maxPoints - pointsLeft) + '</span> / ' + numberFormat(this.maxPoints) + ' Expo-Punkte');
+        $('.helper-headline').remove();
+        $('.table519 tr:nth-child(2)').append('<td class="helper-headline text-right ' + textStyle + '">' + numberFormat(this.maxPoints - pointsLeft) + ' / ' + numberFormat(this.maxPoints) + ' Expo-Punkte</td>');
     };
 
     this.getShip = function (offset) {
