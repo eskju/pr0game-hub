@@ -206,7 +206,7 @@ window.PageFleet = function () {
 
     this.bindEnterKey = function () {
         $(window).keyup(function (e) {
-            if ($('content form').length === 1) {
+            if ($('content form').length === 1 && $('*:focus').length === 0) {
                 if (e.enter) {
                     $('content form').submit();
                 }
