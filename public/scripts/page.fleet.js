@@ -163,9 +163,33 @@ window.PageFleet = function () {
             input.parent().parent().append('<td class="helper text-right" style="margin-left: 10px; width: 200px">' + (Math.abs($this.subExpoPoints(0, obj.ship_id, obj.used))) + ' Expo-Punkte</td>');
         });
 
-        const textStyle = this.maxPoints - (this.maxPoints - pointsLeft) > 0 ? 'text-red' : 'text-green';
-        $('.helper-headline').remove();
-        $('.table519 tr:nth-child(2)').append('<td class="helper-headline text-right ' + textStyle + '">' + numberFormat(this.maxPoints - pointsLeft) + ' / ' + numberFormat(this.maxPoints) + ' Expo-Punkte</td>');
+        this.updatePoints();
+    };
+
+    this.updatePoints = function () {
+        let points = 0;
+        let shipPoints;
+        let shipId;
+        let textStyle;
+
+        $('.table519').each(function (key, obj) {
+            if ($(obj).html().search(/Neuer Auftrag:/) !== -1) {
+                $($(obj).find('input')).each(function (key, field) {
+                    shipId = $(field).attr('name').replace(/ship/, '');
+                    shipPoints = $this.getPointsPerShip(shipId) * getInt($(field).val());
+                    points += shipPoints;
+
+                    $(field).change(function () {
+                        pageFleet.updatePoints();
+                    });
+                });
+
+                textStyle = $this.maxPoints !== points ? 'text-blue' : 'text-green';
+                textStyle = $this.maxPoints > points ? 'text-red' : textStyle;
+                $('.helper-headline').remove();
+                $('.table519 tr:nth-child(2)').append('<td class="helper-headline text-right"><span class="' + textStyle + '">' + numberFormat(points) + '</span> / ' + numberFormat($this.maxPoints) + ' Expo-Punkte</td>');
+            }
+        });
     };
 
     this.getShip = function (offset) {
