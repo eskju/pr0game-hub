@@ -158,7 +158,6 @@ window.PageFleet = function () {
         $.each(localFleet, function (key, obj) {
             input = $('#ship' + obj.ship_id + '_input');
             input.val(obj.used || 0);
-            input.attr('disabled', true);
             input.parent().css('text-align', 'left');
             $(input.parent().parent().find('.helper')).remove();
             input.parent().parent().append('<td class="helper text-right" style="margin-left: 10px; width: 200px">' + (Math.abs($this.subExpoPoints(0, obj.ship_id, obj.used))) + ' Expo-Punkte</td>');
