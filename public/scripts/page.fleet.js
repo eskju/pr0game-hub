@@ -9,6 +9,7 @@ window.PageFleet = function () {
     this.init = function () {
         this.parseShips();
         this.showExpoButton();
+        this.bindEnterKey();
     };
 
     this.parseShips = function () {
@@ -203,13 +204,13 @@ window.PageFleet = function () {
         return pointsLeft - (this.getPointsPerShip(shipId) || 0) * (amount || 0);
     };
 
-    function copy(mainObj) {
-        let objCopy = {}; // objCopy will store a copy of the mainObj
-        let key;
-
-        for (key in mainObj) {
-            objCopy[key] = mainObj[key]; // copies each property to the objCopy object
-        }
-        return objCopy;
+    this.bindEnterKey = function () {
+        $(window).keyup(function (e) {
+            if ($('content form').length === 1) {
+                if (e.enter) {
+                    $('content form').submit();
+                }
+            }
+        });
     }
 };
