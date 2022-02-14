@@ -159,8 +159,6 @@ window.PageFleet = function () {
             input = $('#ship' + obj.ship_id + '_input');
             input.val(obj.used || 0);
             input.parent().css('text-align', 'left');
-            $(input.parent().parent().find('.helper')).remove();
-            input.parent().parent().append('<td class="helper text-right" style="margin-left: 10px; width: 200px">' + (Math.abs($this.subExpoPoints(0, obj.ship_id, obj.used))) + ' Expo-Punkte</td>');
         });
 
         this.updatePoints();
@@ -183,6 +181,9 @@ window.PageFleet = function () {
                         $(field).change(function () {
                             pageFleet.updatePoints();
                         });
+
+                        $($(field).parent().parent().find('.helper')).remove();
+                        $(field).parent().parent().append('<td class="helper text-right" style="margin-left: 10px; width: 200px">' + numberFormat(shipPoints)+ ' Expo-Punkte</td>');
                     }
                 });
 
