@@ -192,139 +192,69 @@ window.PageOverview = function () {
 
         displayChart();
 
-        // generate planet overview
+        // generate planet overview (NEW)
         html = '<table class="noMargin">';
         html += '<tr>';
-        html += '<th width="10%">&nbsp;</th>';
-
-        let coords;
-        let time;
-        let value;
-        let dateTime;
-        let name;
-        let tdWidth = (90 / $('#planetSelector option').length);
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
-            html += '<th colspan="2" class="text-right" width="' + tdWidth + '%">' + coords[1] + ':' + coords[2] + ':' + coords[3] + '</th>';
-        });
-
+        html += '<th width="20%">Planet</th>';
+        html += '<th class="text-right">Gebäude</th>';
+        html += '<th class="text-right">Forschung</th>';
+        html += '<th class="text-right">Hangar</th>';
+        html += '<th class="text-right">Metall</th>';
+        html += '<th class="text-right">Kristall</th>';
+        html += '<th class="text-right">Deuterium</th>';
+        html += '<th class="text-right">Energie</th>';
+        html += '<th class="text-right">Beobachtung</th>';
         html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Planet</td>';
+
+        let coords, name, time, tooltip;
+
         $('#planetSelector option').each(function (key, obj) {
             coords = getCoordinates(obj.innerHTML);
             name = obj.innerHTML.split('[');
-            html += '<td colspan="2" class="text-right" width="' + tdWidth + '%">' + name[0] + '</td>';
-        });
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Gebäude</td>';
 
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
-            time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_timestamp');
-            html += '<td class="text-right" colspan="2" title="' + (getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_item') || '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
-        });
+            html += '<tr>';
 
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Forschung</td>';
-
-        $('#planetSelector option').each(function (key, obj) {
-            if (key === 0) {
-                coords = getCoordinates(obj.innerHTML);
-                time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_timestamp');
-                value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_item');
-                html += '<td class="text-right" colspan="2" title="' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
-            } else {
-                html += '<td colspan="2" class="disabled text-right" style="color: #333">nur auf Main</td>';
-            }
-        });
-
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Hangar</td>';
-
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
-            time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_timestamp');
-            value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_item');
-            html += '<td class="text-right" colspan="2" title="' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
-        });
-
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Felder</td>';
-
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
+            tooltip = '';
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_fieldsTotal');
             value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_fieldsUsed');
-            html += '<td class="text-right" colspan="2">';
-            html += (value && value !== typeof (undefined) && value !== '' ? value : '---');
-            html += ' / ';
-            html += (time && time !== typeof (undefined) && time !== '' ? time : '---');
-            html += '</td>';
-        });
+            tooltip += (value && value !== typeof (undefined) && value !== '' ? value : '---');
+            tooltip += ' / ';
+            tooltip += (time && time !== typeof (undefined) && time !== '' ? time : '---') + ' Felder<br>';
 
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Temperatur</td>';
-
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
             time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_temperatureMax');
             value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_temperatureMin');
-            html += '<td class="text-right" colspan="2">';
-            html += (value && value !== typeof (undefined) && value !== '' ? value + '°C' : '---');
-            html += ' bis ';
-            html += (time && time !== typeof (undefined) && time !== '' ? time + '°C' : '---');
-            html += '</td>';
-        });
+            tooltip += (value && value !== typeof (undefined) && value !== '' ? value + '°C' : '---');
+            tooltip += ' bis ';
+            tooltip += (time && time !== typeof (undefined) && time !== '' ? time + '°C' : '---');
 
-        html += '</tr>';
+            // planet
+            html += '<td class="text-left tooltip" data-tooltip-content="' + tooltip + '">' + coords[1] + ':' + coords[2] + ':' + coords[3] + ' (' + name[0].replace(/ /g, '') + ')</td>';
 
-        html += '<tr>';
-        html += '<td class="text-left">Metall</td>';
+            // buildings
+            time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_timestamp');
+            html += '<td class="text-right" title="' + (getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_item') || '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
 
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
-            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_metal')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_metal'))) + '" class="tooltip ress_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
-        });
+            // research
+            if (key === 0) {
+                time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_timestamp');
+                value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_item');
+                html += '<td class="text-right" title="' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
+            } else {
+                html += '<td class="disabled text-right" style="color: #333">---</td>';
+            }
 
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Kristall</td>';
+            // hangar
+            time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_timestamp');
+            value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_item');
+            html += '<td class="text-right" title="' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
 
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
-            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_crystal')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_crystal'))) + '" class="tooltip ress_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
-        });
+            // resources
+            html += '<td class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_metal')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_metal'))) + '" class="tooltip ress_metal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_crystal')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_crystal'))) + '" class="tooltip ress_crystal_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_deuterium')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_deuterium'))) + '" class="tooltip ress_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
+            html += '<td class="text-right" style="color: ' + getRgb(parseInt(getValue(coords[0] + '_production_energy')) > 0 ? cGreen : cRed) + '">' + (getValue(coords[0] + '_production_energy') || '---') + '</td>';
 
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Deuterium</td>';
-
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
-            html += '<td colspan="2" class="text-right"><span data-tooltip-content="' + numberFormat(getInt(getValue(coords[0] + '_production_deuterium')) / 86400 * 3600) + ' / Stunde<br>Limit: ' + numberFormat(getInt(getValue(coords[0] + '_limit_deuterium'))) + '" class="tooltip ress_deuterium_' + coords[0].replace(/\:/g, '_') + '"></span></td>';
-        });
-
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Energie</td>';
-
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
-            html += '<td colspan="2" class="text-right" style="color: ' + getRgb(parseInt(getValue(coords[0] + '_production_energy')) > 0 ? cGreen : cRed) + '">' + (getValue(coords[0] + '_production_energy') || '---') + '</td>';
-        });
-
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td class="text-left">Beobachtung</td>';
-
-        $('#planetSelector option').each(function (key, obj) {
-            coords = getCoordinates(obj.innerHTML);
+            // notifications
             dateTime = new PlanetResourceNotification().getFinishTime(coords[0]);
 
             if (!dateTime) {
@@ -334,22 +264,11 @@ window.PageOverview = function () {
                 html += '<td class="text-right tooltip" colspan="2" data-tooltip-content="<b>Es fehlen:</b></br>' + (new PlanetResourceNotification().getDiffForResource(coords[0], 'metal')) + ' Metall, ' + new PlanetResourceNotification().getDiffForResource(coords[0], 'crystal') + ' Kristall, ' + new PlanetResourceNotification().getDiffForResource(coords[0], 'deuterium') + ' Deuterium"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
             }
 
-            window.setInterval(function () {
-                $('.notification-timer').each(function () {
-                    if ($(this).attr('data-timestamp') <= new Date().getTime() / 1000) {
-                        $(this).html('<span style="color: ' + getRgb(cGreen) + '">BEREIT</span>');
-                        return;
-                    }
-
-                    $(this).text(formatTimeDiff($(this).attr('data-timestamp')));
-                });
-            }, 1000);
+            html += '</tr>';
         });
 
-        html += '</tr>';
-
         html += '</table>';
-        $($('.infos')[2]).addClass('noPadding');
+
         $($('.infos')[2]).html(html);
     };
 

@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.32',
+        date_time: '2022-02-14 08AM',
+        changes: 'refactored planet overview'
+    },
+    {
         version: '1.0.31',
         date_time: '2022-02-13 09AM',
         changes: 'added mouseover for notifications/timers'
