@@ -267,6 +267,18 @@ window.PageOverview = function () {
             html += '</tr>';
         });
 
+        html += '<tr>';
+        html += '<td class="text-left">Summe</td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '<td class="text-right"><span id="sumMetal"></span> <small style="color: #888">/ <span id="sumLimitMetal"></span></small></td>';
+        html += '<td class="text-right"><span id="sumCrystal"></span> <small style="color: #888">/ <span id="sumLimitCrystal"></span></small></td>';
+        html += '<td class="text-right"><span id="sumDeuterium"></span> <small style="color: #888">/ <span id="sumLimitDeuterium"></span></small></td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '</tr>';
+
         html += '</table>';
 
         $($('.infos')[2]).html(html);
