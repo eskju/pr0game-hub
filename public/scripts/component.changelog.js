@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.33',
+        date_time: '2022-02-14 06PM',
+        changes: 'bugfixes for fleets'
+    },
+    {
         version: '1.0.32',
         date_time: '2022-02-14 08AM',
         changes: 'refactored planet overview'
