@@ -32,10 +32,10 @@ window.Resources = function () {
         const currentValue = !timeDiff ? initValue : initValue + production / 86400 * timeDiff / 1000;
 
         if(currentValue > limit) {
-            $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html('<span class="text-red" title="Die Lager sind vermutlich voll. Produktion gestoppt.">' + numberFormat(getInt(currentValue), true) + '</span>');
+            $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html('<span class="text-red" title="Die Lager sind vermutlich voll. Produktion gestoppt.">' + numberFormat(currentValue) + '</span>');
         }
         else {
-            $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html(numberFormat(getInt(currentValue), true));
+            $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html(numberFormat(currentValue));
         }
     }
 };
