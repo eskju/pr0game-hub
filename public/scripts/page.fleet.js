@@ -174,7 +174,7 @@ window.PageFleet = function () {
 
         $('.table519').each(function (key, obj) {
             if ($(obj).html().search(/Neuer Auftrag:/) !== -1) {
-                $($(obj).find('input')).each(function (key, field) {
+                $($(obj).find('input[type=text]')).each(function (key, field) {
                     shipId = $(field).attr('name').replace(/ship/, '');
                     shipPoints = $this.getPointsPerShip(shipId) * getInt($(field).val());
                     points += shipPoints;
