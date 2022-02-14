@@ -35,6 +35,7 @@ window.Resources = function () {
             $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html('<span class="text-red" title="Die Lager sind vermutlich voll. Produktion gestoppt.">' + numberFormat(currentValue) + '</span>');
         }
         else {
+            console.log(currentValue);
             $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html(numberFormat(currentValue));
         }
     }
