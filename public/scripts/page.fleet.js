@@ -175,13 +175,15 @@ window.PageFleet = function () {
         $('.table519').each(function (key, obj) {
             if ($(obj).html().search(/Neuer Auftrag:/) !== -1) {
                 $($(obj).find('input[type=text]')).each(function (key, field) {
-                    shipId = $(field).attr('name').replace(/ship/, '');
-                    shipPoints = $this.getPointsPerShip(shipId) * getInt($(field).val());
-                    points += shipPoints;
+                    if (field.outerHTML.search(/name\=/) !== -1) {
+                        shipId = $(field).attr('name').replace(/ship/, '');
+                        shipPoints = $this.getPointsPerShip(shipId) * getInt($(field).val());
+                        points += shipPoints;
 
-                    $(field).change(function () {
-                        pageFleet.updatePoints();
-                    });
+                        $(field).change(function () {
+                            pageFleet.updatePoints();
+                        });
+                    }
                 });
 
                 textStyle = $this.maxPoints !== points ? 'text-blue' : 'text-green';
