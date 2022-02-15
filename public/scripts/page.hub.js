@@ -373,7 +373,7 @@ window.PageHub = function () {
             for (let p = 0; p < response['data'].length; p++) {
                 dataSets.push({
                     label: response['data'][p]['name'],
-                    data: response['data'][p]['score_diff'],
+                    data: response['data'][p]['score_relative'],
                     borderColor: colors[p % colors.length],
                     borderWidth: 1,
                     radius: 1
