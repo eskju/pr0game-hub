@@ -39,5 +39,6 @@ window.parsePagePlayerCard = function () {
     });
 
     $('#content').append('<canvas id="playerChart" style="width: 95%; margin: 15px auto; height: 300px"></canvas>');
+    $('#content').append('<canvas id="playerChartBar" style="width: 95%; margin: 15px auto; height: 100px"></canvas>');
     displayChart(playerId);
 }

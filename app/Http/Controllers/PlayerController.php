@@ -173,7 +173,7 @@ class PlayerController extends Controller
                 ->orderBy('score', 'DESC')
                 ->get()
                 ->pluck('id'),
-            'version' => '1.0.33',
+            'version' => '1.0.34',
             'player' => $planet ? $planet->player : []
         ];
     }
@@ -341,29 +341,48 @@ class PlayerController extends Controller
 
     public function getPlayerChart(Player $player, Request $request)
     {
-        return LogPlayer::query()
-            ->select([
-                DB::raw('DATE(`created_at`) AS `date`'),
-                DB::raw('MAX(`score`) AS `score`'),
-                DB::raw('MAX(`score_building`) AS `score_building`'),
-                DB::raw('MAX(`score_science`) AS `score_science`'),
-                DB::raw('MAX(`score_military`) AS `score_military`'),
-                DB::raw('MAX(`score_defense`) AS `score_defense`'),
-            ])
-            ->where('external_id', $player->id)
-            ->orderBy('date')
-            ->groupBy(DB::raw('DATE(created_at)'))
-            ->get()
-            ->map(function (LogPlayer $player) {
-                $tmp = LogPlayer::query()
-                    ->select(DB::raw('MAX(score) as own_score'))
-                    ->where('external_id', auth()->user()->player_id)
-                    ->whereRaw('DATE(created_at) = "' . $player->date . '"')
-                    ->first();
-                $player->own_score = $tmp->own_score ?? null;
-                $player->date = Carbon::parse($player->date)->format('d.m.');
+        $daysDiff = Carbon::parse('2022-01-21')->diffInDays(Carbon::now()) + 1;
+        $return = [];
 
-                return $player;
-            });
+        for ($i = 0; $i < $daysDiff; $i++) {
+            $date = Carbon::parse('2022-01-21')->addDays($i)->toDateString();
+
+            $min = LogPlayer::query()
+                ->where('external_id', $player->id)
+                ->whereRaw('created_at >= "' . $date . ' 00:00:00"')
+                ->whereRaw('created_at <= "' . $date . ' 23:59:59"')
+                ->orderBy('created_at')
+                ->firstOrNew();
+
+            $max = LogPlayer::query()
+                ->where('external_id', $player->id)
+                ->whereRaw('created_at >= "' . $date . ' 00:00:00"')
+                ->whereRaw('created_at <= "' . $date . ' 23:59:59"')
+                ->orderBy('created_at', 'DESC')
+                ->firstOrNew();
+
+            $ownScore = LogPlayer::query()
+                ->select('score')
+                ->where('external_id', auth()->user()->player_id)
+                ->whereRaw('created_at >= "' . $date . ' 00:00:00"')
+                ->whereRaw('created_at <= "' . $date . ' 23:59:59"')
+                ->orderBy('created_at', 'DESC')
+                ->firstOrNew();
+
+            $diff = $min->score && $max->score ? $max->score - $min->score : null;
+            $return[$date] = [
+                'own_score' => $ownScore->score ?? null,
+                'score_min' => $min->score ?? null,
+                'score_max' => $max->score ?? null,
+                'score_diff' => $diff,
+                'score_relative' => $min->score && $max->score ? ($diff / $min->score) * 100 : null,
+                'score_building' => $max->score_building,
+                'score_science' => $max->score_science,
+                'score_military' => $max->score_military,
+                'score_defense' => $max->score_defense
+            ];
+        }
+
+        return $return;
     }
 }

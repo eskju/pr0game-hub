@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.34',
+        date_time: '2022-02-15 01PM',
+        changes: 'added relativ score growth chart'
+    },
+    {
         version: '1.0.33',
         date_time: '2022-02-14 06PM',
         changes: 'bugfixes for fleets'

@@ -5,15 +5,17 @@ window.displayChart = function (playerId) {
         const dates = [];
         const ownScore = [];
         const score = [];
+        const scoreRelative = [];
         const scoreBuilding = [];
         const scoreResearch = [];
         const scoreMilitary = [];
         const scoreDefense = [];
 
         $.each(chartRespone, function (key, obj) {
-            dates.push(obj.date);
+            dates.push(key);
             ownScore.push(obj.own_score);
-            score.push(obj.score);
+            score.push(obj.score_max);
+            scoreRelative.push(obj.score_relative);
             scoreBuilding.push(obj.score_building);
             scoreResearch.push(obj.score_science);
             scoreMilitary.push(obj.score_military);
@@ -86,6 +88,39 @@ window.displayChart = function (playerId) {
                         plugins: {
                             legend: {
                                 display: playerId !== undefined
+                            }
+                        }
+                    }
+                }
+            );
+
+            const myChart2 = new Chart(
+                document.getElementById('playerChartBar'),
+                {
+                    type: 'bar',
+                    data: {
+                        labels: scoreRelative,
+                        datasets: [
+                            {
+                                label: 'Punktedifferenz relativ (in %)',
+                                data: scoreRelative,
+                                backgroundColor: function (context) {
+                                    var index = context.dataIndex;
+                                    var value = context.dataset.data[index];
+                                    return value < 0 ? '#ee4d2e' : '#addc8d';
+                                },
+                            }
+                        ],
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                display: false
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
                             }
                         }
                     }

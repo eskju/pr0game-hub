@@ -187,7 +187,7 @@ window.PageOverview = function () {
         html += '</tr>';
         html += '</table>';
         html += '<a style="margin-left: 12px; margin-top: 10px; color: #888; font-size: 10px;" href="javascript:void(0)" onclick="return Dialog.PlanetAction();">Planet umbenennen/aufgeben</a>';
-        html += '</td><td style="padding: 0"><canvas id="playerChart" style="height: 100px; width: 100%"></canvas></td></table>';
+        html += '</td><td style="padding: 0"><canvas id="playerChart" style="height: 100px; width: 100%"></canvas><canvas id="playerChartBar" style="height: 50px; width: 100%"></canvas></td></table>';
         $($('.infos')[0]).html(html);
 
         displayChart();
