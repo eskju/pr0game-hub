@@ -134,7 +134,7 @@ window.displayChart = function (playerId) {
                                 position: 'left'
                             },
                             y2: {
-                                type: 'logarithmic',
+                                type: 'linear',
                                 position: 'right'
                             }
                         },
