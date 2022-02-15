@@ -152,6 +152,7 @@ class HubController extends Controller
             $players[$key] = [
                 'id' => $player->id,
                 'name' => $player->name,
+                'me' => $player->id === auth()->user()->player_id,
                 'score_diff' => $this->getIntervalValues($tmp, 'score_diff', 7),
                 'score_relative' => $this->getIntervalValues($tmp, 'score_relative', 7)
             ];

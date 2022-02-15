@@ -374,7 +374,7 @@ window.PageHub = function () {
                 dataSets.push({
                     label: response['data'][p]['name'],
                     data: response['data'][p]['score_relative'],
-                    backgroundColor: colors[p % colors.length],
+                    backgroundColor: response['data'][p]['me'] ? '#ee4d2e' : colors[p % colors.length],
                     radius: 1
                 });
             }
@@ -398,7 +398,7 @@ window.PageHub = function () {
                 dataSets.push({
                     label: response['data'][p]['name'],
                     data: response['data'][p]['score_diff'],
-                    backgroundColor: colors[p % colors.length],
+                    backgroundColor: response['data'][p]['me'] ? '#ee4d2e' : colors[p % colors.length],
                     radius: 1
                 });
             }
