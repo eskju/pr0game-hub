@@ -367,8 +367,8 @@ window.PageHub = function () {
             $this.container.html('<div class="infos text-left"><p style="padding-left: 10px"><i class="fa fa-info-circle"></i> <i>Relative Punkteänderung in % pro Kalenderwoche</i></p><canvas id="scoreChart" style="height: 500px; width: 100%"></canvas></div>');
 
             const dates = response['dates'];
-            const dataSets = [];
-            const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette', 'white', 'lightgreen', 'lightblue'];
+            let dataSets = [];
+            let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette', 'white', 'lightgreen', 'lightblue'];
 
             for (let p = 0; p < response['data'].length; p++) {
                 dataSets.push({
@@ -382,6 +382,32 @@ window.PageHub = function () {
 
             const myChart = new Chart(
                 document.getElementById('scoreChart'),
+                {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: dataSets,
+                    },
+                }
+            );
+
+            $this.container.append('<div class="infos text-left"><p style="padding-left: 10px"><i class="fa fa-info-circle"></i> <i>Absolute Punkteänderung pro Kalenderwoche</i></p><canvas id="scoreChart2" style="height: 500px; width: 100%"></canvas></div>');
+
+            dataSets = [];
+            colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette', 'white', 'lightgreen', 'lightblue'];
+
+            for (let p = 0; p < response['data'].length; p++) {
+                dataSets.push({
+                    label: response['data'][p]['name'],
+                    data: response['data'][p]['score_diff'],
+                    borderColor: colors[p % colors.length],
+                    borderWidth: 1,
+                    radius: 1
+                });
+            }
+
+            const myChart2 = new Chart(
+                document.getElementById('scoreChart2'),
                 {
                     type: 'line',
                     data: {
