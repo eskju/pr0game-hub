@@ -336,7 +336,7 @@ class PlayerController extends Controller
 
     public function getOwnPlayerChart(Player $player)
     {
-        return $this->getPlayerChart(Player::query()->find(auth()->user()->player_id), $request);
+        return $this->getPlayerChart(Player::query()->find(auth()->user()->player_id));
     }
 
     public function getPlayerChart(Player $player, ?bool $showOwnScore = true)
