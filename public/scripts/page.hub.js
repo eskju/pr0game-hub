@@ -368,7 +368,7 @@ window.PageHub = function () {
 
             const dates = response['dates'];
             let dataSets = [];
-            let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette', 'white', 'lightgreen', 'lightblue'];
+            let colors = ["#bce4d8", "#aedcd5", "#a1d5d2", "#95cecf", "#89c8cc", "#7ec1ca", "#72bac6", "#66b2c2", "#59acbe", "#4ba5ba", "#419eb6", "#3b96b2", "#358ead", "#3586a7", "#347ea1", "#32779b", "#316f96", "#2f6790", "#2d608a", "#2c5985"];
 
             for (let p = 0; p < response['data'].length; p++) {
                 dataSets.push({
@@ -394,7 +394,6 @@ window.PageHub = function () {
             $this.container.append('<div class="infos text-left"><p style="padding-left: 10px"><i class="fa fa-info-circle"></i> <i>Absolute Punkteänderung pro Kalenderwoche</i></p><canvas id="scoreChart2" style="height: 500px; width: 100%"></canvas></div>');
 
             dataSets = [];
-            colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette', 'white', 'lightgreen', 'lightblue'];
 
             for (let p = 0; p < response['data'].length; p++) {
                 dataSets.push({
