@@ -1,8 +1,13 @@
 window.changelog = [
     {
+        version: '1.0.35',
+        date_time: '2022-02-15 11PM',
+        changes: 'added relative / absolute score development chart'
+    },
+    {
         version: '1.0.34',
         date_time: '2022-02-15 01PM',
-        changes: 'added relativ score growth chart'
+        changes: 'added relative score growth chart'
     },
     {
         version: '1.0.33',
