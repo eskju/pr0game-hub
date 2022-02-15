@@ -341,11 +341,12 @@ class PlayerController extends Controller
 
     public function getPlayerChart(Player $player, Request $request)
     {
-        $daysDiff = Carbon::parse('2022-01-21')->diffInDays(Carbon::now()) + 1;
+        $startDate = Carbon::now()->subDays(14);
+        $daysDiff = $startDate->diffInDays(Carbon::now()) + 1;
         $return = [];
 
         for ($i = 0; $i < $daysDiff; $i++) {
-            $date = Carbon::parse('2022-01-21')->addDays($i)->toDateString();
+            $date = $startDate->addDays($i)->toDateString();
 
             $min = LogPlayer::query()
                 ->where('external_id', $player->id)
