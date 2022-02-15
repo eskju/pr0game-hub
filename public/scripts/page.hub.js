@@ -383,7 +383,7 @@ window.PageHub = function () {
             const myChart = new Chart(
                 document.getElementById('scoreChart'),
                 {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: dates,
                         datasets: dataSets,
@@ -408,7 +408,7 @@ window.PageHub = function () {
             const myChart2 = new Chart(
                 document.getElementById('scoreChart2'),
                 {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: dates,
                         datasets: dataSets,
