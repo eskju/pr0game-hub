@@ -120,7 +120,11 @@ window.displayChart = function (playerId) {
                                 data: scoreDiff,
                                 pointRadius: 0,
                                 borderWidth: 2,
-                                borderColor: '#888888'
+                                borderColor: function (context) {
+                                    var index = context.dataIndex;
+                                    var value = context.dataset.data[index];
+                                    return value < 0 ? '#ee4d2e' : '#addc8d';
+                                },
                             }
                         ],
                     },
