@@ -364,7 +364,7 @@ window.PageHub = function () {
         $('head').append('<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>');
         getJSON('hub/scores', function (response) {
             response = JSON.parse(response.responseText);
-            $this.container.html('<canvas id="scoreChart" style="height: 500px; width: 100%"></canvas>');
+            $this.container.html('<div class="infos text-left"><p style="padding-left: 10px"><i class="fa fa-info-circle"></i> <i>Relative Punkteänderung in % pro Kalenderwoche</i></p><canvas id="scoreChart" style="height: 500px; width: 100%"></canvas></div>');
 
             const dates = response['dates'];
             const dataSets = [];
