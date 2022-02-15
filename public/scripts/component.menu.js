@@ -5,6 +5,7 @@ window.Menu = function() {
         html += '<li><a href="#hub.planets"><i class="fa fa-globe-asia"></i> Planeten</a></li>';
         html += '<li><a href="#hub.research"><i class="fa fa-flask"></i> Forschung</a></li>';
         html += '<li><a href="#hub.fleet"><i class="fa fa-fighter-jet"></i> Flotte</a></li>';
+        html += '<li><a href="#hub.score"><i class="fa fa-trophy"></i> Punkte</a></li>';
         html += '<li><a href="#hub.expos"><i class="fa fa-skull-crossbones"></i> Raids &amp; Expo</a></li>';
         html += '<li><a href="#hub.galaxy"><i class="fa fa-sync"></i> Gala-Aktualität</a></li>';
         html += '<li><a href="#hub.hostile-spying"><i class="fa fa-eye"></i> Fremdspionage</a></li>';

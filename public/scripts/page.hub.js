@@ -22,6 +22,11 @@ window.PageHub = function () {
                 this.loadPageFleet();
                 break;
 
+            case 'score':
+                this.clearPage();
+                this.loadPageScore();
+                break;
+
             case 'expos':
                 this.clearPage();
                 this.loadPageExpos();
@@ -277,10 +282,9 @@ window.PageHub = function () {
                         html += '<td style="text-align: left;">' + sender.name + '</td>';
                         $.each(data, function (key, receiver) {
                             if (allianceId === '' || parseInt(allianceId) === receiver.alliance_id) {
-                                if(sender.transfer_possible[receiver.id] === null) {
+                                if (sender.transfer_possible[receiver.id] === null) {
                                     html += '<td class="text-center" style="color: ' + getRgb(cGray) + '">---</td>';
-                                }
-                                else {
+                                } else {
                                     html += '<td class="text-center text-' + (sender.transfer_possible[receiver.id] ? 'green' : 'red') + '">' + (sender.transfer_possible[receiver.id] ? 'Ja' : 'Nein') + '</td>';
                                 }
                             }
@@ -353,6 +357,39 @@ window.PageHub = function () {
             html += '</div>';
 
             $this.container.html(html);
+        });
+    };
+
+    this.loadPageScore = function () {
+        $('head').append('<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>');
+        getJSON('hub/scores', function (response) {
+            response = JSON.parse(response.responseText);
+            $this.container.html('<canvas id="scoreChart" style="height: 500px; width: 100%"></canvas>');
+
+            const dates = response['dates'];
+            const dataSets = [];
+            const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette', 'white', 'lightgreen', 'lightblue'];
+
+            for (let p = 0; p < response['data'].length; p++) {
+                dataSets.push({
+                    label: response['data'][p]['name'],
+                    data: response['data'][p]['score_diff'],
+                    borderColor: colors[p % colors.length],
+                    borderWidth: 1,
+                    radius: 1
+                });
+            }
+
+            const myChart = new Chart(
+                document.getElementById('scoreChart'),
+                {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: dataSets,
+                    },
+                }
+            );
         });
     };
 

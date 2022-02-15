@@ -4,7 +4,6 @@ window.displayAllianceChart = function (allianceId) {
         const chartRespone = JSON.parse(response.responseText);
         const dates = chartRespone.dates;
         const labels = chartRespone.players;
-        const data = [];
         const dataSets = [];
         const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violette', 'white', 'lightgreen', 'lightblue'];
 

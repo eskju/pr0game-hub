@@ -51,6 +51,7 @@ Route::get('/hub/research', HubController::class . '@getResearch');
 Route::get('/hub/transfer-matrix', HubController::class . '@getTransferMatrix');
 Route::get('/hub/fleet', HubController::class . '@getFleet');
 Route::get('/hub/galaxy', HubController::class . '@getGalaxyViewStatus');
+Route::get('/hub/scores', HubController::class . '@getScores');
 
 Route::post('/planets', PlanetController::class . '@storePlanetId');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');

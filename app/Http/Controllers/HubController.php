@@ -52,7 +52,7 @@ class HubController extends Controller
             $sender['transfer_possible'] = [];
 
             foreach ($senders as $receiver) {
-                if(in_array(null, [
+                if (in_array(null, [
                     $sender['military_tech'],
                     $sender['defense_tech'],
                     $sender['shield_tech'],
@@ -130,6 +130,39 @@ class HubController extends Controller
         return $return;
     }
 
+    public function getScores()
+    {
+        $daysDiff = Carbon::parse('2022-01-24')->diffInDays(Carbon::now()) + 1;
+        $dates = [];
+
+        for ($i = 0; $i < $daysDiff; $i++) {
+            if ($i % 7 === 0) {
+                $dates[] = 'KW ' . Carbon::parse('2022-01-24')->addDays($i)->week();
+            }
+        }
+
+        $players = Player::query()
+            ->whereIn('alliance_id', $this->allianceIds)
+            ->orderBy('players.name')
+            ->get();
+
+        foreach ($players as $key => $player) {
+            $tmp = app()->make(PlayerController::class)->getPlayerChart($player, false);
+
+            $players[$key] = [
+                'id' => $player->id,
+                'name' => $player->name,
+                'score_diff' => $this->getIntervalValues($tmp, 'score_diff', 7),
+                'score_relative' => $this->getIntervalValues($tmp, 'score_relative', 7)
+            ];
+        }
+
+        return [
+            'dates' => $dates,
+            'data' => $players
+        ];
+    }
+
     public function getGalaxyViewStatus()
     {
         $return = [];
@@ -158,5 +191,23 @@ class HubController extends Controller
         if (auth()->user()->player->alliance_id !== $this->allowedAllianceId && auth()->user()->player_id != 275) {
             throw new Exception('PermissionException');
         }
+    }
+
+    private function getIntervalValues($data, string $offset, int $days): array
+    {
+        $return = [];
+        $sum = 0;
+        $i = 0;
+        foreach ($data as $row) {
+            $i++;
+            $sum += $row[$offset];
+
+            if ($i % $days === 0 || $i === count($data) - 1) {
+                $return[] = $sum;
+                $sum = 0;
+            }
+        }
+
+        return $return;
     }
 }

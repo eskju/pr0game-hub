@@ -334,12 +334,12 @@ class PlayerController extends Controller
         return $dateTime->format('d.m. H:i');
     }
 
-    public function getOwnPlayerChart(Player $player, Request $request)
+    public function getOwnPlayerChart(Player $player)
     {
         return $this->getPlayerChart(Player::query()->find(auth()->user()->player_id), $request);
     }
 
-    public function getPlayerChart(Player $player, Request $request)
+    public function getPlayerChart(Player $player, ?bool $showOwnScore = true)
     {
         $startDate = Carbon::now()->subDays(14);
         $daysDiff = Carbon::parse('2022-01-21')->diffInDays(Carbon::now()) + 1;
@@ -362,13 +362,13 @@ class PlayerController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->firstOrNew();
 
-            $ownScore = LogPlayer::query()
+            $ownScore = $showOwnScore ? LogPlayer::query()
                 ->select('score')
                 ->where('external_id', auth()->user()->player_id)
                 ->whereRaw('created_at >= "' . $date . ' 00:00:00"')
                 ->whereRaw('created_at <= "' . $date . ' 23:59:59"')
                 ->orderBy('created_at', 'DESC')
-                ->firstOrNew();
+                ->firstOrNew() : null;
 
             $diff = $min->score && $max->score ? $max->score - $min->score : null;
             $return[$date] = [
