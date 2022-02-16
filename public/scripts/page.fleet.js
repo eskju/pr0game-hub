@@ -76,7 +76,7 @@ window.PageFleet = function () {
     this.showExpoButton = function () {
         $('.table519').each(function (key, obj) {
             if ($(obj).html().search(/Neuer Auftrag:/) !== -1) {
-                $(obj).find('tr th').append('Expo GT: <a class="text-red" href="javascript:void(0)" style="margin-left: 10px" onclick="pageFleet.setExpoFleet()">Ress</a> ');
+                $(obj).find('tr th').append('<span style="margin-left: 20px">Expo GT:</span> <a class="text-red" href="javascript:void(0)" style="margin-left: 10px" onclick="pageFleet.setExpoFleet()">Ress</a> ');
                 $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true)">Schiffe</a> // ');
                 $(obj).find('tr th').append('Expo KT: <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, false)">Ress</a> ');
                 $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true, false)">Schiffe</a>');
