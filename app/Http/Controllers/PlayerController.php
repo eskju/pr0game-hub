@@ -75,6 +75,20 @@ class PlayerController extends Controller
 
         $this->dateFormatForHumans = $request->get('date_for_humans') ?? false;
 
+        foreach ($request->get('ownPlanets') ?? [] as $coords) {
+            if (!$planet = Planet::query()->where('coordinates', $coords)->first()) {
+                $planet = new Planet();
+                $planet->coordinates = $coords;
+                $coords = explode(':', $coords);
+                $planet->galaxy = $coords[0];
+                $planet->system = $coords[1];
+                $planet->planet = $coords[2];
+            }
+
+            $planet->player_id = auth()->user()->player_id;
+            $planet->save();
+        }
+
         $query = Planet::query()
             ->select(
                 DB::raw('planets.*'),
