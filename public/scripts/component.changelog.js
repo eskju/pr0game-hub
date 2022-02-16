@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.36',
+        date_time: '2022-02-16 01AM',
+        changes: 'bugfix for own planets not shown in overview'
+    },
+    {
         version: '1.0.35',
         date_time: '2022-02-15 11PM',
         changes: 'added relative / absolute score development chart'
