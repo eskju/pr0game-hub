@@ -327,11 +327,19 @@ window.PageOverview = function () {
                 this.request.abort();
             }
 
+            const ownPlanets = [];
+            let coords;
+            $('#planetSelector option').each(function (key, obj) {
+                coords = getCoordinates(obj.innerHTML);
+                ownPlanets.push(coords[0]);
+            });
+
             this.setLoading(true);
             this.request = postJSON('players/overview', {
                 galaxy: ownGalaxy,
                 system: ownSystem,
                 planet: ownPlanet,
+                ownPlanets: ownPlanets,
                 show_galaxy: getValue('show_galaxy_enable') === '1' ? (getValue('show_galaxy_value') || ownGalaxy) : ownGalaxy,
                 order_by: getValue('orderBy'),
                 order_direction: getValue('orderDirection'),
