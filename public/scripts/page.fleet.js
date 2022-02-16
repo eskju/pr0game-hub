@@ -76,12 +76,13 @@ window.PageFleet = function () {
     this.showExpoButton = function () {
         $('.table519').each(function (key, obj) {
             if ($(obj).html().search(/Neuer Auftrag:/) !== -1) {
-                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" style="margin-left: 10px" onclick="pageFleet.setExpoFleet()">Expo-Flotte Ress</a> // <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true)">Expo-Flotte Schiffe</a>');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" style="margin-left: 10px" onclick="pageFleet.setExpoFleet()">Expo Ress GT</a> // <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true)">Expo Schiffe GT</a> // ');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" style="margin-left: 10px" onclick="pageFleet.setExpoFleet(false, false)">Expo Ress KT</a> // <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true, false)">Expo Schiffe KT</a>');
             }
         });
     }
 
-    this.setExpoFleet = function (forFleetOnly = false) {
+    this.setExpoFleet = function (forFleetOnly = false, largeTransporters = true) {
         const notices = [];
         this.maxPoints = forFleetOnly ? this.maxFleetPoints : this.maxRessPoints;
         let pointsLeft = $this.maxPoints;
@@ -116,7 +117,7 @@ window.PageFleet = function () {
         });
 
         // fill with transports and trash ships
-        const fillers = [203, 202, 204, 205, 206, 207, 215, 211];
+        const fillers = largeTransporters ? [203, 202, 204, 205, 206, 207, 215, 211] : [202, 203, 204, 205, 206, 207, 215, 211];
         let pointsPerShip;
         let amount;
         $.each(fillers, function (key, possibleShipId) {
@@ -183,7 +184,7 @@ window.PageFleet = function () {
                         });
 
                         $($(field).parent().parent().find('.helper')).remove();
-                        $(field).parent().parent().append('<td class="helper text-right" style="margin-left: 10px; width: 200px">' + numberFormat(shipPoints)+ ' Expo-Punkte</td>');
+                        $(field).parent().parent().append('<td class="helper text-right" style="margin-left: 10px; width: 200px">' + numberFormat(shipPoints) + ' Expo-Punkte</td>');
                     }
                 });
 

@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.37',
+        date_time: '2022-02-16 01AM',
+        changes: 'added expo buttons for KT'
+    },
+    {
         version: '1.0.36',
         date_time: '2022-02-16 01AM',
         changes: 'bugfix for own planets not shown in overview'
