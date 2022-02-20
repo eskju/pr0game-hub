@@ -1,4 +1,4 @@
-window.displayOverviewSettings = function() {
+window.displayOverviewSettings = function () {
     let html = '';
     html += '<div id="phSettings" style="margin: 25px 0; max-width: 100% !important; ' + (getValue('hideSettings') === '1' ? 'display: none' : '') + '">';
     html += '<div style="padding: 12px; text-align: left; background: #121314">';
@@ -7,7 +7,7 @@ window.displayOverviewSettings = function() {
     html += '<a id="settingsFilterHighlighting" class="settings-button settings-button-highlighting" style="cursor: pointer; display: inline-block; margin-left: 2px; padding: 5px 10px; border: 1px solid rgba(255, 255, 255, 0.1)">Highlighting</a>';
     html += '<a id="settingsFilterFilter" class="settings-button settings-button-filter" style="cursor: pointer; display: inline-block; margin-left: 2px; padding: 5px 10px; border: 1px solid rgba(255, 255, 255, 0.1)">Filter</a>';
     html += '<a id="settingsFilterThresholds" class="settings-button settings-button-thresholds" style="cursor: pointer; display: inline-block; margin-left: 2px; padding: 5px 10px; border: 1px solid rgba(255, 255, 255, 0.1)">Thresholds</a>';
-    html += '<a id="settingsFilterFriends" class="settings-button settings-button-friends" style="cursor: pointer; display: inline-block; margin-left: 2px; padding: 5px 10px; border: 1px solid rgba(255, 255, 255, 0.1)">Freunde &amp; Gegner</a>';
+    html += '<a id="settingsFilterFriends" class="settings-button settings-button-friends" style="cursor: pointer; display: inline-block; margin-left: 2px; padding: 5px 10px; border: 1px solid rgba(255, 255, 255, 0.1)">Freunde &amp; Feinde</a>';
     html += '</div>';
     html += '<table width="100%" class="table519">';
     html += '<tr class="settings-filter settings-filter-general"><th colspan="4">Allgemein</th></tr>';
@@ -39,12 +39,37 @@ window.displayOverviewSettings = function() {
     html += displayOverviewHighlight('Galaxie überschreiben? (z.B. 4 für Gala 4)', 'show_galaxy', cWhite, 'Galaxie Nummer');
 
     html += '<tr class="settings-filter settings-filter-filter"><th colspan="4">FILTER</th></tr>';
-    html += displayOverviewSettingsSelect(getHotkeyIcon('I') + 'Inaktive Spieler', 'filter_inactive', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
-    html += displayOverviewSettingsSelect(getHotkeyIcon('N') + 'Spieler mit Noobschutz', 'filter_noobs', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
-    html += displayOverviewSettingsSelect(getHotkeyIcon('U') + 'Spieler im Urlaubsmodus', 'filter_vacation', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
-    html += displayOverviewSettingsSelect(getHotkeyIcon('A') + 'Spieler der Allianz', 'filter_alliance', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
-    html += displayOverviewSettingsSelect(getHotkeyIcon('S') + 'Spieler mit Spiobericht', 'filter_spy_report', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
-    html += displayOverviewSettingsSelect(getHotkeyIcon('K') + 'Spieler mit Kampfbericht', 'filter_battle_report', {ALL: 'Anzeigen', HIDE: 'Ausblenden', ONLY: 'Andere ausblenden'});
+    html += displayOverviewSettingsSelect(getHotkeyIcon('I') + 'Inaktive Spieler', 'filter_inactive', {
+        ALL: 'Anzeigen',
+        HIDE: 'Ausblenden',
+        ONLY: 'Andere ausblenden'
+    });
+    html += displayOverviewSettingsSelect(getHotkeyIcon('N') + 'Spieler mit Noobschutz', 'filter_noobs', {
+        ALL: 'Anzeigen',
+        HIDE: 'Ausblenden',
+        ONLY: 'Andere ausblenden'
+    });
+    html += displayOverviewSettingsSelect(getHotkeyIcon('U') + 'Spieler im Urlaubsmodus', 'filter_vacation', {
+        ALL: 'Anzeigen',
+        HIDE: 'Ausblenden',
+        ONLY: 'Andere ausblenden'
+    });
+    html += displayOverviewSettingsSelect(getHotkeyIcon('A') + 'Spieler der Allianz', 'filter_alliance', {
+        ALL: 'Anzeigen',
+        HIDE: 'Ausblenden',
+        ONLY: 'Andere ausblenden'
+    });
+    html += displayOverviewSettingsSelect(getHotkeyIcon('S') + 'Spieler mit Spiobericht', 'filter_spy_report', {
+        ALL: 'Anzeigen',
+        HIDE: 'Ausblenden',
+        ONLY: 'Andere ausblenden'
+    });
+    html += displayOverviewSettingsSelect(getHotkeyIcon('K') + 'Spieler mit Kampfbericht', 'filter_battle_report', {
+        ALL: 'Anzeigen',
+        HIDE: 'Ausblenden',
+        ONLY: 'Andere ausblenden'
+    });
+
     html += '<tr class="settings-filter settings-filter-thresholds"><th colspan="4">THRESHOLDS</th></tr>';
     html += displayOverviewSettingsRange(getHotkeyIcon('P', true) + 'Punkte', 'filter_score');
     html += displayOverviewSettingsRange(getHotkeyIcon('G', true) + 'Gebäudepunkte', 'filter_score_building');
@@ -57,8 +82,22 @@ window.displayOverviewSettings = function() {
     html += displayOverviewSettingsRange(getHotkeyIcon('Q', true) + 'Metall (letzte Spionage)', 'filter_metal');
     html += displayOverviewSettingsRange(getHotkeyIcon('W', true) + 'Kristall (letzte Spionage)', 'filter_crystal');
     html += displayOverviewSettingsRange(getHotkeyIcon('E', true) + 'Deuterium (letzte Spionage)', 'filter_deuterium');
+
+    html += '<tr class="settings-filter settings-filter-friends"><th colspan="4">FREUNDE &amp; FEINDE</th></tr>';
+    html += '<tr class="settings-filter settings-filter-friends"><td colspan="4" style="text-align: left">Bitte kommagetrennt die Spieler- bzw. Allianz-IDs eintragen. Die IDs findet Ihr in der URL der Spieler- bzw. Allianzprofile.<br>Betroffene Spieler und Allianzen werden in der Planetenübersicht farblich hervorgehoben.</td></tr>';
+    html += displayOverviewSettingsPlayerVar('Befreundete Allianz-IDs', 'filter_ids_friend_alliances', 'friends');
+    html += displayOverviewSettingsPlayerVar('Befreundete Spieler-IDs', 'filter_ids_friends', 'friends');
+    html += displayOverviewSettingsPlayerVar('Verfeindete Allianz-IDs', 'filter_ids_enemy_alliances', 'friends');
+    html += displayOverviewSettingsPlayerVar('Verfeindete Spieler-IDs', 'filter_ids_enemies', 'friends');
+
     html += '</table>';
     html += '</div>';
+
+    // 843
+    // 19, 933
+
+    // 262
+    // 25
 
     return html;
 }

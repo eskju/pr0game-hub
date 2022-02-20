@@ -1,5 +1,15 @@
 window.changelog = [
     {
+        version: '1.0.41',
+        date_time: '2022-02-20 08AM',
+        changes: 'added settings for individual friend- and enemy highlighting'
+    },
+    {
+        version: '1.0.40',
+        date_time: '2022-02-20 08AM',
+        changes: 'split settings into tabs'
+    },
+    {
         version: '1.0.39',
         date_time: '2022-02-20 06AM',
         changes: 'added spy history headline with linked coordinates'
