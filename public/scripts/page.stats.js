@@ -49,7 +49,7 @@ window.parsePageStatistics = function () {
             $('#row' + obj.id + 'ScoreMilitary').css(getPlayerScoreMilitaryStyle(obj, response.player));
             $('#row' + obj.id + 'ScoreDefense').css(getPlayerScoreDefenseStyle(obj, response.player));
 
-            $('#row' + obj.id + ' td:nth-child(2)').css(getPlayerRowTdStyle(obj.response.player));
+            $('#row' + obj.id + ' td:nth-child(2)').css(getPlayerRowTdStyle(obj, response.player));
         });
 
         if (response.missing_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227) {
