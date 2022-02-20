@@ -10,7 +10,7 @@ window.showSpyReportHistoryBox = function (spyReportHistory, offset) {
 
     $(spyReportHistory[offset].data).each(function (key, obj) {
         html += '<tr>';
-        html += '<td style="text-align: left;">' + obj.timestamp + '</td>';
+        html += '<td style="text-align: left;" class="tooltip" data-tooltip-content="' + obj.dateTime + '">' + obj.timestamp + ' (' + ((obj.reporter ? obj.reporter.name : '???') || '???') + ')</td>';
 
         $(obj.values).each(function (key, value) {
             value.value = value.value === null ? '---' : value.value;
