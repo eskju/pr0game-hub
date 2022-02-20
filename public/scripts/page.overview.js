@@ -606,6 +606,7 @@ window.PageOverview = function () {
         });
 
         this.container.html(getOverviewHeader() + html + '</table>');
+        this.bindSettingTabs();
         this.bindFilters();
         this.applyRowStyles(response);
         this.bindHeadlineSort();
@@ -845,5 +846,39 @@ window.PageOverview = function () {
         });
 
         return returnArray;
-    }
+    };
+
+    this.bindSettingTabs = function () {
+        $this.showSettingsTabs(getValue('settings_tab') || 'general');
+
+        $('#settingsFilterGeneral').click(function () {
+            $this.showSettingsTabs('general');
+        });
+
+        $('#settingsFilterHighlighting').click(function () {
+            $this.showSettingsTabs('highlighting');
+        });
+
+        $('#settingsFilterFilter').click(function () {
+            $this.showSettingsTabs('filter');
+        });
+
+        $('#settingsFilterThresholds').click(function () {
+            $this.showSettingsTabs('thresholds');
+        });
+
+        $('#settingsFilterFriends').click(function () {
+            $this.showSettingsTabs('friends');
+        });
+    };
+
+    this.showSettingsTabs = function (alias) {
+        setValue('settings_tab', alias);
+
+        $('.settings-filter').hide();
+        $('.settings-filter-' + alias).show();
+
+        $('.settings-button').removeClass('text-red');
+        $('.settings-button-' + alias).addClass('text-red');
+    };
 };

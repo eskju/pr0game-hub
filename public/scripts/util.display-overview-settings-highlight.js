@@ -1,5 +1,5 @@
 window.displayOverviewHighlight = function(label, alias, color, placeholder='Schwellwert') {
-    let html = '<tr>';
+    let html = '<tr class="settings-filter settings-filter-highlighting">';
     html += '<td width="50%" style="text-align: left; color: ' + getRgb(color) + '">' + label + '</td>';
     html += '<td width="4%">';
     html += '<input id="' + alias + '" class="phFilter" data-alias="' + alias + '_enable" value="1" type="checkbox" ' + (getValue(alias + '_enable') === '1' ? 'checked' : '') + '>';

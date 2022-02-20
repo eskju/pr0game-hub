@@ -1,5 +1,5 @@
 window.displayOverviewSettingsRange = function(label, alias) {
-    let html = '<tr>';
+    let html = '<tr class="settings-filter settings-filter-thresholds">';
     html += '<td width="50%" style="text-align: left">' + label + '</td>';
     html += '<td width="4%">';
     html += '<input id="' + alias + '_enable" class="phFilter" data-alias="' + alias + '_enable" value="1" type="checkbox" ' + (getValue(alias + '_enable') === '1' ? 'checked' : '') + '>';
