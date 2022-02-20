@@ -33,7 +33,7 @@ window.parsePagePlayerCard = function () {
     getJSON('players/' + playerId + '/planets', function(response) {
         if(response.status === 200) {
             $.each(JSON.parse(response.responseText), function(key, obj) {
-                tbl.append('<tr><td colspan="3" style="text-align: left">' + obj.coordinates + '</td></tr>');
+                tbl.append('<tr><td colspan="3" style="text-align: left"><a href="/game.php?page=galaxy&galaxy=' + (obj.galaxy || '') + '&system=' + (obj.system || '') + '">' + obj.coordinates + '</a></td></tr>');
             });
         }
     });
