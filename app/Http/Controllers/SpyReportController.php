@@ -45,12 +45,7 @@ class SpyReportController extends Controller
             ->where('system', $system)
             ->where('planet', $planet)
             ->orderBy('created_at')
-            ->get()
-            ->map(function (SpyReport $spyReport) {
-                $spyReport->reporter;
-
-                return $spyReport;
-            });
+            ->get();
 
         if (!$spyReports) {
             return [];
@@ -115,6 +110,7 @@ class SpyReportController extends Controller
                 }
 
                 return [
+                    'reporter' => $spyReport->reporter,
                     'timestamp' => $spyReport->created_at->subHour()->shortAbsoluteDiffForHumans(),
                     'dateTime' => $spyReport->created_at->format('d.m.Y H:i:s') . ' Uhr',
                     'values' => $values,
