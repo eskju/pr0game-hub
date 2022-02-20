@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.39',
+        date_time: '2022-02-20 06AM',
+        changes: 'added spy history headline with linked coordinates'
+    },
+    {
         version: '1.0.38',
         date_time: '2022-02-20 06AM',
         changes: 'link coords in player card to galaxy view'
