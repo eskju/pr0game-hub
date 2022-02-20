@@ -28,6 +28,7 @@ window.displayOverviewSettings = function () {
     html += '<td width="50%" style="text-align: left">Leserliches Datumsformat</td>';
     html += '<td><input type="checkbox" class="phFilter" data-alias="date_for_humans" value="1" ' + (getValue('date_for_humans') === '1' ? 'checked' : '') + '></td><td colspan="2" style="text-align: left; color: #888">z.B. "vor 5min" statt Datum/Uhrzeit. Erfordert Reload (F5)!</td>';
     html + '</tr>';
+    html += displayOverviewSettingsPlayerVar('Zeilen im Spio-Bericht (je Kategorie)', 'filter_spy_report_lines', 'general');
 
     html += '<tr class="settings-filter settings-filter-highlighting"><th colspan="4">HIGHLIGHTING</th></tr>';
     html += '<tr class="settings-filter settings-filter-highlighting"><td colspan="4"><p style="font-size: 11px; text-align: left;">Standardmäßig werden die Spielerwerte als Referenz genommen; Für Galaxie/System/Planet wird standardmäßig der aktive Planet gesetzt. Ist die Checkbox angehakt, wird der jeweilige Wert vom Eingetragenen überschrieben. Die Spieler-Werte werden in der Farbskala weiß (0 Punkte) bis Farbe (gesetztes Punktelimit) dargestellt.</p></td></tr>';

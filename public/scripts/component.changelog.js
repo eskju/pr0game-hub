@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.43',
+        date_time: '2022-02-20 03PM',
+        changes: 'added an option to limit spy report history'
+    },
+    {
         version: '1.0.42',
         date_time: '2022-02-20 02PM',
         changes: 'added reporter to spy reports'

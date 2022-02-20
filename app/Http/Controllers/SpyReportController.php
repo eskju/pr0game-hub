@@ -38,13 +38,14 @@ class SpyReportController extends Controller
         return response([]);
     }
 
-    public function history(int $galaxy, int $system, int $planet): array
+    public function history(int $galaxy, int $system, int $planet, Request $request): array
     {
         $spyReports = SpyReport::query()
             ->where('galaxy', $galaxy)
             ->where('system', $system)
             ->where('planet', $planet)
-            ->orderBy('created_at')
+            ->orderBy('created_at', 'DESC')
+            ->limit((int)($request->get('lines', 10) ?? 10))
             ->get();
 
         if (!$spyReports) {
@@ -77,6 +78,8 @@ class SpyReportController extends Controller
 
     private function getDiffList(Collection $spyReports, int $offsetStart, int $offsetEnd): array
     {
+        $spyReports = $spyReports->reverse();
+
         $this->offsets = [];
 
         return [
