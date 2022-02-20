@@ -29,7 +29,7 @@ window.PageResources = function () {
     }
 
     this.parseCapacity = function(value) {
-        let multiplier = 0;
+        let multiplier = 1;
 
       if(value.search(/K/) !== -1) {
           multiplier = 1000;
