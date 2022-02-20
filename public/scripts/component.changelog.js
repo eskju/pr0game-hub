@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.38',
+        date_time: '2022-02-20 06AM',
+        changes: 'link coords in player card to galaxy view'
+    },
+    {
         version: '1.0.37',
         date_time: '2022-02-16 01AM',
         changes: 'added expo buttons for KT'
