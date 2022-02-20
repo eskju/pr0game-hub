@@ -22,6 +22,9 @@ window.Resources = function () {
         this.sumMetal = 0;
         this.sumCrystal = 0;
         this.sumDeuterium = 0;
+        this.sumProdMetal = 0;
+        this.sumProdCrystal = 0;
+        this.sumProdDeuterium = 0;
         this.sumLimitMetal = 0;
         this.sumLimitCrystal = 0;
         this.sumLimitDeuterium = 0;
@@ -39,6 +42,9 @@ window.Resources = function () {
         $('#sumLimitMetal').html(numberFormat(this.sumLimitMetal, true));
         $('#sumLimitCrystal').html(numberFormat(this.sumLimitCrystal, true));
         $('#sumLimitDeuterium').html(numberFormat(this.sumLimitDeuterium, true));
+        $('#infoMetal').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdMetal / 24), true) + ' / Stunde<br>' +  numberFormat(this.sumProdMetal / 1000, true) + ' / Tag');
+        $('#infoCrystal').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdCrystal / 24), true) + ' / Stunde<br>' +  numberFormat(this.sumProdCrystal / 1000, true) + ' / Tag');
+        $('#infoDeuterium').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdDeuterium / 24), true) + ' / Stunde<br>' +  numberFormat(this.sumProdDeuterium / 1000, true) + ' / Tag');
 
         $('#current_metal').stop().animate({left: 0}, 1000, () => {
             $this.updateVars();
@@ -61,16 +67,19 @@ window.Resources = function () {
         switch (alias) {
             case 'metal':
                 this.sumMetal += parseInt(currentValue);
+                this.sumProdMetal += getInt(production);
                 this.sumLimitMetal += parseInt(limit);
                 break;
 
             case 'crystal':
                 this.sumCrystal += parseInt(currentValue);
+                this.sumProdCrystal += getInt(production);
                 this.sumLimitCrystal += parseInt(limit);
                 break;
 
             case 'deuterium':
                 this.sumDeuterium += parseInt(currentValue);
+                this.sumProdDeuterium += getInt(production);
                 this.sumLimitDeuterium += parseInt(limit);
                 break;
         }
