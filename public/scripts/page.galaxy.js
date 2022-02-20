@@ -58,12 +58,9 @@ window.PageGalaxy = function () {
                     }
                 });
 
-                $.each(json, function(key, obj) {
+                $.each(json, function (key, obj) {
                     $('#lastSpyReport' + obj.id).click(function () {
-                        getJSON('spy-reports/' + obj.galaxy + '/' + obj.system + '/' + obj.planet, function (spyReports) {
-                            spyReports = JSON.parse(spyReports.responseText);
-                            showSpyReportHistory(spyReports);
-                        });
+                        showSpyReportHistory(obj.galaxy, obj.system, obj.planet);
                     });
                 });
             }

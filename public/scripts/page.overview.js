@@ -456,10 +456,7 @@ window.PageOverview = function () {
             if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
 
             $('#lastSpyReport' + obj.id).click(function () {
-                getJSON('spy-reports/' + obj.galaxy + '/' + obj.system + '/' + obj.planet, function (spyReports) {
-                    spyReports = JSON.parse(spyReports.responseText);
-                    showSpyReportHistory(spyReports);
-                });
+                showSpyReportHistory(obj.galaxy, obj.system, obj.planet);
             });
         });
     };
