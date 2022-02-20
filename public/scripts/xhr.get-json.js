@@ -1,5 +1,6 @@
 window.getJSON = function (url, callback) {
-    url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
+    const concatSym = url.search(/\?/) !== -1 ? '&' : '?';
+    url = apiUrl + url + concatSym + 'api_key=' + apiKey + '&version=' + version;
 
     if (debugMode) {
         console.log('GET', url);
