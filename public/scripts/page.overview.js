@@ -123,7 +123,7 @@ window.PageOverview = function () {
                 parentObj.html(parentObj.html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
 
                 $(parentObj.find('.flight')).each(function (skey, sobj) {
-                    if(skey > 0) {
+                    if (skey > 0) {
                         $(sobj).detach().appendTo(parentObj.find('span')[1]);
                     }
                 });
@@ -444,23 +444,39 @@ window.PageOverview = function () {
     };
 
     this.applyRowStyles = function (response) {
-        $(response.players).each(function (key, obj) {
-            var selector = $('#row' + obj.id);
-            var columns = $(selector).find('td');
-            var links = selector.find('td a');
-            if (response.player) selector.css(getPlayerRowStyle(obj.player, response.player.score));
-            $(columns[6]).css(getPlayerScoreStyle(obj.player, response.player));
-            $(columns[7]).css(getPlayerScoreStyle(obj.player, response.player));
-            $(columns[8]).css(getPlayerScoreBuildingStyle(obj.player, response.player));
-            $(columns[9]).css(getPlayerScoreScienceStyle(obj.player, response.player));
-            $(columns[10]).css(getPlayerScoreMilitaryStyle(obj.player, response.player));
-            $(columns[11]).css(getPlayerScoreDefenseStyle(obj.player, response.player));
-            if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
-            if (response.player) links.css(getPlayerRowTdStyle(obj.player, response.player.score, response.player));
+        let playerRowStyle;
+        let playerScoreStyle;
+        let playerScoreBuildingStyle;
+        let playerScoreScienceStyle;
+        let playerScoreMilitaryStyle;
+        let playerScoreDefenseStyle;
+        let playerRowTdStyle;
+        let selector;
+        let columns;
+        let links;
 
-            $('#lastSpyReport' + obj.id).click(function () {
-                showSpyReportHistory(obj.galaxy, obj.system, obj.planet);
-            });
+        $(response.players).each(function (key, obj) {
+            playerRowStyle = getPlayerRowStyle(obj.player, response.player.score);
+            playerScoreStyle = getPlayerScoreStyle(obj.player, response.player);
+            playerScoreBuildingStyle = getPlayerScoreBuildingStyle(obj.player, response.player);
+            playerScoreScienceStyle = getPlayerScoreScienceStyle(obj.player, response.player);
+            playerScoreMilitaryStyle = getPlayerScoreMilitaryStyle(obj.player, response.player);
+            playerScoreDefenseStyle = getPlayerScoreDefenseStyle(obj.player, response.player);
+            playerRowTdStyle = getPlayerRowTdStyle(obj.player, response.player.score, response.player);
+
+            selector = $('#row' + obj.id);
+            columns = $(selector).find('td');
+            links = selector.find('td a');
+
+            if (response.player) selector.css(playerRowStyle);
+            $(columns[6]).css(playerScoreStyle);
+            $(columns[7]).css(playerScoreStyle);
+            $(columns[8]).css(playerScoreBuildingStyle);
+            $(columns[9]).css(playerScoreScienceStyle);
+            $(columns[10]).css(playerScoreMilitaryStyle);
+            $(columns[11]).css(playerScoreDefenseStyle);
+            if (response.player) links.css(playerRowTdStyle);
+            if (response.player) links.css(playerRowTdStyle);
         });
     };
 
@@ -588,7 +604,7 @@ window.PageOverview = function () {
 
                 html += (fleetQueueItemsDisplayed === 0 ? (obj.last_battle_report || '') : '');
                 html += ' </td>';
-                html += '<td style="text-align: right; cursor: pointer; white-space: nowrap" id="lastSpyReport' + obj.id + '">' + (obj.last_spy_report || '') + '</td>';
+                html += '<td style="text-align: right; cursor: pointer; white-space: nowrap" onclick="showSpyReportHistory(' + obj.galaxy + ', ' + obj.system + ', ' + obj.planet + ')">' + (obj.last_spy_report || '') + '</td>';
                 html += '<td>';
 
                 if (obj.external_id) {
