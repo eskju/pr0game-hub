@@ -109,23 +109,26 @@ window.PageOverview = function () {
             $(obj).parent().html($(obj).parent().html().replace(/\. Mission\: /, '</span><span>'));
         });
 
+        let parentObj;
         $('span.fleets').each(function (key, obj) {
-            if (false && $($(obj).parent()).html().search(/Verbandsangriff/) !== -1) {
-                var tmp = $($(obj).parent()).find('.flight.federation');
-                $($(obj).parent()).find('br').remove();
-                $($(obj).parent()).html($($(obj).parent()).html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g, ''));
-                $(tmp).detach().appendTo($(obj).parent().find('span')[2]);
+            parentObj = $($(obj).parent());
 
-                if ($($(obj).parent()).find('span').length > 1) {
-                    $($($(obj).parent()).find('span')[1]).remove();
-                    $($($(obj).parent()).find('span')[1]).html($($($(obj).parent()).find('span')[1]).html().replace(/span/g, 'div'));
-                }
+            if (parentObj.html().search(/Verbandsangriff/) !== -1) {
+                parentObj.find('br').remove();
+                parentObj.html(parentObj.html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g, ''));
 
-                $(obj).parent().append('<span style="color: rgb(51, 153, 102)">AKS</span>');
+                console.log(parentObj);
+                parentObj.append('<span style="color: rgb(51, 153, 102)">AKS</span>');
 
-                if ($($(obj).parent()).length > 0) {
-                    $($(obj).parent()).html($($(obj).parent()).html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
-                }
+                parentObj.html(parentObj.html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
+
+                $(parentObj.find('.flight')).each(function (skey, sobj) {
+                    if(skey > 0) {
+                        $(sobj).detach().appendTo(parentObj.find('span')[1]);
+                    }
+                });
+
+                $(parentObj.find('span')[1]).html($(parentObj.find('span')[1]).html().replace(/span/g, 'div'));
             }
         });
 
