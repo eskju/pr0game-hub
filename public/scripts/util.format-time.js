@@ -5,6 +5,10 @@ window.formatTimeDiff = function (timestamp) {
 
     const diffInSeconds = Math.ceil(timestamp - new Date().getTime() / 1000);
 
+    if(diffInSeconds < 0) {
+        return 'BEREIT';
+    }
+
     let returnString = '';
     const hours = Math.floor(diffInSeconds / 3600);
     const hoursDiff = diffInSeconds % 3600;
