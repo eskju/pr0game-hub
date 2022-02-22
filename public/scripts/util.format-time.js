@@ -6,7 +6,7 @@ window.formatTimeDiff = function (timestamp) {
     const diffInSeconds = Math.ceil(timestamp - new Date().getTime() / 1000);
 
     if(diffInSeconds < 0) {
-        return 'BEREIT';
+        return '---';
     }
 
     let returnString = '';

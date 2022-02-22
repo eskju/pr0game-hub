@@ -124,6 +124,10 @@ window.updateConfigVars = function () {
     filterDeuteriumMax = getValue('filter_deuterium_max') || '';
 }
 
+window.GetRestTimeFormat = function(seconds) {
+    return formatTimeDiff(new Date().getTime() / 1000 + seconds);
+};
+
 window.getOverviewHeader = function () {
     let header = '<table cellspacing="0"><tr><td width="50%%" style="text-align: left; padding: 5px 10px">';
     header += '<a href="https://pr0game-hub.eskju.net/download/legend.png" target="_blank"><i class="fa fa-info-circle"></i> Legende</a>';
