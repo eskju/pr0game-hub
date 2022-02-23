@@ -544,13 +544,19 @@ window.PageHub = function () {
         });
     };
 
-    this.loadPageHostileSpying = function () {
+    this.loadPageHostileSpying = function (page = 1) {
         let html = '';
 
-        getJSON('hostile-spying', function (response) {
+        getJSON('hostile-spying?page=' + page, function (response) {
             response = JSON.parse(response.responseText);
             html += '<div class="infos text-left">';
-            html += '<table class="borderless">';
+            html += '<div class="text-center">';
+
+            for (let p = 1; p <= response.last_page; p++) {
+                html += '<a style="margin-right: 1px; background: #444; border-radius: 1px; padding: 4px; color: ' + getRgb(p === response.current_page ? cRed : cWhite) + '" href="javascript:void(0)" onclick="pageHub.loadPageHostileSpying(' + p + ')">' + p + '</a>';
+            }
+
+            html += '</div><br><table class="borderless">';
             html += '<tr>';
             html += '<th class="text-left">Allianz</th>';
             html += '<th class="text-left">Spion</th>';
@@ -559,7 +565,7 @@ window.PageHub = function () {
             html += '<th class="text-left">Ziel Koords</th>';
             html += '<th class="text-left">Zeitpunkt</th>';
             html += '</tr>';
-            $.each(response, function (key, obj) {
+            $.each(response.data, function (key, obj) {
                 html += '<tr>';
                 html += '<td class="text-left">' + (obj.attacker_alliance || '---') + '</td>';
                 html += '<td class="text-left">' + (obj.attacker_name || '---') + '</td>';

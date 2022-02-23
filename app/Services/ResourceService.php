@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Pr0gameVar;
+
 class ResourceService
 {
     const MAPPING_NAMES = [
@@ -45,6 +47,13 @@ class ResourceService
         $mapping = array_flip(self::MAPPING_NAMES);
 
         return $mapping[$id] ?? null;
+    }
+
+    public static function getScoreById($id): int
+    {
+        $config = Pr0gameVar::query()->where('elementID', $id)->first();
+
+        return (int)$config->cost901 + (int)$config->cost902;
     }
 
     public static function getReverseMapping(): array

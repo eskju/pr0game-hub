@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.45',
+        date_time: '2022-02-23 01PM',
+        changes: 'added pagination for hostile spy reports'
+    },
+    {
         version: '1.0.44',
         date_time: '2022-02-20 06PM',
         changes: 'added production sum in tooltip'

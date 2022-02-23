@@ -12,7 +12,7 @@ class HostileSpyingController extends Controller
 {
     public function index()
     {
-        return HostileSpying::query()
+        $return = HostileSpying::query()
             ->select([
                 DB::raw('hostile_spying.*'),
                 DB::raw('a.name AS attacker_name'),
@@ -23,13 +23,15 @@ class HostileSpyingController extends Controller
             ->join('alliances', 'alliances.id', '=', 'a.alliance_id', 'left outer')
             ->join('players as t', 't.id', '=', 'hostile_spying.player_target_id')
             ->orderBy('created_at', 'DESC')
-            ->limit(100)
-            ->get()
-            ->map(function (HostileSpying $hostileSpying) {
-                $hostileSpying->timestamp = $hostileSpying->created_at->subHour()->shortAbsoluteDiffForHumans();
+            ->paginate(50);
 
-                return $hostileSpying;
-            });
+        $return->getCollection()->transform(function (HostileSpying $hostileSpying) {
+            $hostileSpying->timestamp = $hostileSpying->created_at->subHour()->shortAbsoluteDiffForHumans();
+
+            return $hostileSpying;
+        });
+
+        return $return;
     }
 
     public function store(Request $request)

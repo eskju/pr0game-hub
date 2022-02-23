@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GalaxyView;
 use App\Models\Planet;
 use App\Models\User;
 use App\Services\ResourceService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -107,19 +105,38 @@ class PlanetController extends Controller
         $planet->save();
 
         $items = [];
+        $total = 0;
+        $totalScore = 0;
+        $totalRecs = 0;
         for ($i = 200; $i < 300; $i++) {
             if ($alias = ResourceService::getAliasById($i)) {
                 $sum = Planet::query()
                     ->where('player_id', auth()->user()->player_id)
                     ->sum($alias);
 
+                $score = ResourceService::getScoreById($i) * $sum / 1000;
+                $recs = $i != 209 ? $score / 20 * 0.3 : 0;
                 $items[$i] = [
                     'id' => $i,
                     'name' => ResourceService::getFullNameById($i),
-                    'sum' => $sum
+                    'sum' => $sum,
+                    'score' => $score,
+                    'recs' => ceil($recs)
                 ];
+
+                $total += $sum;
+                $totalScore += $score;
+                $totalRecs += $recs;
             }
         }
+
+        $items[999] = [
+            'id' => 999,
+            'name' => 'Gesamt',
+            'sum' => $total,
+            'score' => $totalScore,
+            'recs' => ceil($totalRecs)
+        ];
 
         return response($items);
     }
