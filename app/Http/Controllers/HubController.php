@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\GalaxyView;
+use App\Models\Planet;
 use App\Models\Player;
 use Carbon\Carbon;
 use Exception;
@@ -210,5 +211,53 @@ class HubController extends Controller
         }
 
         return $return;
+    }
+
+    public function getAlliancePowerOverview(): array
+    {
+        $systems = [];
+
+        for ($g = 1; $g <= 9; $g++) {
+            for ($p = 1; $p <= 15; $p++) {
+                $systems[$g][$p] = [];
+                for ($s = 1; $s <= 400; $s++) {
+
+                    $systems[$g][$p][$s] = [
+                        'color' => null,
+                        'power' => 0,
+                        'alliance' => null,
+                        'name' => null
+                    ];
+                }
+            }
+        }
+
+        $planets = Planet::query()
+            ->select([
+                'planets.galaxy',
+                'planets.system',
+                'planets.planet',
+                DB::raw('players.name AS player'),
+                'players.score_military',
+                DB::raw('alliances.color AS color'),
+                DB::raw('alliances.name AS alliance'),
+            ])
+            ->join('players', 'players.id', '=', 'planets.player_id')
+            ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
+            ->where('players.is_inactive', 0)
+            ->orderBy('planets.system')
+            ->orderBy('planets.planet')
+            ->get();
+
+        foreach ($planets as $planet) {
+            $systems[$planet->galaxy][$planet->planet][$planet->system] = [
+                'color' => '#' . ($planet->color ?? 'ffffff'),
+                'power' => $planet->score_military ?? 0,
+                'alliance' => $planet->alliance ?? null,
+                'name' => $planet->player ?? null
+            ];
+        }
+
+        return $systems;
     }
 }

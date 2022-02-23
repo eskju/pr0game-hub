@@ -52,6 +52,7 @@ Route::get('/hub/transfer-matrix', HubController::class . '@getTransferMatrix');
 Route::get('/hub/fleet', HubController::class . '@getFleet');
 Route::get('/hub/galaxy', HubController::class . '@getGalaxyViewStatus');
 Route::get('/hub/scores', HubController::class . '@getScores');
+Route::get('/hub/galaxy-alliances', HubController::class . '@getAlliancePowerOverview');
 
 Route::post('/planets', PlanetController::class . '@storePlanetId');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');

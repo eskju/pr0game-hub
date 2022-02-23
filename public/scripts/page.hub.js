@@ -47,6 +47,11 @@ window.PageHub = function () {
                 this.loadPageChangelog();
                 break;
 
+            case 'alliance-power':
+                this.clearPage();
+                this.loadPageAlliancePower();
+                break;
+
             default:
                 alert('unknown page ' + alias);
         }
@@ -566,6 +571,40 @@ window.PageHub = function () {
             });
             html += '</table>';
             html += '</div>';
+
+            $this.container.html(html);
+        });
+    };
+
+    this.loadPageAlliancePower = function () {
+        let html = '';
+
+        getJSON('hub/galaxy-alliances', function (response) {
+            response = JSON.parse(response.responseText);
+            html += '<div class="infos text-left">';
+            html += '<table class="galaxy-power" cellspacing="0" cellpadding="0">';
+
+            $.each(response, function (galaxy, galaxyData) {
+                html += '<tr><th colspan="400" style="padding-top: 10px !important; padding-left: 0 !important;">Galaxie ' + galaxy + '</th></tr>';
+                html += '<tr>';
+                for (let i = 1; i <= 40; i++) {
+                    html += '<th width="10" style="font-size: 8px; width: 10px; padding: 0 !important;" colspan="10">' + (i * 10 - 9) + '</th>';
+                }
+                html += '</tr>';
+
+                $.each(galaxyData, function (planet, data) {
+                    html += '<tr>';
+                    $.each(data, function (system, obj) {
+                        html += '<td class="galaxy-power" width="1" style="background: transparent; font-size: 10px; padding: 0;" title="' + system + ':' + planet + ': ' + (obj.name || '---') + ' (' + (obj.alliance || '---') + ')"><div style="box-shadow: 0 0 ' + Math.round(obj.power / 250) + 'px ' + Math.round(obj.power / 1250) + 'px ' + (obj.color || '#ffffff') + '; background-color: ' + (obj.color || 'rgba(255, 255, 255, 0.1)') + '"></div></td>';
+                    });
+                    html += '</tr>';
+                });
+            });
+
+            html += '</table>';
+            html += '</div>';
+
+            $('head').append('<style>table.galaxy-powerx {border-collapse: collapse !important;} td.galaxy-power {outline: none !important; border: none !important; padding: 0 !important;}.galaxy-power > div {width: 7px !important; height: 7px !important;}</style>');
 
             $this.container.html(html);
         });
