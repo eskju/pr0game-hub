@@ -245,6 +245,7 @@ class HubController extends Controller
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
             ->where('players.is_inactive', 0)
+            ->where('players.score', '>', 5000)
             ->orderBy('planets.system')
             ->orderBy('planets.planet')
             ->get();
