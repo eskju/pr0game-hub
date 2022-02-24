@@ -364,9 +364,9 @@ class PlayerController extends Controller
 
             $min = LogPlayer::query()
                 ->where('external_id', $player->id)
-                ->whereRaw('created_at >= "' . $date . ' 00:00:00"')
-                ->whereRaw('created_at <= "' . $date . ' 23:59:59"')
-                ->orderBy('created_at')
+                ->whereRaw('created_at >= "' . Carbon::parse('2022-01-21')->addDays($i - 1)->toDateString() . ' 00:00:00"')
+                ->whereRaw('created_at <= "' . Carbon::parse('2022-01-21')->addDays($i - 1)->toDateString() . ' 23:59:59"')
+                ->orderBy('created_at', 'DESC')
                 ->firstOrNew();
 
             $max = LogPlayer::query()
