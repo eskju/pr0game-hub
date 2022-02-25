@@ -144,10 +144,12 @@ class PlayerController extends Controller
                     LIMIT 1
                 ) AS `last_spy_deuterium`'),
                 DB::raw('(
-                    SELECT TIMESTAMPDIFF(HOUR, MAX(log_player_status.created_at), NOW())
+                    SELECT created_at
                     FROM log_player_status
                     WHERE log_player_status.player_id = planets.player_id
                     AND is_inactive = 1
+                    ORDER BY created_at DESC
+                    LIMIT 1
                 ) AS `inactive_since`'),
                 DB::raw('ABS(planets.system - ' . (int)$request->get('system') . ') * 100 + ABS(planets.planet - ' . (int)$request->get('planet') . ') AS `distance`'),
                 DB::raw('`players`.`score` - (
@@ -198,6 +200,7 @@ class PlayerController extends Controller
             $return['player']['score_military'] = number_format($return['score_military'], 0, ',', '.');
             $return['score_defense'] = number_format($return['score_defense'], 0, ',', '.');
             $return['player']['score_defense'] = number_format($return['player_score_defense'], 0, ',', '.');
+            $return['inactive_since'] = $return['inactive_since'] ? Carbon::parse($return['inactive_since'])->diffInHours(Carbon::now(), true) : null;
 
             return $return;
         });
