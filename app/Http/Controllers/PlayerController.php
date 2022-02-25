@@ -70,8 +70,6 @@ class PlayerController extends Controller
 
     public function overview(Request $request): array
     {
-        Log::info(microtime(true) - LARAVEL_START . ': Overview start');
-
         $user = auth()->user();
         $user->version = $request->get('version');
         $user->save();
@@ -91,8 +89,6 @@ class PlayerController extends Controller
             $planet->player_id = auth()->user()->player_id;
             $planet->save();
         }
-
-        Log::info(microtime(true) - LARAVEL_START . ': Updated Planets');
 
         $players = Planet::query()
             ->select(
@@ -170,8 +166,6 @@ class PlayerController extends Controller
             ->where('is_deleted', 0)
             ->get();
 
-        Log::info(microtime(true) - LARAVEL_START . ': Query');
-
         $players = $players->map(function (Planet $planet) {
             $return = $planet->toArray();
             $return['last_spy_report_hours'] = $return['last_spy_report'] ? abs(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
@@ -196,8 +190,6 @@ class PlayerController extends Controller
 
             return $return;
         });
-
-        Log::info(microtime(true) - LARAVEL_START . ': Map Result');
 
         return [
             'players' => $players,

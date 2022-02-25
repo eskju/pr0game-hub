@@ -87,24 +87,28 @@ class FlightController extends Controller
             ->whereNotIn('external_id', $inboundIds)
             ->update(['is_active' => 0]);
 
+        Log::info('Step1: ' . (microtime(true) - LARAVEL_START));
         $expoStats = $this->getExpeditionStats(auth()->id());
+        Log::info('Expo Stats: ' . (microtime(true) - LARAVEL_START));
+        $flights = Flight::query()
+            ->where('user_id', auth()->id())
+            ->where('is_active', 1)
+            ->orderBy('timestamp_arrival')
+            ->orderBy('is_return')
+            ->get()
+            ->map(function (Flight $flight) {
+                $flight->metal_diff = number_format($flight->metal_diff, 0, '', '.');
+                $flight->crystal_diff = number_format($flight->crystal_diff, 0, '', '.');
+                $flight->deuterium_diff = number_format($flight->deuterium_diff, 0, '', '.');
+                $flight->score_diff = number_format($flight->score_diff, 0, '', '.');
+
+                return $flight->toArray();
+            });
+        Log::info('Flights: ' . (microtime(true) - LARAVEL_START));
 
         return response([
             'slots_used' => $this->getUsedSlots(),
-            'flights' => Flight::query()
-                ->where('user_id', auth()->id())
-                ->where('is_active', 1)
-                ->orderBy('timestamp_arrival')
-                ->orderBy('is_return')
-                ->get()
-                ->map(function (Flight $flight) {
-                    $flight->metal_diff = number_format($flight->metal_diff, 0, '', '.');
-                    $flight->crystal_diff = number_format($flight->crystal_diff, 0, '', '.');
-                    $flight->deuterium_diff = number_format($flight->deuterium_diff, 0, '', '.');
-                    $flight->score_diff = number_format($flight->score_diff, 0, '', '.');
-
-                    return $flight->toArray();
-                }),
+            'flights' => $flights,
             'expeditions' => $expoStats
         ]);
     }
