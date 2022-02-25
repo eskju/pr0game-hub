@@ -721,7 +721,7 @@ window.PageOverview = function () {
             let tooltipContent;
             let i;
 
-            this.debugTime('POST flights');
+            $this.debugTime('POST flights');
 
             response = JSON.parse(response.responseText);
             let infoTooltip;
