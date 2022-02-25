@@ -93,14 +93,66 @@ class PlayerController extends Controller
             ->select(
                 DB::raw('planets.*'),
                 DB::raw('alliances.name AS alliance_name'),
-                DB::raw('(SELECT created_at FROM battle_reports WHERE battle_reports.galaxy = planets.galaxy AND battle_reports.system = planets.system AND battle_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) as `last_battle_report`'),
-                DB::raw('(SELECT created_at FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) as `last_spy_report`'),
-                DB::raw('(SELECT metal FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_metal`'),
-                DB::raw('(SELECT crystal FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_crystal`'),
-                DB::raw('(SELECT deuterium FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_deuterium`'),
-                DB::raw('(SELECT TIMESTAMPDIFF(HOUR, MAX(log_player_status.created_at), NOW()) FROM log_player_status WHERE log_player_status.player_id = planets.player_id AND is_inactive = 1) AS `inactive_since`'),
+                DB::raw('(
+                    SELECT created_at
+                    FROM battle_reports
+                    WHERE battle_reports.galaxy = planets.galaxy
+                    AND battle_reports.system = planets.system
+                    AND battle_reports.planet = planets.planet
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                ) as `last_battle_report`'),
+                DB::raw('(
+                    SELECT created_at
+                    FROM spy_reports
+                    WHERE spy_reports.galaxy = planets.galaxy
+                    AND spy_reports.system = planets.system
+                    AND spy_reports.planet = planets.planet
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                ) as `last_spy_report`'),
+                DB::raw('(
+                    SELECT metal
+                    FROM spy_reports
+                    WHERE spy_reports.galaxy = planets.galaxy
+                    AND spy_reports.system = planets.system
+                    AND spy_reports.planet = planets.planet
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                ) AS `last_spy_metal`'),
+                DB::raw('(
+                    SELECT crystal
+                    FROM spy_reports
+                    WHERE spy_reports.galaxy = planets.galaxy
+                    AND spy_reports.system = planets.system
+                    AND spy_reports.planet = planets.planet
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                ) AS `last_spy_crystal`'),
+                DB::raw('(
+                    SELECT deuterium
+                    FROM spy_reports
+                    WHERE spy_reports.galaxy = planets.galaxy
+                    AND spy_reports.system = planets.system
+                    AND spy_reports.planet = planets.planet
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                ) AS `last_spy_deuterium`'),
+                DB::raw('(
+                    SELECT TIMESTAMPDIFF(HOUR, MAX(log_player_status.created_at), NOW())
+                    FROM log_player_status
+                    WHERE log_player_status.player_id = planets.player_id
+                    AND is_inactive = 1
+                ) AS `inactive_since`'),
                 DB::raw('ABS(planets.system - ' . (int)$request->get('system') . ') * 100 + ABS(planets.planet - ' . (int)$request->get('planet') . ') AS `distance`'),
-                DB::raw('`players`.`score` - (SELECT `score` FROM `log_players` WHERE `log_players`.`external_id` = `players`.`id` AND `log_players`.`created_at` <= "' . Carbon::now()->subDay()->format('Y-m-d H:i:s') . '" ORDER BY `created_at` DESC LIMIT 1) AS `diff`'),
+                DB::raw('`players`.`score` - (
+                    SELECT `score`
+                    FROM `log_players`
+                    WHERE `log_players`.`external_id` = `players`.`id`
+                    AND `log_players`.`created_at` <= "' . Carbon::now()->subDay()->format('Y-m-d H:i:s') . '"
+                    ORDER BY `created_at`
+                    DESC LIMIT 1
+                ) AS `diff`'),
                 DB::raw('`players`.`id` AS `player_id`'),
                 DB::raw('`players`.`name`'),
                 DB::raw('`players`.`score`'),
@@ -117,38 +169,6 @@ class PlayerController extends Controller
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
             ->where('galaxy', $request->get('show_galaxy') ?? $request->get('galaxy'))
             ->where('is_deleted', 0);
-
-        /*
-        switch ($request->get('order_by')) {
-            case 'name':
-                $query->orderBy('players.name');
-                break;
-
-            case 'alliance':
-                $query->orderBy('alliance_name');
-                break;
-
-            case 'score':
-            case 'score_building':
-            case 'score_science':
-            case 'score_military':
-            case 'score_defense':
-                $query->orderBy('players.' . $request->get('order_by'), 'DESC');
-                break;
-
-            case 'last_spy_report':
-            case 'last_spy_metal':
-            case 'last_spy_crystal':
-            case 'last_spy_deuterium':
-                $query->orderBy($request->get('order_by'), 'DESC');
-                break;
-
-            case 'distance':
-            default:
-                $query->orderBy('distance');
-                break;
-        }
-        */
 
         $planet = Planet::query()
             ->where('galaxy', $request->get('galaxy'))
@@ -190,7 +210,7 @@ class PlayerController extends Controller
                 ->get()
                 ->pluck('id'),
             'version' => '1.0.47',
-            'player' => $planet ? $planet->player : []
+            'player' => auth()->user()->player
         ];
     }
 

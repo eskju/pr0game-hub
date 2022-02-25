@@ -17,7 +17,7 @@ window.PageOverview = function () {
         this.parseOwnAttacks();
         this.prepareHtml();
         this.analyzeFleetMovement();
-        this.renderHtml();
+        // this.renderHtml();
         this.loadData();
         this.bindHotkeys();
     };
@@ -98,21 +98,23 @@ window.PageOverview = function () {
     this.prepareHtml = function () {
         let infos;
 
+
         $($('content .infos')[1]).addClass('fleet-movement');
         $($('content .infos')[1]).html($($('content .infos')[1]).html().replace(/\&nbsp\;/, '')); // remove trailing space
 
         $('span.fleets').each(function (key, obj) {
-            if ($(obj).parent()) {
-                $(obj).parent().html($(obj).parent().html().replace(/Eine deiner /, '').replace(/zum Planet/, 'zu').replace(/vom Planet/, 'von').replace(/von dem Planet/, 'von').replace(/den Planet/, '').replace(/vom Spieler/, 'von').replace(/ Eine/, 'Eine').replace(/ist im Orbit/, 'hält bei').replace(/(die|der) Position/, ''));
-            }
+            parentObj = $($(obj).parent());
+            parentObj.html(parentObj.html().replace(/Eine deiner /, '').replace(/zum Planet/, 'zu').replace(/vom Planet/, 'von').replace(/von dem Planet/, 'von').replace(/den Planet/, '').replace(/vom Spieler/, 'von').replace(/ Eine/, 'Eine').replace(/ist im Orbit/, 'hält bei').replace(/(die|der) Position/, ''));
         });
 
         $('span.fleets').each(function (key, obj) {
-            $(obj).parent().html($(obj).parent().html().replace(/Flotten/, 'Flotte'));
+            parentObj = $($(obj).parent());
+            parentObj.html(parentObj.html().replace(/Flotten/, 'Flotte'));
         });
 
         $('span.fleets').each(function (key, obj) {
-            $(obj).parent().html($(obj).parent().html().replace(/\. Mission\: /, '</span><span>'));
+            parentObj = $($(obj).parent());
+            parentObj.html(parentObj.html().replace(/\. Mission\: /, '</span><span>'));
         });
 
         let parentObj;
@@ -171,9 +173,10 @@ window.PageOverview = function () {
 
         $('content').addClass('home'); // add home class
         this.container = $('.infos:last-child'); // container for hub overview
+        const infosObj = $('.infos');
 
         $('.infos .planeto').remove(); // remove useless headlines
-        infos = $('.infos')[0].innerHTML.split('<br>'); // prepare info gathering
+        infos = infosObj[0].innerHTML.split('<br>'); // prepare info gathering
         const admins = infos[1].split(/\:\:\&nbsp\;/);
         let html = '';
 
@@ -194,7 +197,7 @@ window.PageOverview = function () {
         html += '</table>';
         html += '<a style="margin-left: 12px; margin-top: 10px; color: #888; font-size: 10px;" href="javascript:void(0)" onclick="return Dialog.PlanetAction();">Planet umbenennen/aufgeben</a>';
         html += '</td><td style="padding: 0"><canvas id="playerChart" style="height: 100px; width: 100%"></canvas><canvas id="playerChartBar" style="height: 75px; width: 100%"></canvas></td></table>';
-        $($('.infos')[0]).html(html);
+        $(infosObj[0]).html(html);
 
         displayChart();
 
@@ -302,7 +305,7 @@ window.PageOverview = function () {
 
         html += '</table>';
 
-        $($('.infos')[2]).html(html);
+        $(infosObj[2]).html(html);
     };
 
     this.checkVersion = function () {
@@ -462,52 +465,17 @@ window.PageOverview = function () {
     };
 
     this.applyRowStyles = function (response) {
-        let playerRowStyle;
-        let playerScoreStyle;
-        let playerScoreBuildingStyle;
-        let playerScoreScienceStyle;
-        let playerScoreMilitaryStyle;
-        let playerScoreDefenseStyle;
-        let playerRowTdStyle;
-        let selector;
-        let columns;
-        let links;
 
-        $(response.players).each(function (key, obj) {
-            playerRowStyle = getPlayerRowStyle(obj.player, response.player.score);
-            playerScoreStyle = getPlayerScoreStyle(obj.player, response.player);
-            playerScoreBuildingStyle = getPlayerScoreBuildingStyle(obj.player, response.player);
-            playerScoreScienceStyle = getPlayerScoreScienceStyle(obj.player, response.player);
-            playerScoreMilitaryStyle = getPlayerScoreMilitaryStyle(obj.player, response.player);
-            playerScoreDefenseStyle = getPlayerScoreDefenseStyle(obj.player, response.player);
-            playerRowTdStyle = getPlayerRowTdStyle(obj.player, response.player.score, response.player);
-
-            selector = $('#row' + obj.id);
-            columns = $(selector).find('td');
-            links = selector.find('td a');
-
-            if (response.player) selector.css(playerRowStyle);
-            $(columns[6]).css(playerScoreStyle);
-            $(columns[7]).css(playerScoreStyle);
-            $(columns[8]).css(playerScoreBuildingStyle);
-            $(columns[9]).css(playerScoreScienceStyle);
-            $(columns[10]).css(playerScoreMilitaryStyle);
-            $(columns[11]).css(playerScoreDefenseStyle);
-            if (response.player) links.css(playerRowTdStyle);
-            if (response.player) links.css(playerRowTdStyle);
-        });
     };
 
     this.bindSettingsLink = function () {
         $('#showSettings').click(function () {
             setValue('hideSettings', '0');
-            $('#phSettings').show();
             $this.renderHtml();
         });
 
         $('#hideSettings').click(function () {
             setValue('hideSettings', '1');
-            $('#phSettings').show();
             $this.renderHtml();
         });
     };
@@ -533,6 +501,7 @@ window.PageOverview = function () {
     };
 
     this.renderHtml = function () {
+        $this.debugTime();
         var html = '<table id="hubOverview" width="100%" style="max-width: 100% !important"><tr>';
         var response = this.getData();
 
@@ -568,29 +537,45 @@ window.PageOverview = function () {
         }
 
         let counter = 0;
+        let playerRowStyle;
+        let playerScoreStyle;
+        let playerScoreBuildingStyle;
+        let playerScoreScienceStyle;
+        let playerScoreMilitaryStyle;
+        let playerScoreDefenseStyle;
+        let playerLinkStyle;
+
         $(response.players).each(function (key, obj) {
             if (filterTableRow(obj, response.player)) {
                 counter++;
-                html += '<tr id="row' + obj.id + '">';
+
+                playerRowStyle = getPlayerRowStyle(obj.player, response.player.score);
+                playerScoreStyle = getPlayerScoreStyle(obj.player, response.player);
+                playerScoreBuildingStyle = getPlayerScoreBuildingStyle(obj.player, response.player);
+                playerScoreScienceStyle = getPlayerScoreScienceStyle(obj.player, response.player);
+                playerScoreMilitaryStyle = getPlayerScoreMilitaryStyle(obj.player, response.player);
+                playerScoreDefenseStyle = getPlayerScoreDefenseStyle(obj.player, response.player);
+                playerLinkStyle = getPlayerRowTdStyle(obj.player, response.player.score, response.player);
+
+                html += '<tr id="row' + obj.id + '" style="background: ' + (playerRowStyle.background || 'transparent') + '">';
                 html += '<td>' + counter + '</td>';
                 html += '<td style="text-align: left; max-width: 50px"><div style="max-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (obj.alliance_name || '---') + '</div></td>';
-                ;
                 html += '<td style="text-align: left; max-width: 100px"><div style="max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
 
                 if (obj.inactive_since !== null && obj.inactive_since < 48) {
                     html += '<span style="padding: 2px 5px; border-radius: 2px; background: ' + getRgb(cRed) + '; color: ' + getRgb(cWhite) + '; border-radius: 2px; margin-right: 5px; font-size: 10px;">' + obj.inactive_since + 'H</span>';
                 }
 
-                html += '<a href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + '</a></div></td>';
+                html += '<a style="color: ' + (playerLinkStyle.color || '') + '" href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + '</a></div></td>';
                 html += '<td id="row' + obj.id + 'Galaxy">' + (obj.galaxy || '---') + '</td>';
-                html += '<td id="row' + obj.id + 'System"><a href="/game.php?page=galaxy&galaxy=' + (obj.galaxy || '') + '&system=' + (obj.system || '') + '">' + (obj.system || '---') + '</a></td>';
+                html += '<td id="row' + obj.id + 'System"><a style="color: ' + (playerLinkStyle.color || '') + '" href="/game.php?page=galaxy&galaxy=' + (obj.galaxy || '') + '&system=' + (obj.system || '') + '">' + (obj.system || '---') + '</a></td>';
                 html += '<td id="row' + obj.id + 'Planet">' + (obj.planet || '---') + '</td>';
-                html += '<td id="row' + obj.id + 'Score">' + numberFormat(obj.player.score, true) + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreDiff">' + numberFormat((obj.diff && obj.diff > 0 ? '+' + obj.diff : obj.diff) || '0', true) + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreBuilding">' + numberFormat(obj.player.score_building, true) + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreScience">' + numberFormat(obj.player.score_science, true) + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreMilitary">' + numberFormat(obj.player.score_military, true) + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreDefense" title="Gesamt: ' + (obj.player.score_defense !== null ? numberFormat(obj.player.score_defense, false) : '???') + '">' + numberFormat(obj.score_defense, false) + '</td>';
+                html += '<td id="row' + obj.id + 'Score" style="color: ' + (playerScoreStyle.color || '') + '">' + numberFormat(obj.player.score, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreDiff" style="color: ' + (playerScoreStyle.color || '') + '">' + numberFormat((obj.diff && obj.diff > 0 ? '+' + obj.diff : obj.diff) || '0', true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreBuilding" style="color: ' + (playerScoreBuildingStyle.color || '') + '">' + numberFormat(obj.player.score_building, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreScience" style="color: ' + (playerScoreScienceStyle.color || '') + '">' + numberFormat(obj.player.score_science, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreMilitary" style="color: ' + (playerScoreMilitaryStyle.color || '') + '">' + numberFormat(obj.player.score_military, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreDefense" style="color: ' + (playerScoreDefenseStyle.color || '') + '" title="Gesamt: ' + (obj.player.score_defense !== null ? numberFormat(obj.player.score_defense, false) : '???') + '">' + numberFormat(obj.score_defense, false) + '</td>';
                 html += '<td style="text-align: right; white-space: nowrap">';
 
                 var fleetQueueItemsDisplayed = 0;
@@ -626,12 +611,12 @@ window.PageOverview = function () {
                 html += '<td>';
 
                 if (obj.external_id) {
-                    html += '[<a class="spio-link" data-id="' + obj.external_id + '" style="cursor: pointer">S</a>]';
+                    html += '[<a style="color: ' + (playerLinkStyle.color || '') + '" class="spio-link" data-id="' + obj.external_id + '" style="cursor: pointer">S</a>]';
                 } else {
-                    html += ' [<a style="color: #666" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=6" style="cursor: pointer">S</a>]';
+                    html += ' [<a style="color: ' + (playerLinkStyle.color || '') + '" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=6" style="cursor: pointer">S</a>]';
                 }
 
-                html += ' [<a  href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=1" style="cursor: pointer">A</a>]';
+                html += ' [<a style="color: ' + (playerLinkStyle.color || '') + '" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=1" style="cursor: pointer">A</a>]';
 
                 html += '</td>';
                 html += '<td style="text-align: right;">' + numberFormat(obj.last_spy_metal, true) + '</td>';
@@ -651,6 +636,7 @@ window.PageOverview = function () {
         this.bindSpyLinks();
         this.checkUpdatableIds(response);
 
+        $this.debugTime('renderHTML');
     }
 
     this.analyzeFleetMovement = function () {
@@ -900,34 +886,34 @@ window.PageOverview = function () {
     };
 
     this.bindSettingTabs = function () {
-        $this.showSettingsTabs(getValue('settings_tab') || 'general');
+        this.showSettingsTabs(getValue('settings_tab') || 'general');
 
         $('#settingsFilterGeneral').click(function () {
-            $this.showSettingsTabs('general');
+            pageOverview.showSettingsTabs('general');
         });
 
         $('#settingsFilterHighlighting').click(function () {
-            $this.showSettingsTabs('highlighting');
+            pageOverview.showSettingsTabs('highlighting');
         });
 
         $('#settingsFilterFilter').click(function () {
-            $this.showSettingsTabs('filter');
+            pageOverview.showSettingsTabs('filter');
         });
 
         $('#settingsFilterThresholds').click(function () {
-            $this.showSettingsTabs('thresholds');
+            pageOverview.showSettingsTabs('thresholds');
         });
 
         $('#settingsFilterFriends').click(function () {
-            $this.showSettingsTabs('friends');
+            pageOverview.showSettingsTabs('friends');
         });
     };
 
     this.showSettingsTabs = function (alias) {
         setValue('settings_tab', alias);
 
-        $('.settings-filter').hide();
-        $('.settings-filter-' + alias).show();
+        $('.settings-filter').css('display', 'none');
+        $('.settings-filter-' + alias).css('display', '');
 
         $('.settings-button').removeClass('text-red');
         $('.settings-button-' + alias).addClass('text-red');
