@@ -366,6 +366,7 @@ window.PageOverview = function () {
             order_direction: getValue('orderDirection'),
             date_for_humans: (getValue('date_for_humans') || '0') === '1'
         }, function (response) {
+            $this.debugTime('POST `players/overview`');
             setValue($this.cacheKey, response.responseText);
             $this.setLoading(false);
             $this.checkVersion();
@@ -695,6 +696,8 @@ window.PageOverview = function () {
         $('#sumFleetDeuterium').html(numberFormat(this.sumFleetDeuterium, true));
 
         postJSON('flights', {activities}, function (response) {
+            $this.debugTime('POST `flights`');
+
             let html;
             let tooltipContent;
             let i;
