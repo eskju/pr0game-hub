@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.46',
+        date_time: '2022-02-25 01PM',
+        changes: 'added resources in flights to overview'
+    },
+    {
         version: '1.0.45',
         date_time: '2022-02-23 01PM',
         changes: 'added pagination for hostile spy reports'

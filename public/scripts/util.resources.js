@@ -36,9 +36,9 @@ window.Resources = function () {
             $this.updateVar(coords, 'deuterium');
         });
 
-        $('#sumMetal').html(numberFormat(this.sumMetal, true));
-        $('#sumCrystal').html(numberFormat(this.sumCrystal, true));
-        $('#sumDeuterium').html(numberFormat(this.sumDeuterium, true));
+        $('#sumMetal').html(numberFormat(this.sumMetal + (pageOverview ? pageOverview.sumFleetMetal : 0 || 0), true));
+        $('#sumCrystal').html(numberFormat(this.sumCrystal + (pageOverview ? pageOverview.sumFleetCrystal : 0 || 0), true));
+        $('#sumDeuterium').html(numberFormat(this.sumDeuterium + (pageOverview ? pageOverview.sumFleetDeuterium : 0 || 0), true));
         $('#sumLimitMetal').html(numberFormat(this.sumLimitMetal, true));
         $('#sumLimitCrystal').html(numberFormat(this.sumLimitCrystal, true));
         $('#sumLimitDeuterium').html(numberFormat(this.sumLimitDeuterium, true));

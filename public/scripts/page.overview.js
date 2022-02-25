@@ -7,6 +7,10 @@ window.PageOverview = function () {
     this.request = null;
     this.fleetQueue = [];
 
+    this.sumFleetMetal = 0;
+    this.sumFleetCrystal = 0;
+    this.sumFleetDeuterium = 0;
+
     this.init = function () {
         this.parseOwnAttacks();
         this.prepareHtml();
@@ -116,10 +120,7 @@ window.PageOverview = function () {
             if (parentObj.html().search(/Verbandsangriff/) !== -1) {
                 parentObj.find('br').remove();
                 parentObj.html(parentObj.html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g, ''));
-
-                console.log(parentObj);
                 parentObj.append('<span style="color: rgb(51, 153, 102)">AKS</span>');
-
                 parentObj.html(parentObj.html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
 
                 $(parentObj.find('.flight')).each(function (skey, sobj) {
@@ -262,17 +263,28 @@ window.PageOverview = function () {
 
             if (!dateTime) {
                 html += '<td class="text-right">---</td>';
-                html += '<td class="text-right">---</td>';
             } else {
-                html += '<td class="text-right tooltip" colspan="2" data-tooltip-content="<b>Es fehlen:</b></br>';
-                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'metal') + ' / ' +  numberFormat(getInt(getValue(coords[0] + '_notification_metal'))) + ' Metall<br>';
-                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'crystal') + ' / ' +  numberFormat(getInt(getValue(coords[0] + '_notification_crystal'))) + ' Kristall<br>';
-                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'deuterium') + ' / ' +  numberFormat(getInt(getValue(coords[0] + '_notification_deuterium'))) + ' Deuterium';
+                html += '<td class="text-right tooltip" data-tooltip-content="<b>Es fehlen:</b></br>';
+                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'metal') + ' / ' + numberFormat(getInt(getValue(coords[0] + '_notification_metal'))) + ' Metall<br>';
+                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'crystal') + ' / ' + numberFormat(getInt(getValue(coords[0] + '_notification_crystal'))) + ' Kristall<br>';
+                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'deuterium') + ' / ' + numberFormat(getInt(getValue(coords[0] + '_notification_deuterium'))) + ' Deuterium';
                 html += '"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
             }
 
             html += '</tr>';
         });
+
+        html += '<tr>';
+        html += '<td class="text-left">Flotten</td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '<td class="text-right tooltip" id="infoFleetMetal"><span id="sumFleetMetal"></span></td>';
+        html += '<td class="text-right tooltip" id="infoFleetCrystal"><span id="sumFleetCrystal"></span></td>';
+        html += '<td class="text-right tooltip" id="infoFleetDeuterium"><span id="sumFleetDeuterium"></span></td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '<td class="text-right" style="color: #888">---</td>';
+        html += '</tr>';
 
         html += '<tr>';
         html += '<td class="text-left">Summe</td>';
@@ -327,37 +339,37 @@ window.PageOverview = function () {
                 });
             }
         });
-    },
+    };
 
-        this.loadData = function () {
-            if (this.request !== null) {
-                this.request.abort();
-            }
+    this.loadData = function () {
+        if (this.request !== null) {
+            this.request.abort();
+        }
 
-            const ownPlanets = [];
-            let coords;
-            $('#planetSelector option').each(function (key, obj) {
-                coords = getCoordinates(obj.innerHTML);
-                ownPlanets.push(coords[0]);
-            });
+        const ownPlanets = [];
+        let coords;
+        $('#planetSelector option').each(function (key, obj) {
+            coords = getCoordinates(obj.innerHTML);
+            ownPlanets.push(coords[0]);
+        });
 
-            this.setLoading(true);
-            this.request = postJSON('players/overview', {
-                galaxy: ownGalaxy,
-                system: ownSystem,
-                planet: ownPlanet,
-                ownPlanets: ownPlanets,
-                show_galaxy: getValue('show_galaxy_enable') === '1' ? (getValue('show_galaxy_value') || ownGalaxy) : ownGalaxy,
-                order_by: getValue('orderBy'),
-                order_direction: getValue('orderDirection'),
-                date_for_humans: (getValue('date_for_humans') || '0') === '1'
-            }, function (response) {
-                setValue($this.cacheKey, response.responseText);
-                $this.setLoading(false);
-                $this.checkVersion();
-                $this.renderHtml();
-            });
-        };
+        this.setLoading(true);
+        this.request = postJSON('players/overview', {
+            galaxy: ownGalaxy,
+            system: ownSystem,
+            planet: ownPlanet,
+            ownPlanets: ownPlanets,
+            show_galaxy: getValue('show_galaxy_enable') === '1' ? (getValue('show_galaxy_value') || ownGalaxy) : ownGalaxy,
+            order_by: getValue('orderBy'),
+            order_direction: getValue('orderDirection'),
+            date_for_humans: (getValue('date_for_humans') || '0') === '1'
+        }, function (response) {
+            setValue($this.cacheKey, response.responseText);
+            $this.setLoading(false);
+            $this.checkVersion();
+            $this.renderHtml();
+        });
+    };
 
     this.getData = function () {
         var content = getValue(this.cacheKey);
@@ -645,6 +657,7 @@ window.PageOverview = function () {
         let timeAndId;
         let id;
         let type;
+        let resources;
 
         $('.fleet-movement ul li').each(function (key, obj) {
             columns = $($(obj).children());
@@ -656,6 +669,7 @@ window.PageOverview = function () {
             $(obj).attr('id', 'fleet' + id + '-' + ($(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? '1' : '0'));
 
             if (coordinates && coordinates.length > 0) {
+                resources = $this.getResources($(columns[2]).find('span.textForBlind'));
                 activities.push({
                     external_id: id, // fleet time
                     is_return: $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1, // if true try to assign an outbound flight by coords and timestamps
@@ -665,11 +679,19 @@ window.PageOverview = function () {
                     type: type, // e.g. 'attack', 'transport', ..
                     planet_start_coordinates: coordinates[1], // start-planet's coordinates
                     planet_target_coordinates: coordinates[3], // target-planet's coordinates
-                    resources: $this.getResources($(columns[2]).find('span.textForBlind')), // resources carried
+                    resources: resources, // resources carried
                     ships: $this.getShips($(columns[1]).find('span.textForBlind')), // ship amounts
                 });
+
+                $this.sumFleetMetal += getInt(resources['metal'] || 0);
+                $this.sumFleetCrystal += getInt(resources['crystal'] || 0);
+                $this.sumFleetDeuterium += getInt(resources['deuterium'] || 0);
             }
         });
+
+        $('#sumFleetMetal').html(numberFormat(this.sumFleetMetal, true));
+        $('#sumFleetCrystal').html(numberFormat(this.sumFleetCrystal, true));
+        $('#sumFleetDeuterium').html(numberFormat(this.sumFleetDeuterium, true));
 
         postJSON('flights', {activities}, function (response) {
             let html;
