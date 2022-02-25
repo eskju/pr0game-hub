@@ -356,6 +356,7 @@ window.PageOverview = function () {
         });
 
         this.setLoading(true);
+        this.debugTime();
         this.request = postJSON('players/overview', {
             galaxy: ownGalaxy,
             system: ownSystem,
@@ -695,6 +696,7 @@ window.PageOverview = function () {
         $('#sumFleetCrystal').html(numberFormat(this.sumFleetCrystal, true));
         $('#sumFleetDeuterium').html(numberFormat(this.sumFleetDeuterium, true));
 
+        $this.debugTime();
         postJSON('flights', {activities}, function (response) {
             $this.debugTime('POST `flights`');
 
@@ -931,8 +933,11 @@ window.PageOverview = function () {
         $('.settings-button-' + alias).addClass('text-red');
     };
 
-    this.debugTime = function(message) {
-        console.log('debugTime', (new Date().getTime() - this.renderTime) / 1000, message);
+    this.debugTime = function (message = null) {
+        if (message) {
+            console.log('debugTime', (new Date().getTime() - this.renderTime) / 1000, message);
+        }
+
         this.renderTime = new Date().getTime();
     };
 };
