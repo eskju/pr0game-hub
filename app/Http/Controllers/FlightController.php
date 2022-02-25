@@ -16,6 +16,8 @@ class FlightController extends Controller
 {
     public function store(Request $request)
     {
+        Log::info('Controller: ' . (microtime(true) - LARAVEL_START));
+
         $outboundIds = [];
         $inboundIds = [];
         $inboundOutboundIds = [];
