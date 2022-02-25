@@ -87,9 +87,7 @@ class FlightController extends Controller
             ->whereNotIn('external_id', $inboundIds)
             ->update(['is_active' => 0]);
 
-        Log::info('Step1: ' . (microtime(true) - LARAVEL_START));
         $expoStats = $this->getExpeditionStats(auth()->id());
-        Log::info('Expo Stats: ' . (microtime(true) - LARAVEL_START));
 
         return response([
             'slots_used' => $this->getUsedSlots(),
