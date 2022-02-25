@@ -1,6 +1,8 @@
 window.PageOverview = function () {
     const $this = this;
 
+    this.renderTime = new Date().getTime();
+
     this.isLoading = false;
     this.cacheKey = 'overviewData';
     this.container = null;
@@ -301,6 +303,7 @@ window.PageOverview = function () {
         html += '</table>';
 
         $($('.infos')[2]).html(html);
+        this.debugTime('prepareHtml');
     };
 
     this.checkVersion = function () {
@@ -309,6 +312,8 @@ window.PageOverview = function () {
         if (data && isNewerVersionAvailable(data.version)) {
             $('body').prepend('<div style="padding: 10px 15px; background: ' + getRgb(cRed) + '; color: ' + getRgb(cWhite) + '; z-index: 10000; position: fixed; top: 0; left: 0; right: 0;" id="progress-bar"><i class="fa fa-exclamation-triangle"></i>  Eine neue Plugin-Version v<a href="https://pr0game-hub.eskju.net/download/releases/pr0game-hub.v' + data.version + '.js" target="_blank" download>' + data.version + '</a> ist verf&uuml;gbar.</div>');
         }
+
+        this.debugTime('checkVersion');
     };
 
     this.parseOwnAttacks = function () {
@@ -339,6 +344,8 @@ window.PageOverview = function () {
                 });
             }
         });
+
+        this.debugTime('parseOwnAttacks');
     };
 
     this.loadData = function () {
@@ -364,6 +371,7 @@ window.PageOverview = function () {
             order_direction: getValue('orderDirection'),
             date_for_humans: (getValue('date_for_humans') || '0') === '1'
         }, function (response) {
+            $this.debugTime('POST players/overview');
             setValue($this.cacheKey, response.responseText);
             $this.setLoading(false);
             $this.checkVersion();
@@ -377,6 +385,7 @@ window.PageOverview = function () {
         try {
             var fn = $this.sortData;
             var data = JSON.parse(content);
+            this.debugTime('JSON.parse data');
 
             // sort player list
             data.players = data.players.sort(fn);
@@ -390,7 +399,6 @@ window.PageOverview = function () {
                 player: null
             };
         }
-        ;
     };
 
     this.bindFilters = function () {
@@ -403,6 +411,8 @@ window.PageOverview = function () {
                 }
             });
         });
+
+        this.debugTime('bindFilters');
     };
 
     this.bindHeadlineSort = function () {
@@ -422,6 +432,8 @@ window.PageOverview = function () {
                 $this.renderHtml();
             });
         });
+
+        this.debugTime('bindHeadlineSort');
     };
 
     this.orderBy = function (orderBy, orderDirection) {
@@ -432,6 +444,7 @@ window.PageOverview = function () {
         setValue('orderBy', orderBy);
         setValue('orderDirection', orderDirection);
 
+        this.debugTime('orderBy');
     }
 
     this.sortData = function (a, b) {
@@ -456,6 +469,7 @@ window.PageOverview = function () {
             bVal = bVal.toLowerCase();
         }
 
+        this.debugTime('sortData');
         return ((aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0) * invertSort;
     };
 
@@ -494,6 +508,8 @@ window.PageOverview = function () {
             if (response.player) links.css(playerRowTdStyle);
             if (response.player) links.css(playerRowTdStyle);
         });
+
+        this.debugTime('applyRowStyles');
     };
 
     this.bindSettingsLink = function () {
@@ -508,6 +524,8 @@ window.PageOverview = function () {
             $('#phSettings').show();
             $this.renderHtml();
         });
+
+        this.debugTime('bindSettingsLink');
     };
 
     this.bindSpyLinks = function () {
@@ -516,6 +534,8 @@ window.PageOverview = function () {
                 showMessage(data.mess, (data.code === 600 ? 'success' : 'danger'));
             });
         });
+
+        this.debugTime('bindSpyLinks');
     };
 
     this.checkUpdatableIds = function (response) {
@@ -640,6 +660,7 @@ window.PageOverview = function () {
             }
         });
 
+        this.debugTime('renderHtml');
         this.container.html(getOverviewHeader() + html + '</table>');
         this.bindSettingTabs();
         this.bindFilters();
@@ -693,10 +714,14 @@ window.PageOverview = function () {
         $('#sumFleetCrystal').html(numberFormat(this.sumFleetCrystal, true));
         $('#sumFleetDeuterium').html(numberFormat(this.sumFleetDeuterium, true));
 
+        this.debugTime('analyzeFleetMovement');
+
         postJSON('flights', {activities}, function (response) {
             let html;
             let tooltipContent;
             let i;
+
+            this.debugTime('POST flights');
 
             response = JSON.parse(response.responseText);
             let infoTooltip;
@@ -856,6 +881,8 @@ window.PageOverview = function () {
             html += '<small class="text-left" style="display: block; color: ' + getRgb(cRed) + '; padding-top: 10px; margin-top: 10px; border-top: 1px solid #222">Flottenbewegungen werden nur erfasst, wenn sowohl während Hin- als auch Rückflug die Übersicht mit diesem Plugin geöffnet wurde. Metall/Kristall/Deuterium/Punkte berechnen den Ressourcengewinn, sowie Schiffsgewinn und -verlust (Produktionskosten) mit ein. Komplettverluste (depleted/black hole) sowie Expo-Abbrüche werden <u>NICHT</u> erfasst.</small>';
             $('.fleet-movement').append(html);
         });
+
+        this.debugTime('analyzeFleetMovement render');
     };
 
     this.getResources = function (cell) {
@@ -865,6 +892,8 @@ window.PageOverview = function () {
 
         const cellContent = $(cell).html();
         const resources = cellContent.match(/([.0-9]+) Metall\; ([.0-9]+) Kristall\; ([.0-9]+) Deuterium/);
+
+        this.debugTime('getResources');
 
         return {
             metal: resources[1],
@@ -889,6 +918,8 @@ window.PageOverview = function () {
                 returnArray[parsedShip[2]] = parsedShip[1];
             }
         });
+
+        this.debugTime('getShips');
 
         return returnArray;
     };
@@ -915,6 +946,8 @@ window.PageOverview = function () {
         $('#settingsFilterFriends').click(function () {
             $this.showSettingsTabs('friends');
         });
+
+        this.debugTime('bindSettingsTab');
     };
 
     this.showSettingsTabs = function (alias) {
@@ -925,5 +958,12 @@ window.PageOverview = function () {
 
         $('.settings-button').removeClass('text-red');
         $('.settings-button-' + alias).addClass('text-red');
+
+        this.debugTime('showSettingsTab');
+    };
+
+    this.debugTime = function(message) {
+        console.log('debugTime', (new Date().getTime() - this.renderTime) / 1000, message);
+        this.renderTime = new Date().getTime();
     };
 };

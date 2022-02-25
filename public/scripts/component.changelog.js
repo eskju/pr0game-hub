@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.47',
+        date_time: '2022-02-25 02PM',
+        changes: 'debugging output'
+    },
+    {
         version: '1.0.46',
         date_time: '2022-02-25 01PM',
         changes: 'added resources in flights to overview'

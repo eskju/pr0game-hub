@@ -11,7 +11,7 @@ window.getJSON = function (url, callback) {
         url: url,
         onload: function (response) {
             if (debugMode) {
-                console.log(response.responseText);
+                console.log(response.status);
             }
 
             callback(response);
