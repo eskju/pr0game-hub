@@ -264,7 +264,11 @@ window.PageOverview = function () {
                 html += '<td class="text-right">---</td>';
                 html += '<td class="text-right">---</td>';
             } else {
-                html += '<td class="text-right tooltip" colspan="2" data-tooltip-content="<b>Es fehlen:</b></br>' + (new PlanetResourceNotification().getDiffForResource(coords[0], 'metal')) + ' Metall, ' + new PlanetResourceNotification().getDiffForResource(coords[0], 'crystal') + ' Kristall, ' + new PlanetResourceNotification().getDiffForResource(coords[0], 'deuterium') + ' Deuterium"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
+                html += '<td class="text-right tooltip" colspan="2" data-tooltip-content="<b>Es fehlen:</b></br>';
+                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'metal') + ' / ' +  getInt(getValue(coords[0] + '_notification_metal')) + ' Metall<br>';
+                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'crystal') + ' / ' +  getInt(getValue(coords[0] + '_notification_crystal')) + ' Kristall<br>';
+                html += new PlanetResourceNotification().getDiffForResource(coords[0], 'deuterium') + ' / ' +  getInt(getValue(coords[0] + '_notification_deuterium')) + ' Deuterium';
+                html += '"><i class="fa fa-bell-slash"  onclick="(new PlanetResourceNotification().removeNotification(\'' + coords[0] + '\'))"></i> <span class="notification-timer" data-timestamp="' + dateTime + '">' + formatTimeDiff(dateTime) + '</span></td>';
             }
 
             html += '</tr>';
