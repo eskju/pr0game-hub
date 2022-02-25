@@ -154,8 +154,8 @@ window.filterTableRow = function (obj, player) {
     if (filterInactive === 'ONLY' && obj.player.is_inactive === 0) return false;
 
     if (player !== null) {
-        if (filterNoobs === 'HIDE' && obj.player.is_inactive === 0 && getInt(obj.player.score) < getInt(player.score) / 5) return false;
-        if (filterNoobs === 'ONLY' && obj.player.is_inactive === 0 && getInt(obj.player.score) >= getInt(player.score) / 5) return false;
+        if (filterNoobs === 'HIDE' && obj.player.is_inactive === 0 && getInt(obj.player.score) < 5000 && getInt(obj.player.score) < getInt(player.score) / 5) return false;
+        if (filterNoobs === 'ONLY' && obj.player.is_inactive === 0 && getInt(obj.player.score) < 5000 && getInt(obj.player.score) >= getInt(player.score) / 5) return false;
     }
     if (filterVacation === 'HIDE' && obj.player.on_vacation === 1) return false;
     if (filterVacation === 'ONLY' && obj.player.on_vacation === 0) return false;
