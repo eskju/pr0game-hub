@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.48',
+        date_time: '2022-02-26 01AM',
+        changes: 'performance'
+    },
+    {
         version: '1.0.47',
         date_time: '2022-02-25 02PM',
         changes: 'debugging output'
