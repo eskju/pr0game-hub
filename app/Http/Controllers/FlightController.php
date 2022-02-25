@@ -22,10 +22,12 @@ class FlightController extends Controller
         $inboundIds = [];
         $inboundOutboundIds = [];
 
+        /** @var Flight $activity */
         foreach ($request->get('activities') ?? [] as $activity) {
             $activity = (object)$activity;
             $inboundOutboundIds[] = $activity->external_id ?? null;
             $inboundOutboundIds[] = $activity->outbound_flight_id ?? $activity->external_id ?? null;
+            $outboundFlight = null;
 
             $flight = Flight::query()
                 ->where('external_id', $activity->external_id ?? null)
