@@ -77,6 +77,8 @@ class FlightController extends Controller
             $flight->save();
         }
 
+        Log::info('Get Data: ' . (microtime(true) - LARAVEL_START));
+
         Flight::query()
             ->where('user_id', auth()->id())
             ->where('is_active', '=', 1)
@@ -91,7 +93,7 @@ class FlightController extends Controller
             ->whereNotIn('external_id', $inboundIds)
             ->update(['is_active' => 0]);
 
-        Log::info('Step1: ' . (microtime(true) - LARAVEL_START));
+        Log::info('Updates: ' . (microtime(true) - LARAVEL_START));
         $expoStats = $this->getExpeditionStats(auth()->id());
         Log::info('Expo Stats: ' . (microtime(true) - LARAVEL_START));
         $flights = Flight::query()
