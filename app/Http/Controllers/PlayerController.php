@@ -118,6 +118,7 @@ class PlayerController extends Controller
             ->where('galaxy', $request->get('show_galaxy') ?? $request->get('galaxy'))
             ->where('is_deleted', 0);
 
+        /*
         switch ($request->get('order_by')) {
             case 'name':
                 $query->orderBy('players.name');
@@ -147,6 +148,7 @@ class PlayerController extends Controller
                 $query->orderBy('distance');
                 break;
         }
+        */
 
         $planet = Planet::query()
             ->where('galaxy', $request->get('galaxy'))
