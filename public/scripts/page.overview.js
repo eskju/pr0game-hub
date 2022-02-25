@@ -17,7 +17,7 @@ window.PageOverview = function () {
         this.parseOwnAttacks();
         this.prepareHtml();
         this.analyzeFleetMovement();
-        // this.renderHtml();
+        this.renderHtml();
         this.loadData();
         this.bindHotkeys();
     };
