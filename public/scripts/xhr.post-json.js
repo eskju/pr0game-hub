@@ -13,10 +13,6 @@ window.postJSON = function (url, data, callback) {
             'Content-Type': 'application/json'
         },
         onload: function (response) {
-            if (debugMode) {
-                console.log(response.status);
-            }
-
             callback(response);
         },
         onerror: function (response) {

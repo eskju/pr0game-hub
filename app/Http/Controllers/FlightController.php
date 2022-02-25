@@ -25,7 +25,12 @@ class FlightController extends Controller
             $inboundOutboundIds[] = $activity->external_id ?? null;
             $inboundOutboundIds[] = $activity->outbound_flight_id ?? $activity->external_id ?? null;
 
-            if (!$flight = Flight::query()->where('external_id', $activity->external_id ?? null)->where('is_return', '=', (int)$activity->is_return ?? null)->first()) {
+            $flight = Flight::query()
+                ->where('external_id', $activity->external_id ?? null)
+                ->where('is_return', '=', (int)$activity->is_return ?? null)
+                ->first();
+
+            if (!$flight) {
                 $flight = new Flight();
                 $flight->external_id = $activity->external_id ?? null;
                 $flight->is_return = (int)$activity->is_return ?? null;
@@ -82,6 +87,10 @@ class FlightController extends Controller
             ->whereNotIn('external_id', $inboundIds)
             ->update(['is_active' => 0]);
 
+        Log::info('Step1: ' . (microtime(true) - LARAVEL_START));
+        $expoStats = $this->getExpeditionStats(auth()->id());
+        Log::info('Expo Stats: ' . (microtime(true) - LARAVEL_START));
+
         return response([
             'slots_used' => $this->getUsedSlots(),
             'flights' => Flight::query()
@@ -98,7 +107,7 @@ class FlightController extends Controller
 
                     return $flight->toArray();
                 }),
-            'expeditions' => $this->getExpeditionStats(auth()->id())
+            'expeditions' => $expoStats
         ]);
     }
 
