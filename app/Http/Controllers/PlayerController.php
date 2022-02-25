@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PlayerController extends Controller
 {
@@ -69,6 +70,8 @@ class PlayerController extends Controller
 
     public function overview(Request $request): array
     {
+        Log::info(microtime(true) - LARAVEL_START . ': Overview start');
+
         $user = auth()->user();
         $user->version = $request->get('version');
         $user->save();
@@ -89,7 +92,9 @@ class PlayerController extends Controller
             $planet->save();
         }
 
-        $query = Planet::query()
+        Log::info(microtime(true) - LARAVEL_START . ': Updated Planets');
+
+        $players = Planet::query()
             ->select(
                 DB::raw('planets.*'),
                 DB::raw('alliances.name AS alliance_name'),
@@ -168,40 +173,39 @@ class PlayerController extends Controller
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->join('alliances', 'alliances.id', '=', 'players.alliance_id', 'left outer')
             ->where('galaxy', $request->get('show_galaxy') ?? $request->get('galaxy'))
-            ->where('is_deleted', 0);
+            ->where('is_deleted', 0)
+            ->get();
 
-        $planet = Planet::query()
-            ->where('galaxy', $request->get('galaxy'))
-            ->where('system', $request->get('system'))
-            ->where('planet', $request->get('planet'))
-            ->first();
+        Log::info(microtime(true) - LARAVEL_START . ': Query');
+
+        $players = $players->map(function (Planet $planet) {
+            $return = $planet->toArray();
+            $return['last_spy_report_hours'] = $return['last_spy_report'] ? abs(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
+            $return['last_spy_report'] = $return['last_spy_report'] ? $this->getDateTime(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()) : '';
+            $return['last_battle_report_hours'] = $return['last_battle_report'] ? abs(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
+            $return['last_battle_report'] = $return['last_battle_report'] ? $this->getDateTime(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()) : '';
+            $return['last_spy_metal'] = $return['last_spy_metal'] ? number_format($return['last_spy_metal'], 0, ',', '.') : '';
+            $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '';
+            $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
+            $return['player']['id'] = $return['player_id'];
+            $return['player']['alliance_id'] = $return['alliance_id'];
+            $return['player']['name'] = $return['name'];
+            $return['player']['is_inactive'] = $return['is_inactive'];
+            $return['player']['on_vacation'] = $return['on_vacation'];
+            $return['player']['score'] = number_format($return['score'], 0, ',', '.');
+            $return['player']['score_building'] = number_format($return['score_building'], 0, ',', '.');
+            $return['player']['score_science'] = number_format($return['score_science'], 0, ',', '.');
+            $return['player']['score_military'] = number_format($return['score_military'], 0, ',', '.');
+            $return['score_defense'] = number_format($return['score_defense'], 0, ',', '.');
+            $return['player']['score_defense'] = number_format($return['player_score_defense'], 0, ',', '.');
+
+            return $return;
+        });
+
+        Log::info(microtime(true) - LARAVEL_START . ': Map Result');
 
         return [
-            'players' => $query
-                ->get()
-                ->map(function (Planet $planet) {
-                    $return = $planet->toArray();
-                    $return['last_spy_report_hours'] = $return['last_spy_report'] ? abs(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
-                    $return['last_spy_report'] = $return['last_spy_report'] ? $this->getDateTime(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()) : '';
-                    $return['last_battle_report_hours'] = $return['last_battle_report'] ? abs(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
-                    $return['last_battle_report'] = $return['last_battle_report'] ? $this->getDateTime(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()) : '';
-                    $return['last_spy_metal'] = $return['last_spy_metal'] ? number_format($return['last_spy_metal'], 0, ',', '.') : '';
-                    $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '';
-                    $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
-                    $return['player']['id'] = $return['player_id'];
-                    $return['player']['alliance_id'] = $return['alliance_id'];
-                    $return['player']['name'] = $return['name'];
-                    $return['player']['is_inactive'] = $return['is_inactive'];
-                    $return['player']['on_vacation'] = $return['on_vacation'];
-                    $return['player']['score'] = number_format($return['score'], 0, ',', '.');
-                    $return['player']['score_building'] = number_format($return['score_building'], 0, ',', '.');
-                    $return['player']['score_science'] = number_format($return['score_science'], 0, ',', '.');
-                    $return['player']['score_military'] = number_format($return['score_military'], 0, ',', '.');
-                    $return['score_defense'] = number_format($return['score_defense'], 0, ',', '.');
-                    $return['player']['score_defense'] = number_format($return['player_score_defense'], 0, ',', '.');
-
-                    return $return;
-                }),
+            'players' => $players,
             'outdated_ids' => Player::query()
                 ->select('id')
                 ->where('updated_at', '<', Carbon::now()->subHours(8))
