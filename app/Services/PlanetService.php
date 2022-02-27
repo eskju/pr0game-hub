@@ -28,19 +28,38 @@ class PlanetService
             return;
         }
 
-        if ($spyReport->rocket_launchers !== null) {
-            $scoreDefense = 0;
-            $scoreDefense += (int)$spyReport->rocket_launchers * 2;
-            $scoreDefense += (int)$spyReport->light_laser_turrets * 2;
-            $scoreDefense += (int)$spyReport->heavy_laser_turrets * 8;
-            $scoreDefense += (int)$spyReport->ion_turrets * 8;
-            $scoreDefense += (int)$spyReport->gauss_canons * 35;
-            $scoreDefense += (int)$spyReport->plasma_turrets * 100;
-            $scoreDefense += (int)$spyReport->small_shields * 20;
-            $scoreDefense += (int)$spyReport->large_shields * 100;
+        $planet->update(collect($spyReport->toArray())->filter(function ($value) {
+            return $value !== null;
+        })->toArray());
 
-            $planet->score_defense = $scoreDefense;
-            $planet->save();
-        }
+        $scoreDefense = 0;
+        $scoreDefense += (int)$planet->rocket_launchers * 2;
+        $scoreDefense += (int)$planet->light_laser_turrets * 2;
+        $scoreDefense += (int)$planet->heavy_laser_turrets * 8;
+        $scoreDefense += (int)$planet->ion_turrets * 8;
+        $scoreDefense += (int)$planet->gauss_canons * 35;
+        $scoreDefense += (int)$planet->plasma_turrets * 100;
+        $scoreDefense += (int)$planet->small_shields * 20;
+        $scoreDefense += (int)$planet->large_shields * 100;
+
+        $scoreMilitary = 0;
+        $scoreMilitary += (int)$planet->small_transporters * 4;
+        $scoreMilitary += (int)$planet->large_transporters * 12;
+        $scoreMilitary += (int)$planet->light_hunters * 4;
+        $scoreMilitary += (int)$planet->heavy_hunters * 10;
+        $scoreMilitary += (int)$planet->cruisers * 27;
+        $scoreMilitary += (int)$planet->battleships * 60;
+        $scoreMilitary += (int)$planet->colony_ships * 30;
+        $scoreMilitary += (int)$planet->recyclers * 16;
+        $scoreMilitary += (int)$planet->spy_drones * 1;
+        $scoreMilitary += (int)$planet->bombers * 75;
+        $scoreMilitary += (int)$planet->solar_satellites * 2;
+        $scoreMilitary += (int)$planet->destroyers * 110;
+        $scoreMilitary += (int)$planet->death_stars * 9000;
+        $scoreMilitary += (int)$planet->battle_cruisers * 70;
+
+        $planet->score_defense = $scoreDefense;
+        $planet->score_military = $scoreMilitary;
+        $planet->save();
     }
 }
