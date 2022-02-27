@@ -107,7 +107,7 @@ window.PageFleet = function () {
         }
 
         // set 1 of the best ship
-        const possibleBattleShipIds = [211, 215, 207, 206, 205, 204];
+        const possibleBattleShipIds = [206, 207, 215, 211, 205, 204];
         let foundBestShip = false;
         $.each(possibleBattleShipIds, function (key, possibleShipId) {
             if (!foundBestShip) {
