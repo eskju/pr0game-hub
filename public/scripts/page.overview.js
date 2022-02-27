@@ -575,7 +575,7 @@ window.PageOverview = function () {
                 html += '<td id="row' + obj.id + 'ScoreBuilding" style="color: ' + (playerScoreBuildingStyle.color || '') + '">' + numberFormat(obj.player.score_building, true) + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreScience" style="color: ' + (playerScoreScienceStyle.color || '') + '">' + numberFormat(obj.player.score_science, true) + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreMilitary" style="color: ' + (playerScoreMilitaryStyle.color || '') + '">' + numberFormat(obj.player.score_military, true) + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreDefense" style="color: ' + (playerScoreDefenseStyle.color || '') + '" title="Gesamt: ' + (obj.player.score_defense !== null ? numberFormat(obj.player.score_defense, false) : '???') + '">' + numberFormat(obj.score_defense, false) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreDefense" style="color: ' + (playerScoreDefenseStyle.color || '') + '" title="Gesamt: ' + (obj.player.score_defense !== null ? numberFormat(getInt(obj.player.score_defense), false) : '???') + '">' + numberFormat(getInt(obj.score_defense), false) + '</td>';
                 html += '<td style="text-align: right; white-space: nowrap">';
 
                 var fleetQueueItemsDisplayed = 0;
