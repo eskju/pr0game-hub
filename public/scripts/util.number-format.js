@@ -4,7 +4,7 @@ window.numberFormat = function (number, toUnit = false) {
         let unit = 'K';
 
         if (number === 0) {
-            return '';
+            return '0';
         }
 
         if(number > 1000000) {
