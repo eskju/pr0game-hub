@@ -161,7 +161,8 @@ class PlayerController extends Controller
                 DB::raw('`players`.`score`'),
                 DB::raw('`players`.`score_building`'),
                 DB::raw('`players`.`score_science`'),
-                DB::raw('`players`.`score_military`'),
+                DB::raw('`planets`.`score_military`'),
+                DB::raw('`players`.`score_military` AS `player_score_military`'),
                 DB::raw('`planets`.`score_defense`'),
                 DB::raw('`players`.`score_defense` AS `player_score_defense`'),
                 DB::raw('`players`.`is_inactive`'),
@@ -191,7 +192,8 @@ class PlayerController extends Controller
             $return['player']['score'] = number_format($return['score'], 0, ',', '.');
             $return['player']['score_building'] = number_format($return['score_building'], 0, ',', '.');
             $return['player']['score_science'] = number_format($return['score_science'], 0, ',', '.');
-            $return['player']['score_military'] = number_format($return['score_military'], 0, ',', '.');
+            $return['score_military'] = number_format($return['score_military'], 0, ',', '.');
+            $return['player']['score_military'] = number_format($return['player_score_military'], 0, ',', '.');
             $return['score_defense'] = number_format($return['score_defense'], 0, ',', '.');
             $return['player']['score_defense'] = number_format($return['player_score_defense'], 0, ',', '.');
             $return['inactive_since'] = $return['inactive_since'] ? Carbon::parse($return['inactive_since'])->subHour()->diffInHours(Carbon::now(), true) : null;
