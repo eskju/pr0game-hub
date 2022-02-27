@@ -1,6 +1,11 @@
 window.numberFormat = function (number, toUnit = false) {
+    if(number === null) {
+        return '';
+    }
+
+    number = getInt(number);
+
     if (toUnit) {
-        number = getInt(number);
         let unit = 'K';
 
         if (number === 0) {
