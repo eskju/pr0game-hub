@@ -25,7 +25,7 @@ class SpyReportController extends Controller
         $spyReport->system = $request->get('system');
         $spyReport->planet = $request->get('planet');
 
-        if($request->get('shipsVisible')) {
+        if ($request->get('shipsVisible')) {
             $spyReport->small_transporters = 0;
             $spyReport->large_transporters = 0;
             $spyReport->light_hunters = 0;
@@ -40,6 +40,64 @@ class SpyReportController extends Controller
             $spyReport->destroyers = 0;
             $spyReport->death_stars = 0;
             $spyReport->battle_cruisers = 0;
+        }
+
+        if ($request->get('defenseVisible')) {
+            $spyReport->rocket_launchers = 0;
+            $spyReport->light_laser_turrets = 0;
+            $spyReport->heavy_laser_turrets = 0;
+            $spyReport->gauss_canons = 0;
+            $spyReport->ion_turrets = 0;
+            $spyReport->plasma_turrets = 0;
+            $spyReport->small_shields = 0;
+            $spyReport->large_shields = 0;
+            $spyReport->interceptor_missiles = 0;
+            $spyReport->interplanetary_missiles = 0;
+        }
+
+        if ($request->get('buildingsVisible')) {
+            $spyReport->metal_mine = 0;
+            $spyReport->crystal_mine = 0;
+            $spyReport->deuterium_mine = 0;
+            $spyReport->solar_plant = 0;
+            $spyReport->techno_dome = 0;
+            $spyReport->fusion_plant = 0;
+            $spyReport->robot_factory = 0;
+            $spyReport->nano_factory = 0;
+            $spyReport->hangar = 0;
+            $spyReport->metal_storage = 0;
+            $spyReport->crystal_storage = 0;
+            $spyReport->deuterium_storage = 0;
+            $spyReport->laboratory = 0;
+            $spyReport->terra_former = 0;
+            $spyReport->alliance_depot = 0;
+            $spyReport->base = 0;
+            $spyReport->phalanx = 0;
+            $spyReport->portal = 0;
+            $spyReport->missile_silo = 0;
+        }
+
+        if ($request->get('researchVisible')) {
+            $spyReport->spy_tech = 0;
+            $spyReport->computer_tech = 0;
+            $spyReport->military_tech = 0;
+            $spyReport->defense_tech = 0;
+            $spyReport->shield_tech = 0;
+            $spyReport->energy_tech = 0;
+            $spyReport->hyperspace_tech = 0;
+            $spyReport->combustion_tech = 0;
+            $spyReport->impulse_motor_tech = 0;
+            $spyReport->hyperspace_motor_tech = 0;
+            $spyReport->laser_tech = 0;
+            $spyReport->ion_tech = 0;
+            $spyReport->buster_tech = 0;
+            $spyReport->intergalactic_tech = 0;
+            $spyReport->expedition_tech = 0;
+            $spyReport->metal_proc_tech = 0;
+            $spyReport->crystal_proc_tech = 0;
+            $spyReport->deuterium_proc_tech = 0;
+            $spyReport->graviton_tech = 0;
+            $spyReport->spy_destruction_probability = 0;
         }
 
         foreach ($request->get('resources') as $id => $value) {

@@ -60,9 +60,9 @@ window.PageMessages = function () {
             planet: parseInt(parseResult[4]),
             timestamp: parseResult[5],
             resources: resources,
-            ressVisible: $(obj).html().search(/Rohstoffe/) !== -1,
+            resourcesVisible: $(obj).html().search(/Rohstoffe/) !== -1,
             shipsVisible: $(obj).html().search(/Schiffe/) !== -1,
-            deffVisible: $(obj).html().search(/Verteidigungsanlagen/) !== -1,
+            defenseVisible: $(obj).html().search(/Verteidigungsanlagen/) !== -1,
             buildingsVisible: $(obj).html().search(/Gebäude/) !== -1,
             researchVisible: $(obj).html().search(/Forschungen/) !== -1
         }, function (response) {
