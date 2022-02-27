@@ -194,7 +194,7 @@ class PlayerController extends Controller
             $return['player']['score_military'] = number_format($return['score_military'], 0, ',', '.');
             $return['score_defense'] = number_format($return['score_defense'], 0, ',', '.');
             $return['player']['score_defense'] = number_format($return['player_score_defense'], 0, ',', '.');
-            $return['inactive_since'] = $return['inactive_since'] ? Carbon::parse($return['inactive_since'])->diffInHours(Carbon::now(), true) : null;
+            $return['inactive_since'] = $return['inactive_since'] ? Carbon::parse($return['inactive_since'])->subHour()->diffInHours(Carbon::now(), true) : null;
 
             return $return;
         });

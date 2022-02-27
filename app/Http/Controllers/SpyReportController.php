@@ -25,6 +25,23 @@ class SpyReportController extends Controller
         $spyReport->system = $request->get('system');
         $spyReport->planet = $request->get('planet');
 
+        if($request->get('shipsVisible')) {
+            $spyReport->small_transporters = 0;
+            $spyReport->large_transporters = 0;
+            $spyReport->light_hunters = 0;
+            $spyReport->heavy_hunters = 0;
+            $spyReport->cruisers = 0;
+            $spyReport->battleships = 0;
+            $spyReport->colony_ships = 0;
+            $spyReport->recyclers = 0;
+            $spyReport->spy_drones = 0;
+            $spyReport->bombers = 0;
+            $spyReport->solar_satellites = 0;
+            $spyReport->destroyers = 0;
+            $spyReport->death_stars = 0;
+            $spyReport->battle_cruisers = 0;
+        }
+
         foreach ($request->get('resources') as $id => $value) {
             $resourceAlias = ResourceService::getAliasById($id);
             $spyReport->{$resourceAlias} = $value;
