@@ -60,11 +60,11 @@ window.PageMessages = function () {
             planet: parseInt(parseResult[4]),
             timestamp: parseResult[5],
             resources: resources,
-            ressVisible: $(obj).search(/Rohstoffe/) !== -1,
-            shipsVisible: $(obj).search(/Schiffe/) !== -1,
-            deffVisible: $(obj).search(/Verteidigungsanlagen/) !== -1,
-            buildingsVisible: $(obj).search(/Gebäude/) !== -1,
-            researchVisible: $(obj).search(/Forschungen/) !== -1
+            ressVisible: $(obj).html().search(/Rohstoffe/) !== -1,
+            shipsVisible: $(obj).html().search(/Schiffe/) !== -1,
+            deffVisible: $(obj).html().search(/Verteidigungsanlagen/) !== -1,
+            buildingsVisible: $(obj).html().search(/Gebäude/) !== -1,
+            researchVisible: $(obj).html().search(/Forschungen/) !== -1
         }, function (response) {
         });
     }
