@@ -28,17 +28,18 @@ window.PageResources = function () {
         });
     }
 
-    this.parseCapacity = function(value) {
+    this.parseCapacity = function (value) {
         let multiplier = 1;
 
-      if(value.search(/K/) !== -1) {
-          multiplier = 1000;
-      }
+        if (value.search(/K/) !== -1) {
+            multiplier = 1000;
+        }
 
-      if(value.search(/M/) !== -1) {
-          multiplier = 1000000;
-      }
+        if (value.search(/M/) !== -1) {
+            multiplier = 1000;
+            value = parseInt(value.replace(/,/, '.')) * 1000;
+        }
 
-      return getInt(value) * multiplier;
+        return getInt(value) * multiplier;
     };
 }
