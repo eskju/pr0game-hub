@@ -42,9 +42,9 @@ window.Resources = function () {
         $('#sumLimitMetal').html(numberFormat(this.sumLimitMetal, true));
         $('#sumLimitCrystal').html(numberFormat(this.sumLimitCrystal, true));
         $('#sumLimitDeuterium').html(numberFormat(this.sumLimitDeuterium, true));
-        $('#infoMetal').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdMetal / 24), true) + ' / Stunde<br>' +  numberFormat(this.sumProdMetal / 1000, true) + ' / Tag');
-        $('#infoCrystal').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdCrystal / 24), true) + ' / Stunde<br>' +  numberFormat(this.sumProdCrystal / 1000, true) + ' / Tag');
-        $('#infoDeuterium').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdDeuterium / 24), true) + ' / Stunde<br>' +  numberFormat(this.sumProdDeuterium / 1000, true) + ' / Tag');
+        $('#infoMetal').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdMetal / 24), true) + ' / Stunde<br>' +  numberFormat(Math.round(this.sumProdMetal / 1000), true) + ' / Tag');
+        $('#infoCrystal').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdCrystal / 24), true) + ' / Stunde<br>' +  numberFormat(Math.round(this.sumProdCrystal / 1000), true) + ' / Tag');
+        $('#infoDeuterium').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdDeuterium / 24), true) + ' / Stunde<br>' +  numberFormat(Math.round(this.sumProdDeuterium / 1000), true) + ' / Tag');
 
         $('#current_metal').stop().animate({left: 0}, 1000, () => {
             $this.updateVars();
