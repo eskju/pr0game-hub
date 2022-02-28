@@ -37,7 +37,7 @@ window.PageResources = function () {
 
         if (value.search(/M/) !== -1) {
             multiplier = 1000;
-            value = parseInt(value.replace(/,/, '.')) * 1000;
+            value = parseFloat(value.replace(/,/, '.')) * 1000;
         }
 
         return getInt(value) * multiplier;
