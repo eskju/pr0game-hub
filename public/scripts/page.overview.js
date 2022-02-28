@@ -104,7 +104,7 @@ window.PageOverview = function () {
 
         $('span.fleets').each(function (key, obj) {
             parentObj = $($(obj).parent());
-            parentObj.html(parentObj.html().replace(/Eine deiner /, '').replace(/zum Planet/, 'zu').replace(/vom Planet/, 'von').replace(/von dem Planet/, 'von').replace(/den Planet/, '').replace(/vom Spieler/, 'von').replace(/ Eine/, 'Eine').replace(/ist im Orbit/, 'hält bei').replace(/(die|der) Position/, ''));
+            parentObj.html(parentObj.html().replace(/Eine deiner /, '').replace(/zum Planet/, 'zu').replace(/vom Planet/, 'von').replace(/von dem Planet/, 'von').replace(/den Planet/, '').replace(/vom Spieler/, 'von').replace(/ Eine/, 'Eine').replace(/ist im Orbit/, 'hält bei').replace(/(die|der) Position/, '').replace(/zuen/g, 'zu'));
         });
 
         $('span.fleets').each(function (key, obj) {
@@ -125,7 +125,7 @@ window.PageOverview = function () {
                 parentObj.find('br').remove();
                 parentObj.html(parentObj.html().replace(/<span>(Verbandsangriff|Angreifen)<\/span>/g, ''));
                 parentObj.append('<span style="color: rgb(51, 153, 102)">AKS</span>');
-                parentObj.html(parentObj.html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, ''));
+                parentObj.html(parentObj.html().replace(/Eine deiner /g, '').replace(/zum Planet/g, 'zu').replace(/vom Planet/g, 'von').replace(/von dem Planet/g, 'von').replace(/den Planet/g, '').replace(/vom Spieler/g, 'von').replace(/Eine /g, '').replace(/ist im Orbit/g, 'hält bei').replace(/(die|der) Position/g, '').replace(/\. Mission\: Angreifen/g, '').replace(/\. Mission\: Verbandsangriff/g, '').replace(/zuen/g, 'zu'));
 
                 $(parentObj.find('.flight')).each(function (skey, sobj) {
                     if (skey > 0) {
