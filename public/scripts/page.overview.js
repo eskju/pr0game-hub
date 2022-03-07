@@ -613,10 +613,10 @@ window.PageOverview = function () {
                 if (obj.external_id) {
                     html += '[<a style="color: ' + (playerLinkStyle.color || '') + '; cursor: pointer" class="spio-link" data-id="' + obj.external_id + '">S</a>]';
                 } else {
-                    html += ' [<a style="color: ' + (playerLinkStyle.color || '') + '; cursor: pointer" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=6">S</a>]';
+                    html += ' [<a style="color: ' + (playerLinkStyle.color || '') + '; cursor: pointer" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=' + (obj.type === 'PLANET' ? 1 : 3) + '&target_mission=6">S</a>]';
                 }
 
-                html += ' [<a style="color: ' + (playerLinkStyle.color || '') + '; cursor: pointer" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=1&target_mission=1">A</a>]';
+                html += ' [<a style="color: ' + (playerLinkStyle.color || '') + '; cursor: pointer" href="/game.php?page=fleetTable&galaxy=' + obj.galaxy + '&system=' + obj.system + '&planet=' + obj.planet + '&planettype=' + (obj.type === 'PLANET' ? 1 : 3) + '&target_mission=1">A</a>]';
 
                 html += '</td>';
                 html += '<td style="text-align: right;">' + numberFormat(obj.last_spy_metal, true) + '</td>';
