@@ -7,7 +7,7 @@ window.PageGalaxy = function () {
     this.parsePlanetIds = function () {
         $('tr td:nth-child(2) a.tooltip_sticky').each(function (key, obj) {
             var tooltipSrc = $(obj).attr('data-tooltip-content');
-            var playerId = $(obj).parent().parent().find('td:nth-child(6) a').attr('data-tooltip-content').match(/Dialog\.Buddy\(([0-9]+)\)/);
+            var playerId = $(obj).parent().parent().find('td:nth-child(6) a').attr('data-tooltip-content').match(/Dialog\.Playercard\(([0-9]+)\)/);
             playerId = playerId ? parseInt(playerId[1]) : null;
 
             var coords = tooltipSrc.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/, tooltipSrc);
