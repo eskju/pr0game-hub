@@ -566,7 +566,7 @@ window.PageOverview = function () {
                     html += '<span style="padding: 2px 5px; border-radius: 2px; background: ' + getRgb(cRed) + '; color: ' + getRgb(cWhite) + '; border-radius: 2px; margin-right: 5px; font-size: 10px;">' + obj.inactive_since + 'H</span>';
                 }
 
-                html += '<a style="color: ' + (playerLinkStyle.color || '') + '" href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + (obj.type === 'MOON' ? '[MOND] ' : '') + '</a></div></td>';
+                html += '<a style="color: ' + (playerLinkStyle.color || '') + '" href="/game.php?page=playerCard&id=' + obj.player.id + '">' + obj.player.name + (obj.type === 'MOON' ? ' [MOND]' : '') + '</a></div></td>';
                 html += '<td id="row' + obj.id + 'Galaxy">' + (obj.galaxy || '---') + '</td>';
                 html += '<td id="row' + obj.id + 'System"><a style="color: ' + (playerLinkStyle.color || '') + '" href="/game.php?page=galaxy&galaxy=' + (obj.galaxy || '') + '&system=' + (obj.system || '') + '">' + (obj.system || '---') + '</a></td>';
                 html += '<td id="row' + obj.id + 'Planet">' + (obj.planet || '---') + '</td>';
