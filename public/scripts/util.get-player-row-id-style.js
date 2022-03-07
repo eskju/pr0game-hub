@@ -17,7 +17,7 @@ window.getPlayerRowTdStyle = function (obj, ownScore) {
     const enemyIds = CsvToArray(getValue('filter_ids_enemies'));
 
     for (let i = 0; i < friendAllianceIds.length; i++) {
-        if (friendAllianceIds[i].toString() === (obj.alliance_id || '').toString()) {
+        if (friendAllianceIds[i].toString() === (obj.alliance_id || 'xxx').toString()) {
             return {color: 'rgb(192, 184, 92)'};
         }
     }
@@ -29,7 +29,7 @@ window.getPlayerRowTdStyle = function (obj, ownScore) {
     }
 
     for (let i = 0; i < enemyAllianceIds.length; i++) {
-        if (enemyAllianceIds[i].toString() === (obj.alliance_id || '').toString()) {
+        if (enemyAllianceIds[i].toString() === (obj.alliance_id || 'xxx').toString()) {
             return {color: getRgb(cRed)};
         }
     }
