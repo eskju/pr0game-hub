@@ -15,6 +15,7 @@ class SpyReport extends Model
             ->where('galaxy', $this->galaxy)
             ->where('system', $this->system)
             ->where('planet', $this->planet)
+            ->where('type', $this->type)
             ->first();
     }
 

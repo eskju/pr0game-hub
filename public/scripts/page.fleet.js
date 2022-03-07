@@ -1,9 +1,9 @@
 window.PageFleet = function () {
     var $this = this;
     this.data = [];
-    this.maxPoints = 2400;
-    this.maxRessPoints = 2400;
-    this.maxFleetPoints = 1250;
+    this.maxPoints = 6000;
+    this.maxRessPoints = 6000;
+    this.maxFleetPoints = 3000;
     this.fleet = [];
 
     this.init = function () {

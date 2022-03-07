@@ -21,6 +21,7 @@ class SpyReportController extends Controller
 
         $spyReport->reported_by = auth()->id();
         $spyReport->coordinates = $request->get('galaxy') . ':' . $request->get('system') . ':' . $request->get('planet');
+        $spyReport->type = $request->get('type', 'PLANET');
         $spyReport->galaxy = $request->get('galaxy');
         $spyReport->system = $request->get('system');
         $spyReport->planet = $request->get('planet');

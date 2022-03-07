@@ -49,6 +49,7 @@ class GalaxyController extends Controller
             ])
             ->where('galaxy', $galaxy)
             ->where('system', $system)
+            ->where('type', 'PLANET')
             ->orderBy('planet')
             ->get();
 
