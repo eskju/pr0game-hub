@@ -9,6 +9,7 @@
 // Redstar       colorize players from buddylist
 
 import './config.colors';
+import './util.anonymize-battle-report';
 import './util.csv-to-array';
 import './util.display-alliance-chart';
 import './util.display-chart';
@@ -124,7 +125,7 @@ window.updateConfigVars = function () {
     filterDeuteriumMax = getValue('filter_deuterium_max') || '';
 }
 
-window.GetRestTimeFormat = function(seconds) {
+window.GetRestTimeFormat = function (seconds) {
     return formatTimeDiff(new Date().getTime() / 1000 + seconds);
 };
 
@@ -207,6 +208,14 @@ window.parseUrl = function () {
                 pageHub.loadPage(hash[1]);
                 return;
         }
+    }
+
+    // overview page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=raport/) === 0) {
+        $('body').prepend('<button id="anonymize">Anonymisieren</button>');
+        $('#anonymize').click(function () {
+            window.anonymizeBattleReport();
+        });
     }
 
     // overview page
