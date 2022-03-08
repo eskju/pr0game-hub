@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.50',
+        date_time: '2022-03-08 12AM',
+        changes: 'added function to anonymize battle reports'
+    },
+    {
         version: '1.0.49',
         date_time: '2022-02-28 01AM',
         changes: 'bugfix for resource overview'
