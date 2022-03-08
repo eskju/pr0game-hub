@@ -15,7 +15,7 @@ window.anonymizeBattleReport = function() {
             returnHtml += rounds[i];
         }
 
-        if(i === roundCount - 1) {
+        if(i === roundCount - 1 && roundCount > 1) {
             //returnHtml += '<hr>';
             returnHtml += '<div style="margin: 20px auto; text-align: center"><img style="border-radius: 0; width: 600px" src="https://pr0game-hub.eskju.net/ff_transparent.png"></div>';
             //returnHtml += '<hr>';
