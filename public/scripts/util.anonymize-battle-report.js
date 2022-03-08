@@ -13,12 +13,10 @@ window.anonymizeBattleReport = function() {
     for(var i = 0; i < roundCount; i++) {
         if(i === 0) {
             returnHtml += rounds[i];
+            returnHtml += '<div style="margin: 20px auto; text-align: center"><img style="border-radius: 0; width: 600px" src="https://pr0game-hub.eskju.net/ff_transparent.png"></div>';
         }
 
         if(i === roundCount - 1 && roundCount > 1) {
-            //returnHtml += '<hr>';
-            returnHtml += '<div style="margin: 20px auto; text-align: center"><img style="border-radius: 0; width: 600px" src="https://pr0game-hub.eskju.net/ff_transparent.png"></div>';
-            //returnHtml += '<hr>';
             returnHtml += rounds[i];
         }
     }
