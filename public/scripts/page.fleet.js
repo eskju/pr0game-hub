@@ -1,9 +1,9 @@
 window.PageFleet = function () {
     var $this = this;
     this.data = [];
-    this.maxPoints = 2400;
-    this.maxRessPoints = 2400;
-    this.maxFleetPoints = 1250;
+    this.maxPoints = 6000;
+    this.maxRessPoints = 6000;
+    this.maxFleetPoints = 3000;
     this.fleet = [];
 
     this.init = function () {
@@ -107,7 +107,7 @@ window.PageFleet = function () {
         }
 
         // set 1 of the best ship
-        const possibleBattleShipIds = [206, 207, 215, 211, 205, 204];
+        const possibleBattleShipIds = [207, 206, 215, 211, 205, 204];
         let foundBestShip = false;
         $.each(possibleBattleShipIds, function (key, possibleShipId) {
             if (!foundBestShip) {

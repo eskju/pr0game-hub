@@ -33,5 +33,6 @@ class CrawlBattleHall extends Command
     {
         $html = file_get_contents('https://pr0game.com/index.php?page=battleHall');
 
+        var_dump($html);
     }
 }
