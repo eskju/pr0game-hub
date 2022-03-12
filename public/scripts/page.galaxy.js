@@ -13,12 +13,15 @@ window.PageGalaxy = function () {
             var coords = tooltipSrc.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/, tooltipSrc);
             var planetId = tooltipSrc.match(/doit\(6\,([0-9]+)/, tooltipSrc);
             planetId = planetId ? parseInt(planetId[1]) : null;
+            var moonId = $(obj).parent().parent().find('td:nth-child(4)').html().match(/javascript\:doit\(([0-9]+)\,([0-9]+)\)/);
+            moonId = moonId ? moonId[1] : null;
 
             if (coords && planetId) {
                 postJSON('planets', {
                     coordinates: coords[0],
                     planet_id: planetId,
-                    player_id: playerId
+                    player_id: playerId,
+                    moon_id: moonId
                 }, function (response) {
                 });
             }
