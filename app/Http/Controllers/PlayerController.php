@@ -159,6 +159,7 @@ class PlayerController extends Controller
                 DB::raw('`players`.`id` AS `player_id`'),
                 DB::raw('`players`.`name`'),
                 DB::raw('`players`.`score`'),
+                DB::raw('`players`.`score_building` AS `player_score_building`'),
                 DB::raw('`players`.`score_science`'),
                 DB::raw('`planets`.`score_military`'),
                 DB::raw('`players`.`score_military` AS `player_score_military`'),
@@ -193,6 +194,7 @@ class PlayerController extends Controller
             $return['player']['score_science'] = number_format($return['score_science'], 0, ',', '.');
             $return['player']['score_military'] = $return['player_score_military'];
             $return['player']['score_defense'] = $return['player_score_defense'];
+            $return['player']['score_building'] = $return['player_score_building'];
             $return['inactive_since'] = $return['inactive_since'] ? Carbon::parse($return['inactive_since'])->subHour()->diffInHours(Carbon::now(), true) : null;
 
             return $return;

@@ -521,7 +521,7 @@ window.PageOverview = function () {
         html += '</th>';
         html += '<th class="sortable" data-sort="player.score" title="Punkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cBlue) + '" id="sortByScore"><i class="fa fa-chart-line"></i></th>';
         html += '<th class="sortable" data-sort="diff" title="Punktedifferenz zum Vortag" data-direction="ASC" style="text-align: center; color: ' + getRgb(cBlue) + '" id="sortByScoreDiff"><i class="fa fa-sort-numeric-up-alt"></i></th>';
-        html += '<th class="sortable" data-sort="player.score_building" title="Gebaeudepunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cGreen) + '" id="sortByScoreBuilding"><i class="fa fa-industry"></i></th>';
+        html += '<th class="sortable" data-sort="score_building" title="Gebaeudepunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cGreen) + '" id="sortByScoreBuilding"><i class="fa fa-industry"></i></th>';
         html += '<th class="sortable" data-sort="player.score_science" title="Forschungspunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cPink) + '" id="sortByScoreScience"><i class="fa fa-flask"></i></th>';
         html += '<th class="sortable" data-sort="score_military" title="Militaerpunkte" data-direction="DESC" style="text-align: center; color:' + getRgb(cRed) + '" id="sortByScoreMilitary"><i class="fa fa-fighter-jet"></i></th>';
         html += '<th class="sortable" data-sort="score_defense" title="Verteidigungspunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cYellow) + '" id="sortByScoreDefense"><i class="fa fa-shield"></i></th>';
@@ -572,7 +572,7 @@ window.PageOverview = function () {
                 html += '<td id="row' + obj.id + 'Planet">' + (obj.planet || '---') + '</td>';
                 html += '<td id="row' + obj.id + 'Score" style="color: ' + (playerScoreStyle.color || '') + '">' + numberFormat(obj.player.score, true) + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreDiff" style="color: ' + (playerScoreStyle.color || '') + '">' + numberFormat((obj.diff && obj.diff > 0 ? '+' + obj.diff : obj.diff) || '0', true) + '</td>';
-                html += '<td id="row' + obj.id + 'ScoreBuilding" style="color: ' + (playerScoreBuildingStyle.color || '') + '">' + numberFormat(obj.player.score_building, true) + '</td>';
+                html += '<td id="row' + obj.id + 'ScoreBuilding" style="color: ' + (playerScoreBuildingStyle.color || '') + '" title="Gesamt: ' + (obj.player.score_building !== null ? numberFormat((obj.player.score_building), false) : '???') + '">' + numberFormat(obj.player.score_building, true) + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreScience" style="color: ' + (playerScoreScienceStyle.color || '') + '">' + numberFormat(obj.player.score_science, true) + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreMilitary" style="color: ' + (playerScoreMilitaryStyle.color || '') + '" title="Gesamt: ' + (obj.player.score_military !== null ? numberFormat((obj.player.score_military), false) : '???') + '">' + numberFormat((obj.score_military), true) + '</td>';
                 html += '<td id="row' + obj.id + 'ScoreDefense" style="color: ' + (playerScoreDefenseStyle.color || '') + '" title="Gesamt: ' + (obj.player.score_defense !== null ? numberFormat((obj.player.score_defense), false) : '???') + '">' + numberFormat((obj.score_defense), false) + '</td>';
