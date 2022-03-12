@@ -152,7 +152,7 @@ class PlanetController extends Controller
             }
         }
 
-        $items[999] = [
+        $items['Gesamt'] = [
             'id' => 999,
             'name' => 'Gesamt',
             'sum' => $total,
