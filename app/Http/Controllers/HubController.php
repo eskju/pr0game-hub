@@ -18,8 +18,8 @@ class HubController extends Controller
         return Player::query()
             ->select([
                 DB::raw('players.name'),
+                DB::raw('planets.*'),
                 DB::raw('players.score_building'),
-                DB::raw('planets.*')
             ])
             ->join('planets', 'planets.player_id', '=', 'players.id')
             ->whereIn('alliance_id', $this->allianceIds)
