@@ -103,7 +103,7 @@ class PlanetController extends Controller
         foreach ($sheepIds as $i) {
             if ($alias = ResourceService::getAliasById($i)) {
                 $tmp[$alias] = 0;
-                $items[$i] = [
+                $items[$alias] = [
                     'id' => $i,
                     'name' => ResourceService::getFullNameById($i),
                     'sum' => 0,
@@ -138,7 +138,7 @@ class PlanetController extends Controller
 
                 $score = ResourceService::getScoreById($i) * $sum / 1000;
                 $recs = $i != 209 ? $score / 20 * 0.3 : 0;
-                $items[$i] = [
+                $items[$alias] = [
                     'id' => $i,
                     'name' => ResourceService::getFullNameById($i),
                     'sum' => $sum,
