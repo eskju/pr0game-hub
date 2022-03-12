@@ -48,6 +48,8 @@ class FlightController extends Controller
                 $outboundFlight = Flight::query()
                     ->where('external_id', $activity->outbound_flight_id)
                     ->where('is_return', '=', 0)
+                    ->where('user_id', $activity->user_id)
+                    ->orderBy('created_at')
                     ->first();
 
                 $inboundIds[] = $activity->external_id ?? null;
