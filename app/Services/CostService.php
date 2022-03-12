@@ -6,7 +6,7 @@ use App\Models\Pr0gameVar;
 
 class CostService
 {
-    public static function getCostsForLevel(int $resourceId, int $level): object
+    public static function getCostsForLevel(int $resourceId, ?int $level = 0): object
     {
         $config = Pr0gameVar::query()->where('elementID', $resourceId)->first();
         $costs = (object)['metal' => 0, 'crystal' => 0, 'deuterium' => 0, 'score' => 0];
@@ -25,7 +25,7 @@ class CostService
         return $costs;
     }
 
-    public static function getScoreForLevel(int $resourceId, int $level): float
+    public static function getScoreForLevel(int $resourceId, ?int $level = 0): float
     {
         return self::getCostsForLevel($resourceId, $level)->score;
     }
