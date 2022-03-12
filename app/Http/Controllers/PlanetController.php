@@ -14,7 +14,7 @@ class PlanetController extends Controller
     {
         $coordinates = explode(':', $request->get('coordinates'));
 
-        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
+        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates')->where('type','PLANET'))->first()) {
             $planet = new Planet();
             $planet->player_id = $request->get('player_id');
             $planet->coordinates = $request->get('coordinates');
@@ -26,6 +26,19 @@ class PlanetController extends Controller
         $planet->player_id = $request->get('player_id');
         $planet->external_id = $request->get('planet_id');
         $planet->save();
+
+        if($request->get('moon_id') && (int)$request->get('moon_id') > 0) {
+            if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates')->where('type','MOON'))->first()) {
+                $planet = new Planet();
+                $planet->type = 'MOON';
+                $planet->external_id = $request->get('moon_id');
+                $planet->player_id = $request->get('player_id');
+                $planet->coordinates = $request->get('coordinates');
+                $planet->galaxy = $coordinates[0];
+                $planet->system = $coordinates[1];
+                $planet->planet = $coordinates[2];
+            }
+        }
     }
 
     public function storeBuildings(Request $request)
