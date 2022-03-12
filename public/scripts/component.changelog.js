@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.51',
+        date_time: '2022-03-12 06AM',
+        changes: 'changed hub planet overview to show local building score &amp; made all columns sortable'
+    },
+    {
         version: '1.0.50',
         date_time: '2022-03-08 12AM',
         changes: 'added function to anonymize battle reports'
