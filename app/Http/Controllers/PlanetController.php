@@ -28,7 +28,7 @@ class PlanetController extends Controller
         $planet->save();
 
         if($request->get('moon_id') && (int)$request->get('moon_id') > 0) {
-            if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates')->where('type','MOON'))->first()) {
+            if (!Planet::query()->where('coordinates', $request->get('coordinates')->where('type','MOON'))->first()) {
                 $planet = new Planet();
                 $planet->type = 'MOON';
                 $planet->external_id = $request->get('moon_id');
@@ -37,6 +37,7 @@ class PlanetController extends Controller
                 $planet->galaxy = $coordinates[0];
                 $planet->system = $coordinates[1];
                 $planet->planet = $coordinates[2];
+                $planet->save();
             }
         }
     }
