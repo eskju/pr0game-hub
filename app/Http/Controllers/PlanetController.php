@@ -14,7 +14,7 @@ class PlanetController extends Controller
     {
         $coordinates = explode(':', $request->get('coordinates'));
 
-        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->where('type','PLANET')->first()) {
+        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->where('type', 'PLANET')->first()) {
             $planet = new Planet();
             $planet->player_id = $request->get('player_id');
             $planet->coordinates = $request->get('coordinates');
@@ -27,8 +27,8 @@ class PlanetController extends Controller
         $planet->external_id = $request->get('planet_id');
         $planet->save();
 
-        if($request->get('moon_id') && (int)$request->get('moon_id') > 0) {
-            if (!Planet::query()->where('coordinates', $request->get('coordinates'))->where('type','MOON')->first()) {
+        if ($request->get('moon_id') && (int)$request->get('moon_id') > 0) {
+            if (!Planet::query()->where('coordinates', $request->get('coordinates'))->where('type', 'MOON')->first()) {
                 $planet = new Planet();
                 $planet->type = 'MOON';
                 $planet->external_id = $request->get('moon_id');
@@ -98,7 +98,8 @@ class PlanetController extends Controller
         }
 
         $tmp = [];
-        for ($i = 200; $i < 300; $i++) {
+        $sheepIds = [202, 203, 210, 209, 208, 212, 204, 205, 206, 207, 211, 213, 215, 214];
+        foreach ($sheepIds as $i) {
             if ($alias = ResourceService::getAliasById($i)) {
                 $tmp[$alias] = 0;
             }
