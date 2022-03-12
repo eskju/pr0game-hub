@@ -135,7 +135,7 @@ window.PageHub = function () {
                 html += '<td style="text-align: right; width: 35px">' + obj.system + '</td>';
                 html += '<td style="text-align: right; width: 35px">' + obj.planet + '</td>';
                 html += '<td style="text-align: left;">' + obj.name + '</td>';
-                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.score_building || 0) / getMaxValue(data, 'score_building'), cRed) + '">' + (obj.score_building || '') + '</td>';
+                html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.score_building || 0) / getMaxValue(data, 'score_building'), cRed) + '">' + numberFormat(obj.score_building || '') + '</td>';
                 html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.metal_mine || 0) / getMaxValue(data, 'metal_mine'), cRed) + '">' + (obj.metal_mine || '') + '</td>';
                 html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.crystal_mine || 0) / getMaxValue(data, 'crystal_mine'), cRed) + '">' + (obj.crystal_mine || '') + '</td>';
                 html += '<td style="text-align: right; color: ' + getColorAlt(cGreen, parseInt(obj.deuterium_mine || 0) / getMaxValue(data, 'deuterium_mine'), cRed) + '">' + (obj.deuterium_mine || '') + '</td>';
