@@ -147,6 +147,7 @@ class PlayerController extends Controller
                     ORDER BY created_at DESC
                     LIMIT 1
                 ) AS `inactive_since`'),
+                /*
                 DB::raw('`players`.`score` - (
                     SELECT `score`
                     FROM `log_players`
@@ -155,6 +156,7 @@ class PlayerController extends Controller
                     ORDER BY `created_at` DESC
                     LIMIT 1
                 ) AS `diff`'),
+                */
                 DB::raw('ABS(planets.system - ' . (int)$request->get('system') . ') * 100 + ABS(planets.planet - ' . (int)$request->get('planet') . ') AS `distance`'),
                 DB::raw('`players`.`id` AS `player_id`'),
                 DB::raw('`players`.`name`'),
