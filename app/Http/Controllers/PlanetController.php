@@ -97,11 +97,13 @@ class PlanetController extends Controller
             $planet->planet = $coordinates[2];
         }
 
+        $items = [];
         $tmp = [];
         $sheepIds = [202, 203, 210, 209, 208, 212, 204, 205, 206, 207, 211, 213, 215, 214];
         foreach ($sheepIds as $i) {
             if ($alias = ResourceService::getAliasById($i)) {
                 $tmp[$alias] = 0;
+                $items[$i] = 0;
             }
         }
 
@@ -119,7 +121,6 @@ class PlanetController extends Controller
 
         $planet->save();
 
-        $items = [];
         $total = 0;
         $totalScore = 0;
         $totalRecs = 0;
