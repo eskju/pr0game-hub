@@ -2,11 +2,36 @@
 
 namespace App\Models;
 
+use App\Services\CostService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property int $metal_mine
+ * @property int $crystal_mine
+ * @property int $deuterium_mine
+ * @property int $solar_plant
+ * @property int $techno_dome
+ * @property int $fusion_plant
+ * @property int $robot_factory
+ * @property int $nano_factory
+ * @property int $hangar
+ * @property int $metal_storage
+ * @property int $crystal_storage
+ * @property int $deuterium_storage
+ * @property int $laboratory
+ * @property int $terra_former
+ * @property int $alliance_depot
+ * @property int $base
+ * @property int $phalanx
+ * @property int $portal
+ * @property int $missile_silo
+ * @property int $score_building
+ * @property int $score_military
+ * @property int $score_defense
+ */
 class Planet extends Model
 {
     public $table = 'planets';
@@ -70,5 +95,31 @@ class Planet extends Model
     public function lastSpyReport(): HasOne
     {
         return $this->hasOne(SpyReport::class, 'coordinates', 'coordinates')->orderBy('created_at', 'DESC');
+    }
+
+    public function save(array $options = [])
+    {
+        $this->score_building = 0;
+        $this->score_building += CostService::getScoreForLevel(1, $this->metal_mine);
+        $this->score_building += CostService::getScoreForLevel(2, $this->crystal_mine);
+        $this->score_building += CostService::getScoreForLevel(3, $this->deuterium_mine);
+        $this->score_building += CostService::getScoreForLevel(3, $this->solar_plant);
+        $this->score_building += CostService::getScoreForLevel(3, $this->techno_dome);
+        $this->score_building += CostService::getScoreForLevel(3, $this->fusion_plant);
+        $this->score_building += CostService::getScoreForLevel(3, $this->robot_factory);
+        $this->score_building += CostService::getScoreForLevel(3, $this->nano_factory);
+        $this->score_building += CostService::getScoreForLevel(3, $this->hangar);
+        $this->score_building += CostService::getScoreForLevel(3, $this->metal_storage);
+        $this->score_building += CostService::getScoreForLevel(3, $this->crystal_storage);
+        $this->score_building += CostService::getScoreForLevel(3, $this->deuterium_storage);
+        $this->score_building += CostService::getScoreForLevel(3, $this->laboratory);
+        $this->score_building += CostService::getScoreForLevel(3, $this->terra_former);
+        $this->score_building += CostService::getScoreForLevel(3, $this->alliance_depot);
+        $this->score_building += CostService::getScoreForLevel(3, $this->base);
+        $this->score_building += CostService::getScoreForLevel(3, $this->phalanx);
+        $this->score_building += CostService::getScoreForLevel(3, $this->portal);
+        $this->score_building += CostService::getScoreForLevel(3, $this->missile_silo);
+
+        return parent::save($options);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\SpyReport;
+use App\Services\CostService;
 use App\Services\PlanetService;
 use Illuminate\Console\Command;
 
