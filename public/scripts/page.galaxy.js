@@ -14,7 +14,7 @@ window.PageGalaxy = function () {
             var planetId = tooltipSrc.match(/doit\(6\,([0-9]+)/, tooltipSrc);
             planetId = planetId ? parseInt(planetId[1]) : null;
             var moonId = $(obj).parent().parent().find('td:nth-child(4)').html().match(/javascript\:doit\(([0-9]+)\,([0-9]+)\)/);
-            moonId = moonId ? moonId[1] : null;
+            moonId = moonId ? moonId[2] : null;
 
             if (coords && planetId) {
                 postJSON('planets', {
