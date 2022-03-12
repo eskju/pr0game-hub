@@ -99,7 +99,7 @@ class PlanetController extends Controller
 
         $items = [];
         $tmp = [];
-        $sheepIds = [202, 203, 210, 209, 208, 212, 204, 205, 206, 207, 211, 213, 215, 214];
+        $sheepIds = [202, 203, 210, 209, 208, 212, 204, 205, 206, 207, 215, 213, 211, 214];
         foreach ($sheepIds as $i) {
             if ($alias = ResourceService::getAliasById($i)) {
                 $tmp[$alias] = 0;
