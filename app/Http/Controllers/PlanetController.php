@@ -103,7 +103,13 @@ class PlanetController extends Controller
         foreach ($sheepIds as $i) {
             if ($alias = ResourceService::getAliasById($i)) {
                 $tmp[$alias] = 0;
-                $items[$i] = 0;
+                $items[$i] = [
+                    'id' => $i,
+                    'name' => ResourceService::getFullNameById($i),
+                    'sum' => 0,
+                    'score' => 0,
+                    'recs' => 0
+                ];
             }
         }
 
