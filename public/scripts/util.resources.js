@@ -62,6 +62,7 @@ window.Resources = function () {
             $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html('<span class="text-red" title="Die Lager sind vermutlich voll. Produktion gestoppt.">' + numberFormat(parseInt(currentValue), true) + '<small style="color: #888"> / ' + numberFormat(parseInt(limit), true) + '</small></span>');
         } else {
             $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).html(numberFormat(parseInt(currentValue), true) + '<small style="color: #888"> / ' + numberFormat(parseInt(limit), true) + '</small>');
+            $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).css('color', getColorAlt(cRed, parseInt(currentValue) / parseInt(limit), cGreen));
         }
 
         switch (alias) {
