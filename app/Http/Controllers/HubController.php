@@ -13,7 +13,7 @@ class HubController extends Controller
 {
     public function getBuildings()
     {
-        $this->checkPermission('getBuildings');
+        // $this->checkPermission('getBuildings');
 
         return Player::query()
             ->select([
@@ -21,7 +21,7 @@ class HubController extends Controller
                 DB::raw('planets.*')
             ])
             ->join('planets', 'planets.player_id', '=', 'players.id')
-            ->whereIn('alliance_id', $this->allianceIds)
+            ->whereIn('alliance_id', $this->getAllianceIds('getBuildings'))
             ->orderBy('galaxy')
             ->orderBy('system')
             ->orderBy('planet')
@@ -30,20 +30,20 @@ class HubController extends Controller
 
     public function getResearch()
     {
-        $this->checkPermission('getResearch');
+        // $this->checkPermission('getResearch');
 
         return Player::query()
-            ->whereIn('alliance_id', $this->allianceIds)
+            ->whereIn('alliance_id', $this->getAllianceIds('getResearch'))
             ->orderBy('name')
             ->get();
     }
 
     public function getTransferMatrix()
     {
-        $this->checkPermission('getTransferMatrix');
+        // $this->checkPermission('getTransferMatrix');
 
         $senders = Player::query()
-            ->whereIn('alliance_id', $this->allianceIds)
+            ->whereIn('alliance_id', $this->getAllianceIds('getTransferMatrix'))
             ->orderBy('name')
             ->get();
 
@@ -75,7 +75,7 @@ class HubController extends Controller
 
     public function getFleet()
     {
-        $this->checkPermission('getFleet');
+        // $this->checkPermission('getFleet');
 
         $return = Player::query()
             ->select([
@@ -100,7 +100,7 @@ class HubController extends Controller
                 DB::raw('SUM(`battle_cruisers`) AS `battle_cruisers`'),
             ])
             ->join('planets', 'planets.player_id', '=', 'players.id')
-            ->whereIn('alliance_id', $this->allianceIds)
+            ->whereIn('alliance_id', $this->getAllianceIds('getFleet'))
             ->groupBy('players.name')
             ->orderBy('players.name')
             ->get();
@@ -184,6 +184,11 @@ class HubController extends Controller
         }
 
         return $return;
+    }
+
+    private function getAllianceIds(string $string)
+    {
+        return $this->checkPermission($string) ? [12, 95] : [95];
     }
 
     private function checkPermission(string $string)
