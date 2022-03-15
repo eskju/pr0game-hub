@@ -142,7 +142,7 @@ class HubController extends Controller
         }
 
         $players = Player::query()
-            ->whereIn('alliance_id', $this->allianceIds)
+            ->whereIn('alliance_id', $this->getAllianceIds('getScores'))
             ->orderBy('players.name')
             ->get();
 
