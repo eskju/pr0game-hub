@@ -186,17 +186,20 @@ class HubController extends Controller
         return $return;
     }
 
-    private function getAllianceIds(string $string)
+    private function getAllianceIds(string $string): array
     {
         return $this->checkPermission($string) ? [12, 95] : [95];
     }
 
-    private function checkPermission(string $string)
+    private function checkPermission(string $string): bool
     {
         // not in main ally and not RedStar
         if (auth()->user()->player->alliance_id !== $this->allowedAllianceId && auth()->user()->player_id != 275 && auth()->user()->player_id != 518) {
-            throw new Exception('PermissionException');
+            // throw new Exception('PermissionException');
+            return false;
         }
+
+        return true;
     }
 
     private function getIntervalValues($data, string $offset, int $days): array
