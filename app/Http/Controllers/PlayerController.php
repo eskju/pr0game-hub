@@ -210,7 +210,7 @@ class PlayerController extends Controller
                 ->where('is_deleted', 0)
                 ->get()
                 ->pluck('id'),
-            'version' => '1.0.52',
+            'version' => '1.0.53',
             'player' => auth()->user()->player
         ];
     }

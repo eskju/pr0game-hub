@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.53',
+        date_time: '2022-03-15 11PM',
+        changes: 'enable hub functions for wing members'
+    },
+    {
         version: '1.0.52',
         date_time: '2022-03-15 11PM',
         changes: 'bugfix for transports (calculated twice) in resource overview'
