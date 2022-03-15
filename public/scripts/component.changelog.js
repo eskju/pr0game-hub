@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.0.52',
+        date_time: '2022-03-15 11PM',
+        changes: 'bugfix for transports (calculated twice) in resource overview'
+    },
+    {
         version: '1.0.51',
         date_time: '2022-03-12 06AM',
         changes: 'changed hub planet overview to show local building score &amp; made all columns sortable'

@@ -644,6 +644,7 @@ window.PageOverview = function () {
         let timeAndId;
         let id;
         let type;
+        let isReturn;
         let resources;
 
         $('.fleet-movement ul li').each(function (key, obj) {
@@ -652,6 +653,7 @@ window.PageOverview = function () {
             timeAndId = $(columns[0]).attr('id').replace(/fleettime\_/, '');
             id = timeAndId.substring(10, timeAndId.length);
             type = $(columns[2]).find('a').length > 0 ? $($(columns[2]).find('a')).html() : $(columns[2]).html();
+            isReturn = $(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1;
 
             $(obj).attr('id', 'fleet' + id + '-' + ($(columns[1]).hasClass('return') || $(columns[1]).html().search(/hält bei/) !== -1 ? '1' : '0'));
 
@@ -670,9 +672,11 @@ window.PageOverview = function () {
                     ships: $this.getShips($(columns[1]).find('span.textForBlind')), // ship amounts
                 });
 
-                $this.sumFleetMetal += getInt(resources['metal'] || 0);
-                $this.sumFleetCrystal += getInt(resources['crystal'] || 0);
-                $this.sumFleetDeuterium += getInt(resources['deuterium'] || 0);
+                if(type !== 'Transport' || isReturn) {
+                    $this.sumFleetMetal += getInt(resources['metal'] || 0);
+                    $this.sumFleetCrystal += getInt(resources['crystal'] || 0);
+                    $this.sumFleetDeuterium += getInt(resources['deuterium'] || 0);
+                }
             }
         });
 

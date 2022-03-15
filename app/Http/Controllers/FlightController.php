@@ -77,8 +77,6 @@ class FlightController extends Controller
             $flight->save();
         }
 
-        Log::info('Get Data: ' . (microtime(true) - LARAVEL_START));
-
         Flight::query()
             ->where('user_id', auth()->id())
             ->where('is_active', '=', 1)
