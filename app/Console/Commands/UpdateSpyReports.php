@@ -32,6 +32,12 @@ class UpdateSpyReports extends Command
 
     public function handle()
     {
+        for($i = 1; $i <= 30; $i++) {
+            echo $i . ': ' . json_encode(CostService::getCostsForLevel(4, $i)) . PHP_EOL;
+        }
+
+        exit;
+
         $coords = SpyReport::query()
             ->select('coordinates')
             ->groupBy('coordinates')
