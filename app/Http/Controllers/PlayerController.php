@@ -100,7 +100,6 @@ class PlayerController extends Controller
                     WHERE battle_reports.galaxy = planets.galaxy
                     AND battle_reports.system = planets.system
                     AND battle_reports.planet = planets.planet
-                    AND battle_reports.type = planets.type
                     ORDER BY created_at DESC
                     LIMIT 1
                 ) as `last_battle_report`'),
