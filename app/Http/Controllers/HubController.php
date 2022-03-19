@@ -144,7 +144,7 @@ class HubController extends Controller
         $player = Player::query()->find(auth()->user()->player_id);
 
         $players = Player::query()
-            ->whereIn('alliance_id', $player->alliance_id)
+            ->where('alliance_id', $player->alliance_id)
             ->orderBy('players.name')
             ->get();
 
