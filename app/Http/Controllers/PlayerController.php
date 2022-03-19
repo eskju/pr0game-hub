@@ -212,6 +212,7 @@ class PlayerController extends Controller
                 ->select('id')
                 ->where('updated_at', '<', Carbon::now()->subHours(8))
                 ->where('is_deleted', 0)
+                ->where('is_inactive', 0)
                 ->get()
                 ->pluck('id'),
             'version' => '1.0.53',
