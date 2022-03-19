@@ -8,7 +8,6 @@ window.processQueue = function () {
                 $($('iframe')[0]).remove();
             }
 
-            $('#row' + id + ' > td').css({backgroundColor: 'green'});
             processQueue();
         });
     } else {
