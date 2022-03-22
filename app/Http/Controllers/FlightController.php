@@ -16,8 +16,6 @@ class FlightController extends Controller
 {
     public function store(Request $request)
     {
-        Log::info('Controller: ' . (microtime(true) - LARAVEL_START));
-
         $outboundIds = [];
         $inboundIds = [];
         $inboundOutboundIds = [];
@@ -91,9 +89,7 @@ class FlightController extends Controller
             ->whereNotIn('external_id', $inboundIds)
             ->update(['is_active' => 0]);
 
-        Log::info('Updates: ' . (microtime(true) - LARAVEL_START));
         $expoStats = $this->getExpeditionStats(auth()->id());
-        Log::info('Expo Stats: ' . (microtime(true) - LARAVEL_START));
         $flights = Flight::query()
             ->where('user_id', auth()->id())
             ->where('is_active', 1)
@@ -108,7 +104,6 @@ class FlightController extends Controller
 
                 return $flight->toArray();
             });
-        Log::info('Flights: ' . (microtime(true) - LARAVEL_START));
 
         return response([
             'slots_used' => $this->getUsedSlots(),
@@ -156,7 +151,6 @@ class FlightController extends Controller
                 $costDeuterium = $key === 'deuterium' ? 1 : 0;
             } else {
                 if (!$resourceId = ResourceService::MAPPING_NAMES[$key] ?? null) {
-                    Log::error('SHIP ' . $key . ' NOT FOUND!');
                     continue;
                 }
 
@@ -192,7 +186,6 @@ class FlightController extends Controller
 
         foreach ($ships_diff ?? [] as $shipAlias => $data) {
             if (!$resourceId = ResourceService::MAPPING_NAMES[$shipAlias] ?? null) {
-                Log::error('SHIP ' . $shipAlias . ' NOT FOUND!');
                 continue;
             }
 
