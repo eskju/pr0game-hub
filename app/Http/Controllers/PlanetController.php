@@ -21,6 +21,7 @@ class PlanetController extends Controller
             $planet->galaxy = $coordinates[0];
             $planet->system = $coordinates[1];
             $planet->planet = $coordinates[2];
+            $planet->type = 'PLANET';
         }
 
         $planet->player_id = $request->get('player_id');
