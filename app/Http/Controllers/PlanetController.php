@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PlanetController extends Controller
 {
@@ -23,6 +24,8 @@ class PlanetController extends Controller
             $planet->planet = $coordinates[2];
             $planet->type = 'PLANET';
         }
+
+        Log::info($planet->coordinates);
 
         $planet->player_id = $request->get('player_id');
         $planet->external_id = $request->get('planet_id');
