@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController
 {
@@ -24,6 +25,7 @@ class Controller extends BaseController
 
         /** @var User $user */
         if (!$user = User::query()->where('api_key', $apiKey)->first()) {
+            Log::info('invalid API key ' . $apiKey);
             abort(422);
         }
 
