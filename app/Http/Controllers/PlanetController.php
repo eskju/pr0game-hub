@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class PlanetController extends Controller
 {
     public function storePlanetId(Request $request)
-    {return;
+    {
         $coordinates = explode(':', $request->get('coordinates'));
 
         if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->where('type', 'PLANET')->first()) {
