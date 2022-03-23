@@ -46,7 +46,7 @@ window.Resources = function () {
         $('#infoCrystal').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdCrystal / 24), true) + ' / Stunde<br>' +  numberFormat(Math.round(this.sumProdCrystal), true) + ' / Tag');
         $('#infoDeuterium').attr('data-tooltip-content', numberFormat(Math.round(this.sumProdDeuterium / 24), true) + ' / Stunde<br>' +  numberFormat(Math.round(this.sumProdDeuterium), true) + ' / Tag');
 
-        $('#current_metal').stop().animate({left: 0}, 100, () => {
+        $('#current_metal').stop().animate({left: 0}, 1000, () => {
             $this.updateVars();
         });
     };
