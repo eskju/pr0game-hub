@@ -51,6 +51,7 @@ import './page.fleet';
 import './page.galaxy';
 import './page.hangar';
 import './page.hub';
+import './page.imperium';
 import './page.messages';
 import './page.overview';
 import './page.playercard';
@@ -230,6 +231,12 @@ window.parseUrl = function () {
     }
 
     // message page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=imperium/) === 0) {
+        window.pageImperium = new PageImperium();
+        pageImperium.init();
+    }
+
+    // message page
     else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=messages/) === 0) {
         window.pageMessages = new PageMessages();
         pageMessages.init();
@@ -284,6 +291,44 @@ window.parseUrl = function () {
                 }
             }
         });
+
+        if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=fleetStep1/) === 0) {
+            let destination = getValue(ownCoords[0] + '_fleet_destination');
+
+            if (destination) {
+                destination = getCoordinates(destination);
+                $('content').prepend('<a id="setDestination" href="#" style="padding: 10px; color: ' + getRgb(cYellow) + ';">Preset-Destination ' + destination[0] + ' auswählen</a>');
+
+                $('#setDestination').click(function () {
+                    $('#galaxy').val(destination[1]);
+                    $('#system').val(destination[2]);
+                    $('#planet').val(destination[3]);
+                    updateVars();
+                });
+            }
+        }
+
+        if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=fleetStep2/) === 0) {
+            let metal = getValue(ownCoords[0] + '_fleet_metal');
+            let crystal = getValue(ownCoords[0] + '_fleet_crystal');
+            let deuterium = getValue(ownCoords[0] + '_fleet_deuterium');
+
+            if (metal || crystal || deuterium) {
+                $('content').prepend('<a id="setResources" href="#" style="padding: 10px; color: ' + getRgb(cYellow) + ';">Preset-Ressourcen setzen</a>');
+
+                $('#setResources').click(function () {
+                    $('input[name=metal]').val(metal);
+                    $('input[name=crystal]').val(crystal);
+                    $('input[name=deuterium]').val(deuterium);
+
+                    if ($('input[name=mission]:checked').length === 0) {
+                        $('#radio_4').attr('checked', 'checked');
+                    }
+
+                    calculateTransportCapacity();
+                });
+            }
+        }
     }
 
     // fleet page
@@ -315,6 +360,7 @@ window.pageHub = null;
 window.pageOverview = null;
 window.pageBuildings = null;
 window.pageHangar = null;
+window.pageImperium = null;
 window.pageDefense = null;
 window.pageResearch = null;
 window.pageGalaxy = null;

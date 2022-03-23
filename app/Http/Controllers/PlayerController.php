@@ -215,7 +215,7 @@ class PlayerController extends Controller
                 ->where('is_inactive', 0)
                 ->get()
                 ->pluck('id'),
-            'version' => '1.0.53',
+            'version' => '1.1.0',
             'player' => auth()->user()->player
         ];
     }

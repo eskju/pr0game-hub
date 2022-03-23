@@ -64,13 +64,14 @@ window.PageBuildings = function () {
             let metal = $this.getCost('Metall', ressList);
             let crystal = $this.getCost('Kristall', ressList);
             let deuterium = $this.getCost('Deuterium', ressList);
+            let level = $this.getCost('Stufe', $(cell).html());
 
             // show notification button
             if (new PlanetResourceNotification().hasNotification(coords, resourceId)) {
                 const timestamp = new PlanetResourceNotification().getFinishTime(coords);
                 buildingRight.append('<br><button onclick="(new PlanetResourceNotification().removeNotification(\'' + coords + '\'))" style="color: ' + getRgb(cRed) + '"><i class="fa fa-bell-slash"></i> baubar in <span class="notification-timer" data-timestamp="' + timestamp + '">' + formatTimeDiff(timestamp) + '</span></button>');
             } else {
-                buildingRight.append('<br><button onclick="(new PlanetResourceNotification().addNotification(\'' + coords + '\', \'' + resourceId + '\',' + metal + ',' + crystal + ',' + deuterium + '))" style="color: ' + getRgb(cGreen) + '"><i class="fa fa-bell"></i> benachrichtigen, wenn baubar</button>');
+                buildingRight.append('<br><button onclick="(new PlanetResourceNotification().addNotification(\'' + coords + '\', \'' + resourceId + '\',' + metal + ',' + crystal + ',' + deuterium + ',' + level + '))" style="color: ' + getRgb(cGreen) + '"><i class="fa fa-bell"></i> benachrichtigen, wenn baubar</button>');
             }
         }
 
@@ -100,6 +101,15 @@ window.PageBuildings = function () {
             case 'Deuterium':
                 tmp = html.match(/\<a (.*)\>(Deuterium)\<\/a\>(.*)\<b(.*)\<span(.*)\>([.0-9]+)\<\//);
                 break;
+
+            case 'Stufe':
+                if(!html) {
+                    return 1;
+                }
+
+                tmp = html.match(/(Stufe) ([.0-9]+)/);
+                console.log(tmp);
+                return tmp ? getInt(tmp[2]) : 0;
         }
 
         return tmp ? getInt(tmp[6]) : 0;

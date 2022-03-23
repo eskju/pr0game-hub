@@ -65,6 +65,8 @@ window.Resources = function () {
             $('.ress_' + alias + '_' + coords.replace(/\:/g, '_')).css('color', getColorAlt(cRed, parseInt(currentValue) / parseInt(limit), cGreen));
         }
 
+        $('.ress_light_' + alias + '_' + coords.replace(/\:/g, '_')).html(numberFormat(parseInt(currentValue)));
+
         switch (alias) {
             case 'metal':
                 this.sumMetal += parseInt(currentValue);

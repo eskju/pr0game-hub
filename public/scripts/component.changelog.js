@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.0',
+        date_time: '2022-03-23 11AM',
+        changes: 'added presets for fleet'
+    },
+    {
         version: '1.0.53',
         date_time: '2022-03-15 11PM',
         changes: 'enable hub functions for wing members'

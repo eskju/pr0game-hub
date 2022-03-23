@@ -5,11 +5,13 @@ window.PageFleet = function () {
     this.maxRessPoints = 6000;
     this.maxFleetPoints = 3000;
     this.fleet = [];
+    this.cargoOptions = [];
 
     this.init = function () {
         this.parseShips();
         this.showExpoButton();
         this.bindEnterKey();
+        this.showCargoOptions();
     };
 
     this.parseShips = function () {
@@ -246,5 +248,121 @@ window.PageFleet = function () {
                 }
             }
         });
+    }
+
+    this.showCargoOptions = function () {
+        let html = '';
+        const planetResourceNotification = new PlanetResourceNotification();
+        const metal = getInt(getValue(ownCoords[0] + '_metal'));
+        const crystal = getInt(getValue(ownCoords[0] + '_crystal'));
+        const deuterium = getInt(getValue(ownCoords[0] + '_deuterium'));
+        const ktAvailable = getInt($('#ship202_value').html());
+        const gtAvailable = getInt($('#ship203_value').html());
+
+        this.cargoOptions = []
+        this.cargoOptions.push({
+            title: 'Ressourcen auf dem Planeten',
+            metal,
+            crystal,
+            deuterium,
+            setMetal: metal,
+            setCrystal: crystal,
+            setDeuterium: deuterium,
+            coords: null
+        });
+
+        $.each(planetResourceNotification.getNotifications(), function (key, obj) {
+            $this.cargoOptions.push({
+                title: obj.coords + ' (' + obj.resource + ' Stufe ' + obj.level + ')',
+                metal: getInt(obj.metal),
+                crystal: getInt(obj.crystal),
+                deuterium: getInt(obj.deuterium),
+                setMetal: getInt(getInt(obj.metal) <= getInt(metal) ? obj.metal : metal),
+                setCrystal: getInt(getInt(obj.crystal) <= getInt(crystal) ? obj.crystal : crystal),
+                setDeuterium: getInt(getInt(obj.deuterium) <= getInt(deuterium) ? obj.deuterium : deuterium),
+                coords: obj.coords
+            });
+        });
+
+        html += '<br>';
+        html += '<div id="customContentContainer">';
+        html += '<table width="100%">'
+        html += '<thead>';
+        html += '<tr><th colspan="5">Cargo Options</th></tr>';
+        html += '<tr>';
+        html += '<th class="text-left">Preset</th>';
+        html += '<th class="text-right">Metall</th>';
+        html += '<th class="text-right">Kristall</th>';
+        html += '<th class="text-right">Deuterium</th>';
+        html += '<th class="text-right">ben. KT/GT</th>';
+        html += '<th class="text-left">Optionen</th>';
+        html += '</tr>';
+        html += '</thead>';
+        html += '<tbody>';
+
+        $.each(this.cargoOptions, function (key, obj) {
+            obj.sum = getInt(obj.setMetal) + getInt(obj.setCrystal) + getInt(obj.setDeuterium);
+            obj.ktNeeded = Math.ceil((obj.sum + 1000) / 5000);
+            obj.gtNeeded = Math.ceil((obj.sum + 1000) / 25000);
+
+            html += '<tr>';
+            html += '<td class="text-left">' + obj.title + '</td>'
+            html += '<td class="text-right" style="color: ' + getRgb(obj.metal <= metal ? cGreen : cRed) + '">' + numberFormat(obj.metal) + '</td>'
+            html += '<td class="text-right" style="color: ' + getRgb(obj.crystal <= crystal ? cGreen : cRed) + '">' + numberFormat(obj.crystal) + '</td>'
+            html += '<td class="text-right" style="color: ' + getRgb(obj.deuterium <= deuterium ? cGreen : cRed) + '">' + numberFormat(obj.deuterium) + '</td>'
+            html += '<td class="text-right"><span style="color: ' + getRgb(ktAvailable >= obj.ktNeeded ? cGreen : cRed) + '">' + numberFormat(obj.ktNeeded) + '</span> / <span style="color: ' + getRgb(gtAvailable >= obj.gtNeeded ? cGreen : cRed) + '">' + numberFormat(obj.gtNeeded) + '</span></td>'
+            html += '<td class="text-left">';
+            html += '<a href="javascript:void(0)" onclick="pageFleet.setCargoFleet(' + obj.setMetal + ', ' + obj.setCrystal + ', ' + obj.setDeuterium + ', 202, \'' + ownCoords[0] + '\', \'' + obj.coords + '\')" class="tooltip" style="font-weight: bold; color: ' + getRgb(ktAvailable === 0 ? cRed : (ktAvailable >= obj.ktNeeded ? cGreen : cYellow)) + '" data-tooltip-content="<b style=\'color:' + getRgb(cRed) + '\'>KT</b>s priorisieren: Erst die benötigten KT auswählen;<br>Falls nicht ausreichend vorhanden mit GTs auffüllen.<br>(+1.000 Ress für Treibstoff einkalkuliert).<br><span style=\'color: ' + getRgb(cGreen) + '\';>Genug KT vorhanden</span> / <span style=\'color: ' + getRgb(cYellow) + '\';>Mit GT-Auffüllung möglich</span> / <span style=\'color: ' + getRgb(cRed) + '\';>Keine KT vorhanden</span>"><i class="fa fa-truck-pickup"></i></a> / ';
+            html += '<a href="javascript:void(0)" onclick="pageFleet.setCargoFleet(' + obj.setMetal + ', ' + obj.setCrystal + ', ' + obj.setDeuterium + ', 203, \'' + ownCoords[0] + '\', \'' + obj.coords + '\')" class="tooltip" style="font-weight: bold; color: ' + getRgb(gtAvailable === 0 ? cRed : (gtAvailable >= obj.gtNeeded ? cGreen : cYellow)) + '" data-tooltip-content="<b style=\'color:' + getRgb(cRed) + '\'>GT</b>s priorisieren: Erst die benötigten GT auswählen;<br>Falls nicht ausreichend vorhanden mit KTs auffüllen.<br>(+1.000 Ress für Treibstoff einkalkuliert).<br><span style=\'color: ' + getRgb(cGreen) + '\';>Genug GT vorhanden</span> / <span style=\'color: ' + getRgb(cYellow) + '\';>Mit KT-Auffüllung möglich</span> / <span style=\'color: ' + getRgb(cRed) + '\';>Keine GT vorhanden</span>"><i class="fa fa-truck"></i></a>';
+            html += '</td>'
+            html += '</tr>';
+        });
+
+        html += '</tbody>';
+        html += '</table>';
+        html += '</div><br>';
+
+        $('content > br').replaceWith(html);
+    };
+
+    this.setCargoFleet = function (metal, crystal, deuterium, preset, departure, destination) {
+        const ktAvailable = getInt($('#ship202_value').html());
+        const gtAvailable = getInt($('#ship203_value').html());
+        let sum = metal + crystal + deuterium + 1000;
+        let sumKt = 0;
+        let sumGt = 0;
+        let asd;
+
+        switch (preset) {
+            case 202:
+                asd = Math.ceil(sum / 5000);
+                sumKt = asd > ktAvailable ? ktAvailable : asd;
+                sum -= sumKt * 5000;
+
+                if (sum > 0) {
+                    asd = Math.ceil(sum / 25000);
+                    sumGt = asd > gtAvailable ? gtAvailable : asd;
+                }
+                break;
+
+            case 203:
+                asd = Math.ceil(sum / 25000);
+                sumGt = asd > gtAvailable ? gtAvailable : asd;
+                sum -= sumGt * 25000;
+
+                if (sum > 0) {
+                    asd = Math.ceil(sum / 5000);
+                    sumKt = asd > ktAvailable ? ktAvailable : asd;
+                }
+                break;
+        }
+
+        setValue(departure + '_fleet_metal', metal);
+        setValue(departure + '_fleet_crystal', crystal);
+        setValue(departure + '_fleet_deuterium', deuterium);
+        setValue(departure + '_fleet_destination', destination);
+
+        $('#ship202_input').val(sumKt);
+        $('#ship203_input').val(sumGt);
     }
 };
