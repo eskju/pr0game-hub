@@ -8,6 +8,7 @@ use App\Http\Controllers\GalaxyController;
 use App\Http\Controllers\HostileSpyingController;
 use App\Http\Controllers\HubController;
 use App\Http\Controllers\PlanetController;
+use App\Http\Controllers\PlanetImagesController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\SpyReportController;
 use App\Models\Alliance;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 Route::model('{alliance}', Alliance::class);
 Route::model('{player}', Player::class);
 
+Route::get('planet-images', PlanetImagesController::class . '@index');
 Route::get('/login', PlayerController::class . '@login');
 Route::post('/players/stats', PlayerController::class . '@stats');
 Route::post('/players/overview', PlayerController::class . '@overview');

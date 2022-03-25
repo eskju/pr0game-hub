@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Http\Controllers;
+
+class PlanetImagesController
+{
+    protected $urls = [
+        'pr0game' => [
+            'https://pr0game.com/styles/theme/nova/planeten/debris.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet01.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet02.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet03.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet04.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet05.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet06.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet07.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet08.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet09.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/dschjungelplanet10.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet01.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet02.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet03.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet04.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet05.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet06.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet07.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet08.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet09.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/eisplanet10.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/gasplanet01.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/gasplanet02.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/gasplanet03.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/gasplanet04.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/gasplanet05.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/gasplanet06.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/gasplanet07.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/gasplanet08.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/mond.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/normaltempplanet01.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/normaltempplanet02.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/normaltempplanet03.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/normaltempplanet04.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/normaltempplanet05.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/normaltempplanet06.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/normaltempplanet07.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet01.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet02.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet03.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet04.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet05.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet06.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet07.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet08.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet09.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/trockenplanet10.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet01.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet02.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet03.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet04.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet05.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet06.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet07.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet08.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wasserplanet09.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wuestenplanet01.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wuestenplanet02.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wuestenplanet03.jpg',
+            'https://pr0game.com/styles/theme/nova/planeten/wuestenplanet04.jpg'
+        ],
+        'm23' => [
+            'https://abload.de/img/1acj6e.jpg',
+            'https://abload.de/img/4dhk5m.jpg',
+            'https://abload.de/img/3y2kf1.jpg',
+            'https://abload.de/img/2rwjhr.jpg',
+            'https://abload.de/img/5j3kpa.jpg',
+            'https://abload.de/img/2428j6s.jpg',
+            'https://abload.de/img/231mj4b.jpg',
+            'https://abload.de/img/22b9jtt.jpg',
+            'https://abload.de/img/21bikcm.jpg',
+            'https://abload.de/img/20k4jvu.jpg',
+            'https://abload.de/img/19vmkvn.jpg',
+            'https://abload.de/img/184xkau.jpg',
+            'https://abload.de/img/17pcji6.jpg',
+            'https://abload.de/img/16stjxd.jpg',
+            'https://abload.de/img/1599kub.jpg',
+            'https://abload.de/img/14hfjp0.jpg',
+            'https://abload.de/img/13akjz5.jpg',
+            'https://abload.de/img/12a3km4.jpg',
+            'https://abload.de/img/11xbjtk.jpg',
+            'https://abload.de/img/10nljk9.jpg',
+            'https://abload.de/img/9rtj2e.jpg',
+            'https://abload.de/img/8tkkqz.jpg',
+            'https://abload.de/img/7u1jyq.jpg',
+            'https://abload.de/img/6q8k9l.jpg'
+        ]
+    ];
+
+    public function index()
+    {
+        return view('planet-images')->with('urls', $this->urls);
+    }
+}
