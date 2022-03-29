@@ -183,10 +183,10 @@ class PlayerController extends Controller
 
         $players = $players->map(function (Planet $planet) {
             $return = $planet->toArray();
-            $return['last_spy_report_hours'] = $return['last_spy_report'] ? abs(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
-            $return['last_spy_report'] = $return['last_spy_report'] ? $this->getDateTime(Carbon::parse($return['last_spy_report'])->subMinute()->subHour()) : '';
-            $return['last_battle_report_hours'] = $return['last_battle_report'] ? abs(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '';
-            $return['last_battle_report'] = $return['last_battle_report'] ? $this->getDateTime(Carbon::parse($return['last_battle_report'])->subMinute()->subHour()) : '';
+            $return['last_spy_report_hours'] = $return['last_spy_report'] ? abs(Carbon::parse($return['last_spy_report'])->subMinute()->diffInHours(Carbon::now())) : '';
+            $return['last_spy_report'] = $return['last_spy_report'] ? $this->getDateTime(Carbon::parse($return['last_spy_report'])->subMinute()) : '';
+            $return['last_battle_report_hours'] = $return['last_battle_report'] ? abs(Carbon::parse($return['last_battle_report'])->subMinute()->diffInHours(Carbon::now())) : '';
+            $return['last_battle_report'] = $return['last_battle_report'] ? $this->getDateTime(Carbon::parse($return['last_battle_report'])->subMinute()) : '';
             $return['last_spy_metal'] = $return['last_spy_metal'] ? number_format($return['last_spy_metal'], 0, ',', '.') : '';
             $return['last_spy_crystal'] = $return['last_spy_crystal'] ? number_format($return['last_spy_crystal'], 0, ',', '.') : '';
             $return['last_spy_deuterium'] = $return['last_spy_deuterium'] ? number_format($return['last_spy_deuterium'], 0, ',', '.') : '';
@@ -201,7 +201,7 @@ class PlayerController extends Controller
             $return['player']['score_military'] = $return['player_score_military'];
             $return['player']['score_defense'] = $return['player_score_defense'];
             $return['player']['score_building'] = $return['player_score_building'];
-            $return['inactive_since'] = $return['inactive_since'] ? Carbon::parse($return['inactive_since'])->subHour()->diffInHours(Carbon::now(), true) : null;
+            $return['inactive_since'] = $return['inactive_since'] ? Carbon::parse($return['inactive_since'])->diffInHours(Carbon::now(), true) : null;
 
             return $return;
         });
