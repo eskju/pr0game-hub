@@ -26,7 +26,7 @@ class HostileSpyingController extends Controller
             ->paginate(50);
 
         $return->getCollection()->transform(function (HostileSpying $hostileSpying) {
-            $hostileSpying->timestamp = $hostileSpying->created_at->subHour()->shortAbsoluteDiffForHumans();
+            $hostileSpying->timestamp = $hostileSpying->created_at->shortAbsoluteDiffForHumans();
 
             return $hostileSpying;
         });
