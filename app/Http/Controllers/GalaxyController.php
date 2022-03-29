@@ -62,13 +62,13 @@ class GalaxyController extends Controller
                 'system' => $planet['system'],
                 'planet' => $planet['planet'],
                 'external_id' => $planet['external_id'],
-                'last_battle_report' => $planet['last_battle_report'] ? $this->getDateTime(Carbon::parse($planet['last_battle_report'])->subMinute()->subHour()) : '',
-                'last_spy_report' => $planet['last_spy_report'] ? $this->getDateTime(Carbon::parse($planet['last_spy_report'])->subMinute()->subHour()) : '',
+                'last_battle_report' => $planet['last_battle_report'] ? $this->getDateTime(Carbon::parse($planet['last_battle_report'])->subMinute()) : '',
+                'last_spy_report' => $planet['last_spy_report'] ? $this->getDateTime(Carbon::parse($planet['last_spy_report'])->subMinute()) : '',
                 'last_spy_metal' => $planet['last_spy_metal'] ? number_format($planet['last_spy_metal'], 0, ',', '.') : '',
                 'last_spy_crystal' => $planet['last_spy_crystal'] ? number_format($planet['last_spy_crystal'], 0, ',', '.') : '',
                 'last_spy_deuterium' => $planet['last_spy_deuterium'] ? number_format($planet['last_spy_deuterium'], 0, ',', '.') : '',
-                'last_spy_report_hours' => $planet['last_spy_report'] ? abs(Carbon::parse($planet['last_spy_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '',
-                'last_battle_report_hours' => $planet['last_battle_report'] ? abs(Carbon::parse($planet['last_battle_report'])->subMinute()->subHour()->diffInHours(Carbon::now())) : '',
+                'last_spy_report_hours' => $planet['last_spy_report'] ? abs(Carbon::parse($planet['last_spy_report'])->subMinute()->diffInHours(Carbon::now())) : '',
+                'last_battle_report_hours' => $planet['last_battle_report'] ? abs(Carbon::parse($planet['last_battle_report'])->subMinute()->diffInHours(Carbon::now())) : '',
             ];
         }
 
