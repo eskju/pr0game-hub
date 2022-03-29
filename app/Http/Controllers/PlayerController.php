@@ -370,7 +370,7 @@ class PlayerController extends Controller
     private function getDateTime(Carbon $dateTime): string
     {
         if ($this->dateFormatForHumans) {
-            return $dateTime->subHour()->shortAbsoluteDiffForHumans();
+            return $dateTime->addHour()->shortAbsoluteDiffForHumans();
         }
 
         return $dateTime->format('d.m. H:i');
