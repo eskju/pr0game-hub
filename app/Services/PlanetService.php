@@ -24,6 +24,7 @@ class PlanetService
 
     public static function updatePlanetBySpyReport(SpyReport $spyReport)
     {
+        /** @var Planet|null $planet */
         if (!$planet = $spyReport->getPlanet()) {
             return;
         }
@@ -32,6 +33,13 @@ class PlanetService
             return $value !== null;
         })->toArray());
 
+        $planet->save();
+
+        self::updatePlanet($planet);
+    }
+
+    public static function updatePlanet(Planet $planet)
+    {
         $scoreDefense = 0;
         $scoreDefense += (int)$planet->rocket_launchers * 2;
         $scoreDefense += (int)$planet->light_laser_turrets * 2;
