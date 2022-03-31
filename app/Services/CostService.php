@@ -19,7 +19,7 @@ class CostService
             $costs->metal += floor($metal * pow($factor, $l));
             $costs->crystal += floor($crystal * pow($factor, $l));
             $costs->deuterium += floor($deuterium * pow($factor, $l));
-            $costs->score = floor($costs->metal + $costs->crystal) / 1000;
+            $costs->score = floor($costs->metal + $costs->crystal + $costs->deuterium) / 1000;
         }
 
         return $costs;
