@@ -49,6 +49,8 @@ class PlanetService
         $scoreDefense += (int)$planet->plasma_turrets * 130;
         $scoreDefense += (int)$planet->small_shields * 20;
         $scoreDefense += (int)$planet->large_shields * 100;
+        $scoreDefense += (int)$planet->interceptor_missiles * 10;
+        $scoreDefense += (int)$planet->interplanetary_missiles * 25;
 
         $scoreMilitary = 0;
         $scoreMilitary += (int)$planet->small_transporters * 4;

@@ -61,6 +61,7 @@ class PlanetController extends Controller
         }
 
         $planet->save();
+        PlanetService::updatePlanet($planet);
 
         $items = [];
         for ($i = 1; $i < 100; $i++) {

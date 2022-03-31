@@ -47,6 +47,7 @@ import './component.changelog';
 import './component.menu';
 import './page.alliance';
 import './page.buildings';
+import './page.defense';
 import './page.fleet';
 import './page.galaxy';
 import './page.hangar';
@@ -262,6 +263,12 @@ window.parseUrl = function () {
     else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=buildings/) === 0) {
         window.pageBuildings = new PageBuildings();
         pageBuildings.init();
+    }
+
+    // defense page
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=shipyard\&mode\=defense/) === 0) {
+        window.pageDefense = new PageDefense();
+        pageDefense.init();
     }
 
     // buildings page
