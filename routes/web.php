@@ -12,6 +12,7 @@ use App\Http\Controllers\PlanetImagesController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\SpyReportController;
 use App\Models\Alliance;
+use App\Models\Planet;
 use App\Models\Player;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::model('{alliance}', Alliance::class);
 Route::model('{player}', Player::class);
+
+Route::get('live-score', function () {
+    $score = 0;
+    $score += Planet::query()->where('player_id', 1029)->sum('score_building');
+    $score += Planet::query()->where('player_id', 1029)->sum('score_defense');
+    $score += Planet::query()->where('player_id', 1029)->sum('score_military');
+    $score += Player::query()->where('id', 1029)->sum('score_science');
+    $oldScore = Player::query()->where('id', 1029)->sum('score');
+    $diff = $score - $oldScore;
+
+    echo '<pre>';
+    echo 'pr0game: ' . number_format($oldScore, 0, '', '.') . PHP_EOL;
+    echo 'neu:     ' . number_format($score, 0, '', '.') . PHP_EOL;
+    echo 'diff:    ' . ($diff > 0 ? '+' : '') . number_format($diff, 0, '', '.');
+    echo '</pre>';
+});
 
 Route::get('planet-images', PlanetImagesController::class . '@index');
 Route::get('/login', PlayerController::class . '@login');

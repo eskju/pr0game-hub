@@ -206,6 +206,14 @@ class PlayerController extends Controller
             return $return;
         });
 
+        // live score
+        $score = 0;
+        $score += Planet::query()->where('player_id', auth()->user()->player_id)->sum('score_building');
+        $score += Planet::query()->where('player_id', auth()->user()->player_id)->sum('score_defense');
+        $score += Planet::query()->where('player_id', auth()->user()->player_id)->sum('score_military');
+        $score += Player::query()->where('id', auth()->user()->player_id)->sum('score_science');
+        $oldScore = Player::query()->where('id', auth()->user()->player_id)->sum('score');
+
         return [
             'players' => $players,
             'outdated_ids' => Player::query()
@@ -216,7 +224,9 @@ class PlayerController extends Controller
                 ->get()
                 ->pluck('id'),
             'version' => '1.1.0',
-            'player' => auth()->user()->player
+            'player' => auth()->user()->player,
+            'live_score' => $score,
+            'live_score_diff' => $score - $oldScore
         ];
     }
 

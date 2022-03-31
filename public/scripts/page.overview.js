@@ -194,6 +194,10 @@ window.PageOverview = function () {
         html += '<td class="text-left">Punkte</td>';
         html += '<td class="text-left">' + infos[3].replace(/Punkte /, '') + '</td>';
         html += '</tr>';
+        html += '<tr>';
+        html += '<td class="text-left">Live</td>';
+        html += '<td class="text-left"><span id="live-score"></span> <span id="live-score-diff"></span></td>';
+        html += '</tr>';
         html += '</table>';
         html += '<a style="margin-left: 12px; margin-top: 10px; color: #888; font-size: 10px;" href="javascript:void(0)" onclick="return Dialog.PlanetAction();">Planet umbenennen/aufgeben</a>';
         html += '</td><td style="padding: 0"><canvas id="playerChart" style="height: 100px; width: 100%"></canvas><canvas id="playerChartBar" style="height: 75px; width: 100%"></canvas></td></table>';
@@ -535,6 +539,12 @@ window.PageOverview = function () {
             ownPlayer = response.player;
         }
 
+        if (response.live_score) {
+            $('#live-score').html(numberFormat(response.live_score));
+            $('#live-score-diff').html('(' + (response.live_score_diff > 0 ? '+' : '') + numberFormat(response.live_score_diff) + ')');
+            $('#live-score-diff').css('color', getRgb(response.live_score_diff > 0 ? cGreen : cRed));
+        }
+
         let counter = 0;
         let playerRowStyle;
         let playerScoreStyle;
@@ -672,7 +682,7 @@ window.PageOverview = function () {
                     ships: $this.getShips($(columns[1]).find('span.textForBlind')), // ship amounts
                 });
 
-                if(type !== 'Transport' || isReturn) {
+                if (type !== 'Transport' || isReturn) {
                     $this.sumFleetMetal += getInt(resources['metal'] || 0);
                     $this.sumFleetCrystal += getInt(resources['crystal'] || 0);
                     $this.sumFleetDeuterium += getInt(resources['deuterium'] || 0);

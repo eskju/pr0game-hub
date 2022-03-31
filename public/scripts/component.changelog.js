@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.1',
+        date_time: '2022-03-31 07AM',
+        changes: 'added live score'
+    },
+    {
         version: '1.1.0',
         date_time: '2022-03-23 11AM',
         changes: 'added presets for fleet'
