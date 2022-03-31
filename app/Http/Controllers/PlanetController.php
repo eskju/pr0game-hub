@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Planet;
 use App\Models\User;
+use App\Services\PlanetService;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -127,6 +128,7 @@ class PlanetController extends Controller
         }
 
         $planet->save();
+        PlanetService::updatePlanet($planet);
 
         $total = 0;
         $totalScore = 0;
