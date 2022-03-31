@@ -45,8 +45,8 @@ class PlanetService
         $scoreDefense += (int)$planet->light_laser_turrets * 2;
         $scoreDefense += (int)$planet->heavy_laser_turrets * 8;
         $scoreDefense += (int)$planet->ion_turrets * 8;
-        $scoreDefense += (int)$planet->gauss_canons * 35;
-        $scoreDefense += (int)$planet->plasma_turrets * 100;
+        $scoreDefense += (int)$planet->gauss_canons * 37;
+        $scoreDefense += (int)$planet->plasma_turrets * 130;
         $scoreDefense += (int)$planet->small_shields * 20;
         $scoreDefense += (int)$planet->large_shields * 100;
 
