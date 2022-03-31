@@ -103,22 +103,22 @@ class Planet extends Model
         $this->score_building += CostService::getScoreForLevel(1, $this->metal_mine);
         $this->score_building += CostService::getScoreForLevel(2, $this->crystal_mine);
         $this->score_building += CostService::getScoreForLevel(3, $this->deuterium_mine);
-        $this->score_building += CostService::getScoreForLevel(3, $this->solar_plant);
-        $this->score_building += CostService::getScoreForLevel(3, $this->techno_dome);
-        $this->score_building += CostService::getScoreForLevel(3, $this->fusion_plant);
-        $this->score_building += CostService::getScoreForLevel(3, $this->robot_factory);
-        $this->score_building += CostService::getScoreForLevel(3, $this->nano_factory);
-        $this->score_building += CostService::getScoreForLevel(3, $this->hangar);
-        $this->score_building += CostService::getScoreForLevel(3, $this->metal_storage);
-        $this->score_building += CostService::getScoreForLevel(3, $this->crystal_storage);
-        $this->score_building += CostService::getScoreForLevel(3, $this->deuterium_storage);
-        $this->score_building += CostService::getScoreForLevel(3, $this->laboratory);
-        $this->score_building += CostService::getScoreForLevel(3, $this->terra_former);
-        $this->score_building += CostService::getScoreForLevel(3, $this->alliance_depot);
-        $this->score_building += CostService::getScoreForLevel(3, $this->base);
-        $this->score_building += CostService::getScoreForLevel(3, $this->phalanx);
-        $this->score_building += CostService::getScoreForLevel(3, $this->portal);
-        $this->score_building += CostService::getScoreForLevel(3, $this->missile_silo);
+        $this->score_building += CostService::getScoreForLevel(4, $this->solar_plant);
+        $this->score_building += CostService::getScoreForLevel(6, $this->techno_dome);
+        $this->score_building += CostService::getScoreForLevel(12, $this->fusion_plant);
+        $this->score_building += CostService::getScoreForLevel(14, $this->robot_factory);
+        $this->score_building += CostService::getScoreForLevel(15, $this->nano_factory);
+        $this->score_building += CostService::getScoreForLevel(21, $this->hangar);
+        $this->score_building += CostService::getScoreForLevel(22, $this->metal_storage);
+        $this->score_building += CostService::getScoreForLevel(23, $this->crystal_storage);
+        $this->score_building += CostService::getScoreForLevel(24, $this->deuterium_storage);
+        $this->score_building += CostService::getScoreForLevel(31, $this->laboratory);
+        $this->score_building += CostService::getScoreForLevel(33, $this->terra_former);
+        $this->score_building += CostService::getScoreForLevel(34, $this->alliance_depot);
+        $this->score_building += CostService::getScoreForLevel(41, $this->base);
+        $this->score_building += CostService::getScoreForLevel(42, $this->phalanx);
+        $this->score_building += CostService::getScoreForLevel(43, $this->portal);
+        $this->score_building += CostService::getScoreForLevel(44, $this->missile_silo);
 
         return parent::save($options);
     }
