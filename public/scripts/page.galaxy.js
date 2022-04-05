@@ -23,7 +23,7 @@ window.PageGalaxy = function () {
                     planet_id: planetId,
                     player_id: playerId,
                     moon_id: moonId,
-                    activity: activity[1] || null,
+                    activity: activity && activity.length > 0 ? (activity[1] || null) : null,
                 }, function (response) {
                 });
             }
