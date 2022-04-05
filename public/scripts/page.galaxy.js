@@ -14,6 +14,7 @@ window.PageGalaxy = function () {
             var planetId = tooltipSrc.match(/doit\(6\,([0-9]+)/, tooltipSrc);
             planetId = planetId ? parseInt(planetId[1]) : null;
             var moonId = $(obj).parent().parent().find('td:nth-child(4)').html().match(/javascript\:doit\(([0-9]+)\,([0-9]+)\)/);
+            var activity = $(obj).parent().parent().find('td:nth-child(3)').html().match(/\(([*0-9]+)/);
             moonId = moonId ? moonId[2] : null;
 
             if (coords && planetId) {
@@ -21,7 +22,8 @@ window.PageGalaxy = function () {
                     coordinates: coords[0],
                     planet_id: planetId,
                     player_id: playerId,
-                    moon_id: moonId
+                    moon_id: moonId,
+                    activity: activity[1] || null,
                 }, function (response) {
                 });
             }

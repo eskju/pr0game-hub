@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Planet;
+use App\Models\PlanetActivity;
 use App\Models\User;
 use App\Services\PlanetService;
 use App\Services\ResourceService;
@@ -24,6 +25,11 @@ class PlanetController extends Controller
             $planet->planet = $coordinates[2];
             $planet->type = 'PLANET';
         }
+
+        $activity = new PlanetActivity();
+        $activity->coordinates = $request->get('coordinates');
+        $activity->activity = $request->get('activity');
+        $activity->save();
 
         $planet->player_id = $request->get('player_id');
         $planet->external_id = $request->get('planet_id');
