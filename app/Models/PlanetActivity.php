@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
+ * @property int $player_id
  * @property string $coordinates
  * @property string $activity
  * @property Carbon $created_at

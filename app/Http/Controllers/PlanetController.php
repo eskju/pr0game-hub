@@ -28,6 +28,7 @@ class PlanetController extends Controller
 
         $activity = new PlanetActivity();
         $activity->coordinates = $request->get('coordinates');
+        $activity->player_id = Planet::query()->where('coordinates', $request->get('coordinates'))->first()->player_id ?? null;
         $activity->activity = $request->get('activity');
         $activity->save();
 
