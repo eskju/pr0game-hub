@@ -1,4 +1,9 @@
-window.postJSON = function (url, data, callback) {
+window.postJSON = function (url, data, callback, queue = true) {
+    if (queue && false) {
+        queueXhr('POST', url, data, callback);
+        return;
+    }
+
     url = apiUrl + url + '?api_key=' + apiKey + '&version=' + version;
 
     if (debugMode) {

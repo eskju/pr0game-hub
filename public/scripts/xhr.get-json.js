@@ -1,4 +1,4 @@
-window.getJSON = function (url, callback) {
+window.getJSON = function (url, callback, queue = true) {
     const concatSym = url.search(/\?/) !== -1 ? '&' : '?';
     url = apiUrl + url + concatSym + 'api_key=' + apiKey + '&version=' + version;
 

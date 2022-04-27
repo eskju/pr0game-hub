@@ -43,6 +43,7 @@ import './util.show-spy-report-history-box';
 import './util.version-check';
 import './xhr.get-json';
 import './xhr.post-json';
+import './xhr.queue';
 import './component.changelog';
 import './component.menu';
 import './page.alliance';

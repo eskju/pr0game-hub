@@ -11,6 +11,7 @@ use App\Http\Controllers\PlanetController;
 use App\Http\Controllers\PlanetImagesController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\SpyReportController;
+use App\Http\Controllers\TrackingXhrRequestController;
 use App\Models\Alliance;
 use App\Models\Planet;
 use App\Models\Player;
@@ -86,3 +87,5 @@ Route::get('/debug/flights', FlightController::class . '@fixFlightDiffs');
 
 Route::post('/hostile-spying', HostileSpyingController::class . '@store');
 Route::get('/hostile-spying', HostileSpyingController::class . '@index');
+
+Route::post('/tracking/xhr-request', TrackingXhrRequestController::class . '@store');
