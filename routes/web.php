@@ -88,4 +88,4 @@ Route::get('/debug/flights', FlightController::class . '@fixFlightDiffs');
 Route::post('/hostile-spying', HostileSpyingController::class . '@store');
 Route::get('/hostile-spying', HostileSpyingController::class . '@index');
 
-Route::post('/tracking/xhr-request', TrackingXhrRequestController::class . '@store');
+Route::post('/tracking/xhr-requests', TrackingXhrRequestController::class . '@store');
