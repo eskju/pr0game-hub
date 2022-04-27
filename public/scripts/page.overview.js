@@ -493,15 +493,6 @@ window.PageOverview = function () {
     };
 
     this.checkUpdatableIds = function (response) {
-        if (response.outdated_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227 && ownPlanet == 10) {
-            this.container.prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
-            $('#fetchMissingIdsBtn').click(function () {
-                playerUpdateQueue = response.outdated_ids;
-
-                $('#fetchMissingIdsBtn').remove();
-                processQueue();
-            });
-        }
     };
 
     this.renderHtml = function () {

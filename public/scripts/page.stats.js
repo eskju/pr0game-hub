@@ -52,25 +52,5 @@ window.parsePageStatistics = function () {
             $('#row' + obj.id + ' td:nth-child(1)').css(getPlayerRowTdStyle(obj, response.player));
             $('#row' + obj.id + ' td:nth-child(2)').css(getPlayerRowTdStyle(obj, response.player));
         });
-
-        if (response.missing_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227) {
-            $('content').prepend('<button id="fetchMissingIdsBtn">Fetch ' + response.missing_ids.length + ' missing IDs</button>');
-            $('#fetchMissingIdsBtn').click(function () {
-                playerUpdateQueue = response.missing_ids;
-
-                $('#fetchMissingIdsBtn').remove();
-                processQueue();
-            });
-        }
-
-        if (response.outdated_ids.length > 0 && ownGalaxy == 3 && ownSystem == 227) {
-            $('content').prepend('<button id="fetchUpdatableIdsBtn">Fetch ' + response.outdated_ids.length + ' outdated IDs</button>');
-            $('#fetchUpdatableIdsBtn').click(function () {
-                playerUpdateQueue = response.outdated_ids;
-
-                $('#fetchMissingIdsBtn').remove();
-                processQueue();
-            });
-        }
     });
 };
