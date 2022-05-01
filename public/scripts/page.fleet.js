@@ -83,15 +83,17 @@ window.PageFleet = function () {
     this.showExpoButton = function () {
         $('.table519').each(function (key, obj) {
             if ($(obj).html().search(/Neuer Auftrag:/) !== -1) {
-                $(obj).find('tr th').append('<span style="margin-left: 20px">Expo GT:</span> <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet()">Ress</a> ');
+                $(obj).find('tr th').append('<span style="margin-left: 20px">Expo:</span> <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet()">Ress</a> ');
                 $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true)">Schiffe</a> // ');
-                $(obj).find('tr th').append('Expo KT: <a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, false)">Ress</a> ');
-                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(true, false)">Schiffe</a>');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 206)">Xer</a> ');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 215)">SX</a> ');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 213)">Zer</a> ');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 211)">Bomber</a> ');
             }
         });
     }
 
-    this.setExpoFleet = function (forFleetOnly = false, largeTransporters = true) {
+    this.setExpoFleet = function (forFleetOnly = false, largeTransporters = true, battleShipId = 207) {
         const notices = [];
         this.maxPoints = forFleetOnly ? this.maxFleetPoints : this.maxRessPoints;
         let pointsLeft = $this.maxPoints;
@@ -109,7 +111,8 @@ window.PageFleet = function () {
         }
 
         // set 1 of the best ship
-        const possibleBattleShipIds = [207, 206, 215, 211, 205, 204];
+        const possibleBattleShipIds = [battleShipId, 206, 215, 211, 205, 204];
+
         let foundBestShip = false;
         $.each(possibleBattleShipIds, function (key, possibleShipId) {
             if (!foundBestShip) {

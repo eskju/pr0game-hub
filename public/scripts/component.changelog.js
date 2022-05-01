@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.7',
+        date_time: '2022-05-01 05PM',
+        changes: 'added different expo presets'
+    },
+    {
         version: '1.1.6',
         date_time: '2022-05-01 05PM',
         changes: 'automatically delete non-existent planets'
