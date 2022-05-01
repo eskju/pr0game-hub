@@ -199,7 +199,7 @@ window.filterTableRow = function (obj, player) {
 }
 
 window.parseUrl = function () {
-    const url = window.location.href.replace('www.', '');
+    const url = window.location.href.replace('www.', '').replace('http:', 'https:').replace('.local', '.com');
 
     // custom pages
     if (location.hash && location.hash.length > 0) {
@@ -242,6 +242,16 @@ window.parseUrl = function () {
     else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=messages/) === 0) {
         window.pageMessages = new PageMessages();
         pageMessages.init();
+    }
+
+    // phalanx
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=phalanx/) === 0) {
+        console.log($('td.fleets'));
+        $('td.fleets').each(function (key, obj) {
+            var end = new Date($(obj).attr('data-fleet-end-time') * 1000);
+
+            $(obj).parent().append(' <span>' + end.toLocaleTimeString("de-DE") + '</span>');
+        });
     }
 
     // galaxy page

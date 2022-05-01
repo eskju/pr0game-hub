@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.2',
+        date_time: '2022-05-01 04PM',
+        changes: 'added arrival time for phalanx'
+    },
+    {
         version: '1.1.1',
         date_time: '2022-03-31 07AM',
         changes: 'added live score'

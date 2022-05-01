@@ -492,9 +492,6 @@ window.PageOverview = function () {
         });
     };
 
-    this.checkUpdatableIds = function (response) {
-    };
-
     this.renderHtml = function () {
         $this.debugTime();
         var html = '<table id="hubOverview" width="100%" style="max-width: 100% !important"><tr>';
@@ -633,7 +630,6 @@ window.PageOverview = function () {
         this.bindHeadlineSort();
         this.bindSettingsLink();
         this.bindSpyLinks();
-        this.checkUpdatableIds(response);
 
         $this.debugTime('renderHTML');
     }
