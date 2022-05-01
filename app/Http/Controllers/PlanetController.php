@@ -9,7 +9,6 @@ use App\Services\PlanetService;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PlanetController extends Controller
 {
@@ -77,7 +76,11 @@ class PlanetController extends Controller
             $activity->save();
 
             $planet->player_id = $requestPlanet->player_id;
-            $planet->external_id = $requestPlanet->planet_id;
+
+            if ($requestPlanet->planet_id) {
+                $planet->external_id = $requestPlanet->planet_id;
+            }
+
             $planet->save();
 
             $planetIds[] = $planet->id;
@@ -101,6 +104,7 @@ class PlanetController extends Controller
             ->where('galaxy', $request->get('galaxy'))
             ->where('system', $request->get('system'))
             ->whereNotIn('id', $planetIds)
+            ->where('player_id', '!=', auth()->user()->player_id)
             ->delete();
     }
 
