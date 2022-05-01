@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BattleReport;
-use Carbon\Carbon;
+use App\Services\ImprovedCarbon;
 use Illuminate\Http\Request;
 
 class BattleReportController extends Controller
@@ -27,7 +27,7 @@ class BattleReportController extends Controller
         $battleReport->deuterium = $request->get('deuterium', 0);
         $battleReport->debris_metal = $request->get('debris_metal', 0);
         $battleReport->debris_crystal = $request->get('crystal_metal', 0);
-        $battleReport->created_at = Carbon::parse($request->get('timestamp'));
+        $battleReport->created_at = ImprovedCarbon::parse($request->get('timestamp'));
         $battleReport->save();
 
         return response([]);
