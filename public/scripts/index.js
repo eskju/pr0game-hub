@@ -245,6 +245,18 @@ window.parseUrl = function () {
         pageMessages.init();
     }
 
+    // battle simulator
+    else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=battleSimulator/) === 0) {
+        $($('table')[3]).find('tr').each(function (key, obj) {
+            $($(obj).find('td,th')[0]).addClass('text-left');
+            if ($(obj).find('input').length > 0) {
+                $($(obj).find('td')[0]).after('<td class="text-right">' + $(obj).find('input').val() + '</td>');
+            } else {
+                $($(obj).find('td,th')[0]).after('<td>&nbsp;</td>');
+            }
+        });
+    }
+
     // phalanx
     else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=phalanx/) === 0) {
         $('td.fleets').each(function (key, obj) {

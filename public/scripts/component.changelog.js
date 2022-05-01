@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.4',
+        date_time: '2022-05-01 04PM',
+        changes: 'show own ships in extra column (battle sim)'
+    },
+    {
         version: '1.1.3',
         date_time: '2022-05-01 04PM',
         changes: 'added link to combat simulator'
