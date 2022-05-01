@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PlayerController extends Controller
 {
@@ -77,9 +76,13 @@ class PlayerController extends Controller
         $this->dateFormatForHumans = $request->get('date_for_humans') ?? false;
 
         foreach ($request->get('ownPlanets') ?? [] as $coords) {
-            if (!$planet = Planet::query()->where('coordinates', $coords)->first()) {
+            $isMoon = substr($coords, -1) === 'M';
+            $coords = str_replace('M', '', $coords);
+
+            if (!$planet = Planet::query()->where('coordinates', $coords)->where('type', $isMoon ? 'MOON' : 'PLANET')->first()) {
                 $planet = new Planet();
                 $planet->coordinates = $coords;
+                $planet->type = $isMoon ? 'MOON' : 'PLANET';
                 $coords = explode(':', $coords);
                 $planet->galaxy = $coords[0];
                 $planet->system = $coords[1];
@@ -223,7 +226,7 @@ class PlayerController extends Controller
                 ->where('is_inactive', 0)
                 ->get()
                 ->pluck('id'),
-            'version' => '1.1.7',
+            'version' => '1.1.8',
             'player' => auth()->user()->player,
             'live_score' => $score,
             'live_score_diff' => $score - $oldScore

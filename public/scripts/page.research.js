@@ -56,7 +56,7 @@ window.PageResearch = function()
 
             let buildingRight = $($(cell).parent().find('.building-right'));
             let ressList = $(buildingRight.find('> span:first-child')).html();
-            let coords = ownGalaxy + ':' + ownSystem + ':' + ownPlanet;
+            let coords = ownId;
             let resourceId = $($(cell).parent().find('.buildn > a')).attr('onclick').match(/\(([0-9]+)\)/)[1];
 
             let metal = $this.getCost('Metall', ressList);

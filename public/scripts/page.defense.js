@@ -18,7 +18,7 @@ window.PageDefense = function () {
         });
 
         postJSON('planets/buildings', {
-            coordinates: ownGalaxy + ':' + ownSystem + ':' + ownPlanet,
+            coordinates: ownId,
             buildings
         }, function (response) {
             $this.data = JSON.parse(response.responseText);

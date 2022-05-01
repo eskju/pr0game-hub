@@ -154,8 +154,8 @@ window.PageOverview = function () {
         };
 
         $.each(queues, function (key, obj) {
-            setValue(ownGalaxy + ':' + ownSystem + ':' + ownPlanet + '_' + key + '_item', obj ? obj[1] : ''); // active queue item with level/amount
-            setValue(ownGalaxy + ':' + ownSystem + ':' + ownPlanet + '_' + key + '_timestamp', obj ? timestamp + parseInt(obj[3]) : ''); // end timestamp
+            setValue(ownId + '_' + key + '_item', obj ? obj[1] : ''); // active queue item with level/amount
+            setValue(ownId + '_' + key + '_timestamp', obj ? timestamp + parseInt(obj[3]) : ''); // end timestamp
         });
 
         const planetInfo = {
@@ -166,10 +166,10 @@ window.PageOverview = function () {
             temperatureMax: infos.length >= 7 && infos[6].match(/bis ([-0-9]+)\°/)
         };
 
-        setValue(ownGalaxy + ':' + ownSystem + ':' + ownPlanet + '_fieldsUsed', planetInfo.fieldsUsed ? planetInfo.fieldsUsed[1] : '');
-        setValue(ownGalaxy + ':' + ownSystem + ':' + ownPlanet + '_fieldsTotal', planetInfo.fieldsTotal ? planetInfo.fieldsTotal[1] : '');
-        setValue(ownGalaxy + ':' + ownSystem + ':' + ownPlanet + '_temperatureMin', planetInfo.temperatureMin ? planetInfo.temperatureMin[1] : '');
-        setValue(ownGalaxy + ':' + ownSystem + ':' + ownPlanet + '_temperatureMax', planetInfo.temperatureMax ? planetInfo.temperatureMax[1] : '');
+        setValue(ownId + '_fieldsUsed', planetInfo.fieldsUsed ? planetInfo.fieldsUsed[1] : '');
+        setValue(ownId + '_fieldsTotal', planetInfo.fieldsTotal ? planetInfo.fieldsTotal[1] : '');
+        setValue(ownId + '_temperatureMin', planetInfo.temperatureMin ? planetInfo.temperatureMin[1] : '');
+        setValue(ownId + '_temperatureMax', planetInfo.temperatureMax ? planetInfo.temperatureMax[1] : '');
 
         $('content').addClass('home'); // add home class
         this.container = $('.infos:last-child'); // container for hub overview
@@ -228,37 +228,37 @@ window.PageOverview = function () {
             html += '<tr>';
 
             tooltip = '';
-            time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_fieldsTotal');
-            value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_fieldsUsed');
+            time = getValue(coords[0] + '_fieldsTotal');
+            value = getValue(coords[0] + '_fieldsUsed');
             tooltip += (value && value !== typeof (undefined) && value !== '' ? value : '---');
             tooltip += ' / ';
             tooltip += (time && time !== typeof (undefined) && time !== '' ? time : '---') + ' Felder<br>';
 
-            time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_temperatureMax');
-            value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_temperatureMin');
+            time = getValue(coords[0] + '_temperatureMax');
+            value = getValue(coords[0] + '_temperatureMin');
             tooltip += (value && value !== typeof (undefined) && value !== '' ? value + '°C' : '---');
             tooltip += ' bis ';
             tooltip += (time && time !== typeof (undefined) && time !== '' ? time + '°C' : '---');
 
             // planet
-            html += '<td class="text-left tooltip" data-tooltip-content="' + tooltip + '">' + coords[1] + ':' + coords[2] + ':' + coords[3] + ' (' + name[0].replace(/ /g, '') + ')</td>';
+            html += '<td class="text-left tooltip" data-tooltip-content="' + tooltip + '">' + coords[0] + ' (' + name[0].replace(/ /g, '') + ')</td>';
 
             // buildings
-            time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_timestamp');
-            html += '<td class="text-right" title="' + (getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_item') || '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
+            time = getValue(coords[0] + '_building_timestamp');
+            html += '<td class="text-right" title="' + (getValue(coords[0] + '_building_item') || '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
 
             // research
             if (key === 0) {
-                time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_timestamp');
-                value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_research_item');
+                time = getValue(coords[0] + '_research_timestamp');
+                value = getValue(coords[0] + '_research_item');
                 html += '<td class="text-right" title="' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
             } else {
                 html += '<td class="disabled text-right" style="color: #333">---</td>';
             }
 
             // hangar
-            time = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_timestamp');
-            value = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_hangar_item');
+            time = getValue(coords[0] + '_hangar_timestamp');
+            value = getValue(coords[0] + '_hangar_item');
             html += '<td class="text-right" title="' + (value && value !== typeof (undefined) && value !== '' ? value : '---') + '">' + (time && time !== typeof (undefined) ? '<span class="timer" data-time="' + (parseInt(time) - Math.round(new Date().getTime() / 1000)) + '"></span>' : '---') + '</td>';
 
             // resources

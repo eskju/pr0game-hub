@@ -110,11 +110,15 @@ class PlanetController extends Controller
 
     public function storeBuildings(Request $request)
     {
-        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
+        $isMoon = substr($request->get('coordinates'), -1) === 'M';
+        $coords = str_replace('M', '', $request->get('coordinates'));
+
+        if (!$planet = Planet::query()->where('coordinates', $coords)->where('type', $isMoon ? 'MOON' : 'PLANET')->first()) {
             $coordinates = explode(':', $request->get('coordinates'));
             $planet = new Planet();
             $planet->player_id = auth()->user()->player_id;
-            $planet->coordinates = $request->get('coordinates');
+            $planet->type = $isMoon ? 'MOON' : 'PLANET';
+            $planet->coordinates = $coords;
             $planet->galaxy = $coordinates[0];
             $planet->system = $coordinates[1];
             $planet->planet = $coordinates[2];
@@ -154,11 +158,15 @@ class PlanetController extends Controller
 
     public function storeFleet(Request $request)
     {
-        if (!$planet = Planet::query()->where('coordinates', $request->get('coordinates'))->first()) {
+        $isMoon = substr($request->get('coordinates'), -1) === 'M';
+        $coords = str_replace('M', '', $request->get('coordinates'));
+
+        if (!$planet = Planet::query()->where('coordinates', $coords)->where('type', $isMoon ? 'MOON' : 'PLANET')->first()) {
             $coordinates = explode(':', $request->get('coordinates'));
             $planet = new Planet();
             $planet->player_id = auth()->user()->player_id;
-            $planet->coordinates = $request->get('coordinates');
+            $planet->type = $isMoon ? 'MOON' : 'PLANET';
+            $planet->coordinates = $coords;
             $planet->galaxy = $coordinates[0];
             $planet->system = $coordinates[1];
             $planet->planet = $coordinates[2];

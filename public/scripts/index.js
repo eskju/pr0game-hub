@@ -380,6 +380,7 @@ window.cYellow = [247, 197, 22];
 window.cCyan = [0, 255, 255];
 
 window.ownCoords = getCoordinates($('#planetSelector option:selected').html());
+window.ownId = ownCoords[0];
 window.ownGalaxy = ownCoords[1];
 window.ownSystem = ownCoords[2];
 window.ownPlanet = ownCoords[3];

@@ -61,7 +61,7 @@ window.PageFleet = function () {
         });
 
         postJSON('planets/fleet', {
-            coordinates: ownGalaxy + ':' + ownSystem + ':' + ownPlanet,
+            coordinates: ownId,
             fleet: globalFleet
         }, function (response) {
             $this.data = JSON.parse(response.responseText);

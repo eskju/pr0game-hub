@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.8',
+        date_time: '2022-05-01 06PM',
+        changes: 'fixed moon/planet differentiation'
+    },
+    {
         version: '1.1.7',
         date_time: '2022-05-01 05PM',
         changes: 'added different expo presets'

@@ -34,7 +34,7 @@ window.PageImperium = function () {
 
             $('#planetSelector option').each(function (sKey, sObj) {
                 coords = getCoordinates(sObj.innerHTML);
-                item = getValue(coords[1] + ':' + coords[2] + ':' + coords[3] + '_building_item');
+                item = getValue(coords[0] + '_building_item');
                 itemName = item.match(/(.*) \(([0-9]+)\)/);
                 itemName = itemName ? itemName[1] : '';
 

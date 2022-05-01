@@ -35,7 +35,7 @@ window.PageBuildings = function () {
         });
 
         postJSON('planets/buildings', {
-            coordinates: ownGalaxy + ':' + ownSystem + ':' + ownPlanet,
+            coordinates: ownId,
             buildings
         }, function (response) {
             $this.data = JSON.parse(response.responseText);
@@ -58,7 +58,7 @@ window.PageBuildings = function () {
 
             let buildingRight = $($(cell).parent().find('.building-right'));
             let ressList = $(buildingRight.find('> span:first-child')).html();
-            let coords = ownGalaxy + ':' + ownSystem + ':' + ownPlanet;
+            let coords = ownId;
             let resourceId = $($(cell).parent().find('.buildn > a')).attr('onclick').match(/\(([0-9]+)\)/)[1];
 
             let metal = $this.getCost('Metall', ressList);
