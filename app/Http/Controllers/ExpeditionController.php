@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expedition;
+use App\Services\ImprovedCarbon;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class ExpeditionController extends Controller
         $expedition->message = $request->get('message');
         $expedition->type = $request->get('type');
         $expedition->size = $request->get('size');
-        $expedition->created_at = Carbon::parse($request->get('date_time'));
+        $expedition->created_at = ImprovedCarbon::parse($request->get('date_time'));
         $expedition->save();
 
         return response([]);
