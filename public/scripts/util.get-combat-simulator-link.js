@@ -1,4 +1,4 @@
-window.getCombatSimulatorLink = function(data, galaxy,system,planet) {
+window.getCombatSimulatorLink = function(data, galaxy, system, planet) {
 
     let sience = [];
 
@@ -45,17 +45,14 @@ window.getCombatSimulatorLink = function(data, galaxy,system,planet) {
 
     };
 
+    let params = 'koords=' + galaxy + ':' + system + ':' + planet;
 
-    let params = "koords="+galaxy+":"+system+":"+planet;
-
-    values.forEach((item)=>{
-        if(typeof map[item.alias] != "undefined") {
-            params += (params === "" ? "" : "&") + map[item.alias] + '=' + item.value;
+    values.forEach((item) => {
+        if (typeof map[item.alias] != 'undefined') {
+            params += (params === '' ? '' : '&') + map[item.alias] + '=' + item.value;
         }
     });
 
-
-
-    return "window.open('https://pr0game.gamers-universe.eu/pr0game/sim/?"+params+"','_blank')";
+    return 'window.open(\'https://pr0game.gamers-universe.eu/pr0game/sim/?' + params + '\',\'_blank\')';
 
 };
