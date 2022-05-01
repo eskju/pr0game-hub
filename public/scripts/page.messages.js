@@ -58,7 +58,7 @@ window.PageMessages = function () {
             galaxy: parseInt(parseResult[2]),
             system: parseInt(parseResult[3]),
             planet: parseInt(parseResult[4]),
-            timestamp: parseResult[5],
+            timestamp: dateTime,
             resources: resources,
             resourcesVisible: $(obj).html().search(/Rohstoffe/) !== -1,
             shipsVisible: $(obj).html().search(/Schiffe/) !== -1,
