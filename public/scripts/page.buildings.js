@@ -108,7 +108,6 @@ window.PageBuildings = function () {
                 }
 
                 tmp = html.match(/(Stufe) ([.0-9]+)/);
-                console.log(tmp);
                 return tmp ? getInt(tmp[2]) : 0;
         }
 

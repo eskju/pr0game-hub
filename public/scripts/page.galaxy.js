@@ -5,18 +5,35 @@ window.PageGalaxy = function () {
     }
 
     this.parsePlanetIds = function () {
+        let tooltipSrc, playerId, coords, planetId, moonId, activity, parent, parentParent;
+        const payload = [];
+
         $('tr td:nth-child(2) a.tooltip_sticky').each(function (key, obj) {
-            var tooltipSrc = $(obj).attr('data-tooltip-content');
-            var playerId = $(obj).parent().parent().find('td:nth-child(6) a').attr('data-tooltip-content').match(/Dialog\.Playercard\(([0-9]+)\)/);
+            obj = $(obj);
+            parent = obj.parent();
+            parentParent = parent.parent();
+            tooltipSrc = obj.attr('data-tooltip-content');
+            playerId = parentParent.find('td:nth-child(6) a').attr('data-tooltip-content').match(/Dialog\.Playercard\(([0-9]+)\)/);
             playerId = playerId ? parseInt(playerId[1]) : null;
 
-            var coords = tooltipSrc.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/, tooltipSrc);
-            var planetId = tooltipSrc.match(/doit\(6\,([0-9]+)/, tooltipSrc);
+            coords = tooltipSrc.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/, tooltipSrc);
+            planetId = tooltipSrc.match(/doit\(6\,([0-9]+)/, tooltipSrc);
             planetId = planetId ? parseInt(planetId[1]) : null;
-            var moonId = $(obj).parent().parent().find('td:nth-child(4)').html().match(/javascript\:doit\(([0-9]+)\,([0-9]+)\)/);
-            var activity = $(obj).parent().parent().find('td:nth-child(3)').html().match(/\(([*0-9]+)/);
+            moonId = parentParent.find('td:nth-child(4)').html().match(/javascript\:doit\(([0-9]+)\,([0-9]+)\)/);
+            activity = parentParent.find('td:nth-child(3)').html().match(/\(([*0-9]+)/);
             moonId = moonId ? moonId[2] : null;
 
+            if (coords && planetId) {
+                payload.push({
+                    coordinates: coords[0],
+                    planet_id: planetId,
+                    player_id: playerId,
+                    moon_id: moonId,
+                    activity: activity && activity.length > 0 ? (activity[1] || null) : null,
+                });
+            }
+
+            /*
             if (coords && planetId) {
                 postJSON('planets', {
                     coordinates: coords[0],
@@ -27,7 +44,10 @@ window.PageGalaxy = function () {
                 }, function (response) {
                 });
             }
+            */
         });
+
+        postJSON('planets/new', payload, function(response) {});
     };
 
     this.enhanceList = function () {

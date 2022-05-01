@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HostileSpying;
 use App\Models\Planet;
+use App\Services\ImprovedCarbon;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,7 @@ class HostileSpyingController extends Controller
         $spying->player_start_id = Planet::query()->where('coordinates', $request->get('planet_start_coordinates') ?? null)->first()->player_id ?? null;
         $spying->planet_target_coordinates = $request->get('planet_target_coordinates');
         $spying->player_target_id = auth()->user()->player_id;
-        $spying->created_at = Carbon::parse($request->get('date_time'));
+        $spying->created_at = ImprovedCarbon::parse($request->get('date_time'));
         $spying->save();
 
         return response([]);

@@ -75,6 +75,7 @@ Route::get('/hub/scores', HubController::class . '@getScores');
 Route::get('/hub/galaxy-alliances', HubController::class . '@getAlliancePowerOverview');
 
 Route::post('/planets', PlanetController::class . '@storePlanetId');
+Route::post('/planets/new', PlanetController::class . '@storePlanetIds');
 Route::post('/planets/buildings', PlanetController::class . '@storeBuildings');
 Route::post('/planets/fleet', PlanetController::class . '@storeFleet');
 Route::get('/galaxy/{galaxy}/{system}', GalaxyController::class . '@show');

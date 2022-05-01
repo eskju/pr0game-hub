@@ -7,6 +7,11 @@ window.PageHub = function () {
 
     this.loadPage = function (alias) {
         switch (alias) {
+            case 'galaxyview':
+                this.clearPage();
+                this.loadGalaxyView();
+                break;
+
             case 'planets':
                 this.clearPage();
                 this.loadPagePlanets();
@@ -55,6 +60,10 @@ window.PageHub = function () {
             default:
                 alert('unknown page ' + alias);
         }
+    };
+
+    this.loadGalaxyView = function() {
+
     };
 
     this.clearPage = function () {
