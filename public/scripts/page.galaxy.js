@@ -47,7 +47,11 @@ window.PageGalaxy = function () {
             */
         });
 
-        postJSON('planets/new', payload, function(response) {});
+        postJSON('planets/new', {
+            planets: payload,
+            galaxy: parseInt($('input[name=galaxy]').val()),
+            system: parseInt($('input[name=system]').val())
+        }, function(response) {});
     };
 
     this.enhanceList = function () {

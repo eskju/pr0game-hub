@@ -9,6 +9,7 @@ use App\Services\PlanetService;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PlanetController extends Controller
 {
@@ -49,6 +50,58 @@ class PlanetController extends Controller
                 $planet->save();
             }
         }
+    }
+
+    public function storePlanetIds(Request $request)
+    {
+        $planetIds = [];
+
+        foreach ($request->get('planets') as $requestPlanet) {
+            $requestPlanet = (object)$requestPlanet;
+            $coordinates = explode(':', $requestPlanet->coordinates);
+
+            if (!$planet = Planet::query()->where('coordinates', $requestPlanet->coordinates)->where('type', 'PLANET')->first()) {
+                $planet = new Planet();
+                $planet->player_id = $requestPlanet->player_id;
+                $planet->coordinates = $requestPlanet->coordinates;
+                $planet->galaxy = $coordinates[0];
+                $planet->system = $coordinates[1];
+                $planet->planet = $coordinates[2];
+                $planet->type = 'PLANET';
+            }
+
+            $activity = new PlanetActivity();
+            $activity->coordinates = $requestPlanet->coordinates;
+            $activity->player_id = Planet::query()->where('coordinates', $requestPlanet->coordinates)->first()->player_id ?? null;
+            $activity->activity = $requestPlanet->activity;
+            $activity->save();
+
+            $planet->player_id = $requestPlanet->player_id;
+            $planet->external_id = $requestPlanet->planet_id;
+            $planet->save();
+
+            $planetIds[] = $planet->id;
+
+            if ($requestPlanet->moon_id && (int)$requestPlanet->moon_id > 0) {
+                if (!Planet::query()->where('coordinates', $requestPlanet->coordinates)->where('type', 'MOON')->first()) {
+                    $planet = new Planet();
+                    $planet->type = 'MOON';
+                    $planet->external_id = $requestPlanet->moon_id;
+                    $planet->player_id = $requestPlanet->player_id;
+                    $planet->coordinates = $requestPlanet->coordinates;
+                    $planet->galaxy = $coordinates[0];
+                    $planet->system = $coordinates[1];
+                    $planet->planet = $coordinates[2];
+                    $planet->save();
+                }
+            }
+        }
+
+        Planet::query()
+            ->where('galaxy', $request->get('galaxy'))
+            ->where('system', $request->get('system'))
+            ->whereNotIn('id', $planetIds)
+            ->delete();
     }
 
     public function storeBuildings(Request $request)

@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.6',
+        date_time: '2022-05-01 05PM',
+        changes: 'automatically delete non-existent planets'
+    },
+    {
         version: '1.1.5',
         date_time: '2022-05-01 04PM',
         changes: 'fixed spy report times'
