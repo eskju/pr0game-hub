@@ -22,6 +22,7 @@ import './util.format-time';
 import './util.get-color';
 import './util.get-color-alt';
 import './util.get-color-intensity';
+import './util.get-combat-simulator-link';
 import './util.get-coordinates';
 import './util.get-hotkey-icon';
 import './util.get-int';

@@ -16,7 +16,8 @@ window.showSpyReportHistory = function (galaxy, system, planet, limit) {
         html += '<a href="javascript:void(0)" onclick="showSpyReportHistory(' + galaxy + ',' + system + ',' + planet + ')">Standard</a> | ';
         html += '<a href="javascript:void(0)" onclick="showSpyReportHistory(' + galaxy + ',' + system + ',' + planet + ', 5)">5 Zeilen</a> | ';
         html += '<a href="javascript:void(0)" onclick="showSpyReportHistory(' + galaxy + ',' + system + ',' + planet + ', 10)">10 Zeilen</a> | ';
-        html += '<a href="javascript:void(0)" onclick="showSpyReportHistory(' + galaxy + ',' + system + ',' + planet + ', 999999)">Alle Zeilen</a> ';
+        html += '<a href="javascript:void(0)" onclick="showSpyReportHistory(' + galaxy + ',' + system + ',' + planet + ', 999999)">Alle Zeilen</a> | ';
+        html += '<a href="javascript:void(0)" onclick="' + getCombatSimulatorLink(spyReportHistory, galaxy, system, planet) + '">Kampfsim</a> ';
         html += '</div>';
         html += showSpyReportHistoryBox(spyReportHistory, 'resources');
         html += showSpyReportHistoryBox(spyReportHistory, 'fleet');
