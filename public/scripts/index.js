@@ -247,7 +247,6 @@ window.parseUrl = function () {
 
     // phalanx
     else if (url.search(/https\:\/\/pr0game\.com\/game\.php\?page\=phalanx/) === 0) {
-        console.log($('td.fleets'));
         $('td.fleets').each(function (key, obj) {
             var end = new Date($(obj).attr('data-fleet-end-time') * 1000);
 
