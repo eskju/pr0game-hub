@@ -88,9 +88,32 @@ window.PageFleet = function () {
                 $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 206)">Xer</a> ');
                 $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 215)">SX</a> ');
                 $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 213)">Zer</a> ');
-                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 211)">Bomber</a> ');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.setExpoFleet(false, true, 211)">Bomber</a> // Custom: ');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.saveCustomExpoFleet()">save</a> ');
+                $(obj).find('tr th').append('<a class="text-red" href="javascript:void(0)" onclick="pageFleet.loadCustomExpoFleet()">load</a>');
             }
         });
+    }
+
+    this.saveCustomExpoFleet = function () {
+        let fleet = {};
+        $('.table519 input:not([type="submit"])').each(function (key, obj) {
+            let val = parseInt($(obj).val());
+            let name= $(obj).attr('name');
+            if(val > 0) {
+                fleet[name] = val;
+            }
+        });
+        setValue('custom_expo_fleet', JSON.stringify(fleet))
+    }
+
+    this.loadCustomExpoFleet = function () {
+        let customFleet = getValue('custom_expo_fleet');
+        if(typeof customFleet !== 'undefined') {
+            $.each(JSON.parse(customFleet), function(key, amount){
+                $('input[name="'+key+'"]').val(amount)
+            });
+        }
     }
 
     this.setExpoFleet = function (forFleetOnly = false, largeTransporters = true, battleShipId = 207) {
