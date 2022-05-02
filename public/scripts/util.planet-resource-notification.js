@@ -9,10 +9,6 @@ window.PlanetResourceNotification = function () {
         setValue(coords + '_notification_level', parseInt(level));
 
         showMessage('Benachrichtigung gespeichert.');
-
-        $('body').animate({left: 0}, 1000, () => {
-            window.location.reload();
-        });
     };
 
     this.removeNotification = function (coords) {
@@ -20,8 +16,6 @@ window.PlanetResourceNotification = function () {
         setValue(coords + '_notification_metal', null);
         setValue(coords + '_notification_crystal', null);
         setValue(coords + '_notification_deuterium', null);
-
-        window.location.reload();
     }
 
     this.hasNotification = function (coords, resourceId) {

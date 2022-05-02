@@ -442,10 +442,6 @@ let filterDeuteriumEnabled = getValue('filter_deuterium_enable') || '0';
 let filterDeuteriumMin = getValue('filter_deuterium_min') || '';
 let filterDeuteriumMax = getValue('filter_deuterium_max') || '';
 
-window.alert = function (msg) {
-    window.location.reload();
-};
-
 $(window).on('hashchange', function () {
     parseUrl();
 });

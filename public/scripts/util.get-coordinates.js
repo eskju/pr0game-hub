@@ -1,5 +1,5 @@
 window.getCoordinates = function (string) {
-    const isMoon = string.replace('(Mond)', '') !== string;
+    const isMoon = string ? string.replace('(Mond)', '') !== string : string;
     const match = string ? string.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/) : false;
 
     return !match ? false : [
