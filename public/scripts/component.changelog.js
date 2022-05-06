@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.10',
+        date_time: '2022-05-07 08PM',
+        changes: 'temp fix for IP'
+    },
+    {
         version: '1.1.9',
         date_time: '2022-05-06 09PM',
         changes: 'adjustments for new ruleset'

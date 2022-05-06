@@ -190,7 +190,7 @@ window.filterTableRow = function (obj, player) {
 }
 
 window.parseUrl = function () {
-    const url = window.location.href.replace('www.', '').replace('http:', 'https:').replace('.local', '.com');
+    const url = window.location.href.replace('www.', '').replace('http:', 'https:').replace('.local', '.com').replace('37.221.67.168', 'pr0game.com');
 
     // custom pages
     if (location.hash && location.hash.length > 0) {
