@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\HostileSpying;
 use App\Models\Planet;
 use App\Services\ImprovedCarbon;
+use App\Services\MessageService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +38,8 @@ class HostileSpyingController extends Controller
 
     public function store(Request $request)
     {
+        MessageService::storeMessageId($request->get('id'));
+
         if (!$spying = HostileSpying::query()->where('external_id', $request->get('external_id'))->first()) {
             $spying = new HostileSpying();
             $spying->external_id = $request->get('external_id');

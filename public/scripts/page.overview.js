@@ -241,7 +241,7 @@ window.PageOverview = function () {
             tooltip += (time && time !== typeof (undefined) && time !== '' ? time + '°C' : '---');
 
             // planet
-            html += '<td class="text-left tooltip" data-tooltip-content="' + tooltip + '">' + coords[0] + ' (' + name[0].replace(/ /g, '') + ')</td>';
+            html += '<td style="white-space: nowrap" class="text-left tooltip" data-tooltip-content="' + tooltip + '">' + coords[0] + ' (' + name[0].replace('\ (Mond\) ', '').substring(0, name[0].length - 1) + ')</td>';
 
             // buildings
             time = getValue(coords[0] + '_building_timestamp');
@@ -379,7 +379,7 @@ window.PageOverview = function () {
             $this.setLoading(false);
             $this.checkVersion();
             $this.renderHtml();
-        });
+        }, false);
     };
 
     this.getData = function () {
@@ -681,171 +681,13 @@ window.PageOverview = function () {
         $('#sumFleetCrystal').html(numberFormat(this.sumFleetCrystal, true));
         $('#sumFleetDeuterium').html(numberFormat(this.sumFleetDeuterium, true));
 
-        $this.debugTime();
-        postJSON('flights', {activities}, function (response) {
-            $this.debugTime('POST `flights`');
+        // @todo
+        const todo = {
+            slots_used: -1,
+            slots_available: -1
+        };
 
-            let html;
-            let tooltipContent;
-            let i;
-
-            response = JSON.parse(response.responseText);
-            let infoTooltip;
-
-            $('.fleet-movement').append('<div style="border-top: 1px solid #222; border-bottom: 1px solid #222; padding: 10px 0; margin: 10px 0"><b>' + response.slots_used + ' Slots genutzt</b></div>');
-
-            $.each(response.flights, function (key, obj) {
-                if (obj.ships_diff) {
-                    html = '<table style="width: 250px">'
-                    $.each(obj.ships_diff, function (skey, ship) {
-                        html += '<tr>';
-                        html += '<td class="text-left">' + skey + '</td>';
-                        html += '<td class="text-right">' + ship.after + '</td>';
-
-                        if (ship.diff > 0) {
-                            html += '<td class="text-right text-green">+' + ship.diff + '</td>';
-                        } else if (ship.diff < 0) {
-                            html += '<td class="text-right text-red">' + ship.diff + '</td>';
-                        } else {
-                            html += '<td class="text-right text-gray">---</td>';
-                        }
-
-                        html += '</tr>';
-                    });
-
-                    html += '</table>';
-
-                    infoTooltip = $('#fleet' + obj.external_id + '-' + obj.is_return + ' > span:nth-child(2) a');
-                    infoTooltip.attr('data-tooltip-content', html);
-                }
-
-                if (obj.resources_diff) {
-                    html = '<table style="width: 250px">'
-                    $.each(obj.resources_diff, function (skey, resource) {
-                        html += '<tr>';
-                        html += '<td class="text-left">' + skey + '</td>';
-                        html += '<td class="text-right">' + resource.after + '</td>';
-
-                        if (resource.diff > 0) {
-                            html += '<td class="text-right text-green">+' + resource.diff + '</td>';
-                        } else if (resource.diff < 0) {
-                            html += '<td class="text-right text-red">' + resource.diff + '</td>';
-                        } else {
-                            html += '<td class="text-right text-gray">---</td>';
-                        }
-
-                        html += '</tr>';
-                    });
-
-                    html += '</table>';
-
-                    infoTooltip = $('#fleet' + obj.external_id + '-' + obj.is_return + ' > span:nth-child(3) a');
-                    infoTooltip.attr('data-tooltip-content', html);
-                }
-
-                if (obj.is_return) {
-                    infoTooltip = $('#fleet' + obj.external_id + '-' + obj.is_return + ' > span:nth-child(2)').prepend('<i class="fa fa-backward"></i> ');
-                }
-
-                html = '<span style="width: 4%" class="text-right">';
-                html += '<a class="tooltip" data-tooltip-content="' + escape(tooltipContent) + '">';
-
-                tooltipContent = '<table style="width: 700px; border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5)" cellspacing="0">';
-                tooltipContent += '<tr>';
-                tooltipContent += '<th class="text-left">&nbsp;</th>';
-                tooltipContent += '<th class="text-right">Anzahl</th>';
-                tooltipContent += '<th class="text-right">Differenz</th>';
-                tooltipContent += '<th class="text-right">Metall</th>';
-                tooltipContent += '<th class="text-right">Kristall</th>';
-                tooltipContent += '<th class="text-right">Deuterium</th>';
-                tooltipContent += '<th class="text-right">Punkte</th>';
-                tooltipContent += '</tr>';
-
-                if (obj.resources_diff) {
-                    i = 0;
-                    $.each(obj.resources_diff, function (skey, ship) {
-                        tooltipContent += '<tr>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-left">' + skey + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right">' + ship.after + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.diff) + '">' + ship.diff + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.metal) + '">' + ship.metal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.crystal) + '">' + ship.crystal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.deuterium) + '">' + ship.deuterium + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.score) + '">' + ship.score + '</td>';
-                        tooltipContent += '</tr>';
-                        i++;
-                    });
-                }
-
-                if (obj.ships_diff) {
-                    i = 0;
-                    $.each(obj.ships_diff, function (skey, ship) {
-                        tooltipContent += '<tr>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-left">' + skey + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right">' + ship.after + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.diff) + '">' + ship.diff + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.metal) + '">' + ship.metal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.crystal) + '">' + ship.crystal + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.deuterium) + '">' + ship.deuterium + '</td>';
-                        tooltipContent += '<td style="' + (i === 0 ? 'border-top: 1px dashed ' + getRgb(cGray) : '') + '" class="text-right ' + getStyle(ship.score) + '">' + ship.score + '</td>';
-                        tooltipContent += '</tr>';
-                        i++;
-                    });
-                }
-
-                tooltipContent += '<tr>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-left"><b>Gesamt</b></th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right text-gray">---</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right text-gray"></th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</th>';
-                tooltipContent += '<th style="border-top: 1px dashed ' + getRgb(cGray) + '" class="text-right ' + getStyle(obj.score_diff) + '">' + obj.score_diff + '</th>';
-                tooltipContent += '</tr>';
-                tooltipContent += '</table>';
-
-                if (obj.is_return) {
-                    if (getInt(obj.score_diff) > 0) {
-                        html += '<span class="text-green">+' + obj.score_diff + '</span>';
-                    } else if (getInt(obj.score_diff) === 0) {
-                        html += '<span style="color: #444"><small>+/-</small> 0</span>';
-                    } else {
-                        html += '<span class="text-red">' + obj.score_diff + '</span>';
-                    }
-                } else {
-                    html += '<span style="color: #444">---</span>';
-                }
-                html += '</a>';
-                html += '</span>';
-                $('#fleet' + obj.external_id + '-' + obj.is_return).append(html);
-                $('#fleet' + obj.external_id + '-' + obj.is_return + ' span:last-child a.tooltip').attr('data-tooltip-content', tooltipContent);
-            });
-
-            html = '<table class="borderless" style="padding: 0; margin: 0"><tr><td width="50%" style="padding: 0" >';
-            html += '<tr>';
-            html += '<th style="white-space: nowrap">Planet</th>';
-            html += '<th style="white-space: nowrap" class="text-right">Letzte 24 Std</th>';
-            html += '<th style="white-space: nowrap" class="text-right">Metall</th>';
-            html += '<th style="white-space: nowrap" class="text-right">Kristall</th>';
-            html += '<th style="white-space: nowrap" class="text-right">Deuterium</th>';
-            html += '<th style="white-space: nowrap" class="text-right">Punkte</th>';
-            html += '</tr>';
-
-            $.each(response.expeditions, function (key, obj) {
-                html += '<tr>';
-                html += '<td style="white-space: nowrap" class="text-left">' + key + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right">' + obj.count_24 + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.metal_diff) + '">' + obj.metal_diff + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.crystal_diff) + '">' + obj.crystal_diff + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.deuterium_diff) + '">' + obj.deuterium_diff + '</td>';
-                html += '<td style="white-space: nowrap" class="text-right ' + getStyle(obj.score_diff) + '">' + obj.score_diff + '</td>';
-                html += '</tr>';
-
-            });
-
-            html += '</table>';
-            $('.fleet-movement').append(html);
-        });
+        $('.fleet-movement').append('<div style="border-top: 1px solid #222;padding: 10px 0 0 0; margin: 10px 0"><b>' + todo.slots_used + ' / ' + todo.slots_available + ' Slots genutzt</b></div>');
     };
 
     this.getResources = function (cell) {

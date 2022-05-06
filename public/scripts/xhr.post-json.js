@@ -1,5 +1,5 @@
 window.postJSON = function (url, data, callback, queue = true) {
-    if (queue && false) {
+    if (queue) {
         queueXhr('POST', url, data, callback);
         return;
     }
@@ -19,6 +19,10 @@ window.postJSON = function (url, data, callback, queue = true) {
         },
         onload: function (response) {
             callback(response);
+
+            if (debugMode) {
+                console.log(response.responseText);
+            }
         },
         onerror: function (response) {
             if (debugMode) {

@@ -20,18 +20,35 @@ window.PageMessages = function () {
     const $this = this;
 
     this.init = function () {
+        const ids = [];
+        let messageId;
+
         messages.each(function (key, obj) {
-            // spy report
-            if ($(obj).find('.spyRaport').length > 0) {
-                $this.parseSpyReport(key, obj);
-            } else if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().search(/Spionage\-Aktivität/) !== -1) {
-                $this.parseEnemySpying(key, obj);
-            } else if ($(obj).find('.raportMessage').length > 0) {
-                $this.parseBattleReport(key, obj);
-            } else if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().search(/Expeditionsbericht/) !== -1) {
-                $this.parseExpedition(key, obj);
+            messageId = parseInt($(obj).attr('class')?.match(/message\_([0-9]+)/)[1]);
+
+            if (messageId && Array.from(ids).indexOf(messageId) === -1) {
+                ids.push(messageId);
             }
         });
+
+        postJSON('messages', {messageIds: ids}, function (unknownIds) {
+            messages.each(function (key, obj) {
+                messageId = parseInt($(obj).attr('class')?.match(/message\_([0-9]+)/)[1]);
+
+                if (messageId && Array.from(JSON.parse(unknownIds.responseText)).indexOf(messageId) !== -1) {
+                    // spy report
+                    if ($(obj).find('.spyRaport').length > 0) {
+                        $this.parseSpyReport(key, obj);
+                    } else if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().search(/Spionage\-Aktivität/) !== -1) {
+                        $this.parseEnemySpying(key, obj);
+                    } else if ($(obj).find('.raportMessage').length > 0) {
+                        $this.parseBattleReport(key, obj);
+                    } else if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().search(/Expeditionsbericht/) !== -1) {
+                        $this.parseExpedition(key, obj);
+                    }
+                }
+            });
+        }, false);
     }
 
     this.parseSpyReport = function (key, obj) {
@@ -74,6 +91,7 @@ window.PageMessages = function () {
         var parseResult = getCoordinates($(obj).find('.raportMessage').html());
 
         postJSON('battle-reports', {
+            id: parseInt($(obj).attr('class').match(/message\_([0-9]+)/)[1]),
             report_id: html.match(/(raport|report)\=([^"]{32})/)[2],
             galaxy: parseInt(parseResult[1]),
             system: parseInt(parseResult[2]),
@@ -96,6 +114,7 @@ window.PageMessages = function () {
         const coords = $($(messages[key - 1]).find('td')).html().match(/([0-9]+)\:([0-9]+)\:([0-9]+)/g);
 
         postJSON('hostile-spying', {
+            id: messageId,
             external_id: messageId,
             date_time: dateTime,
             planet_start_coordinates: coords[0],
@@ -279,6 +298,7 @@ window.PageMessages = function () {
         }
 
         postJSON('expeditions', {
+            id: messageId,
             external_id: messageId,
             date_time: dateTime,
             type: expeditionType,

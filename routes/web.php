@@ -7,6 +7,7 @@ use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GalaxyController;
 use App\Http\Controllers\HostileSpyingController;
 use App\Http\Controllers\HubController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PlanetController;
 use App\Http\Controllers\PlanetImagesController;
 use App\Http\Controllers\PlayerController;
@@ -82,6 +83,7 @@ Route::get('/galaxy/{galaxy}/{system}', GalaxyController::class . '@show');
 
 Route::post('/expeditions', ExpeditionController::class . '@store');
 
+Route::post('/messages', MessageController::class . '@index');
 Route::post('/flights', FlightController::class . '@store');
 Route::get('/flights/stats', FlightController::class . '@stats');
 Route::get('/debug/flights', FlightController::class . '@fixFlightDiffs');

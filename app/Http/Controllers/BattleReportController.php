@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\BattleReport;
 use App\Services\ImprovedCarbon;
+use App\Services\MessageService;
 use Illuminate\Http\Request;
 
 class BattleReportController extends Controller
 {
     public function store(Request $request)
     {
+        MessageService::storeMessageId($request->get('id'));
+
         if (!$battleReport = BattleReport::query()->where('report_id', $request->get('report_id'))->first()) {
             $battleReport = new BattleReport();
             $battleReport->report_id = $request->get('report_id');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Planet;
 use App\Models\SpyReport;
 use App\Services\ImprovedCarbon;
+use App\Services\MessageService;
 use App\Services\PlanetService;
 use App\Services\ResourceService;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +15,8 @@ class SpyReportController extends Controller
 {
     public function store(Request $request)
     {
+        MessageService::storeMessageId($request->get('id'));
+
         if (!$spyReport = SpyReport::query()->find($request->get('id'))) {
             $spyReport = new SpyReport();
             $spyReport->id = $request->get('id');

@@ -12,6 +12,10 @@ use App\Services\ResourceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * OUTDATED: NOT IN USE
+ * Previously used to analyze profit/loss + expos
+ */
 class FlightController extends Controller
 {
     public function store(Request $request)

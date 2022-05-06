@@ -1,13 +1,3 @@
-// == feature requests / ideas ==
-// Klarname      add a simulator link to spy report history
-// ???           exploration counter
-// eichhorn      flying times in overview
-// eichhorn      mileage in overview
-// Klarname      show last spy, last attack, etc. in galaxy view
-// Redstar       filter for coordinates (start / end)
-// Redstar       colorize ally partners in green
-// Redstar       colorize players from buddylist
-
 import './config.colors';
 import './util.anonymize-battle-report';
 import './util.csv-to-array';
