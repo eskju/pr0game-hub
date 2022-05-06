@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.9',
+        date_time: '2022-05-06 09PM',
+        changes: 'adjustments for new ruleset'
+    },
+    {
         version: '1.1.8',
         date_time: '2022-05-01 06PM',
         changes: 'fixed moon/planet differentiation'
