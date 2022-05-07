@@ -6,7 +6,7 @@ window.PageGalaxy = function () {
     }
 
     this.enhanceList = function () {
-        const systemCoords = $('content > table tr:first-child th').html().match(/System ([0-9]+)\:([0-9]+)/);
+        const systemCoords = $('content > table tr:first-child th').html()?.match(/System ([0-9]+)\:([0-9]+)/);
         const headerRow = $($('content > table tr')[1]);
         headerRow.append('<th class="text-right"><i class="fa fa-crosshairs"></i></th>');
         headerRow.append('<th class="text-right"><i class="fa fa-user-secret"></i></th>');
@@ -31,12 +31,12 @@ window.PageGalaxy = function () {
                         parent = tooltipCell.parent();
                         parentParent = parent.parent();
                         tooltipSrc = tooltipCell.attr('data-tooltip-content');
-                        playerId = parentParent.find('td:nth-child(6) a').attr('data-tooltip-content').match(/Dialog\.Playercard\(([0-9]+)\)/);
+                        playerId = parentParent.find('td:nth-child(6) a').attr('data-tooltip-content')?.match(/Dialog\.Playercard\(([0-9]+)\)/);
                         playerId = playerId ? parseInt(playerId[1]) : null;
-                        coords = tooltipSrc.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/, tooltipSrc);
-                        planetId = tooltipSrc.match(/doit\(6\,([0-9]+)/, tooltipSrc);
+                        coords = tooltipSrc?.match(/([0-9]+)\:([0-9]+)\:([0-9]+)/, tooltipSrc);
+                        planetId = tooltipSrc?.match(/doit\(6\,([0-9]+)/, tooltipSrc);
                         planetId = planetId ? parseInt(planetId[1]) : null;
-                        moonId = parentParent.find('td:nth-child(4)').html().match(/javascript\:doit\(([0-9]+)\,([0-9]+)\)/);
+                        moonId = parentParent.find('td:nth-child(4)').html()?.match(/javascript\:doit\(([0-9]+)\,([0-9]+)\)/);
                         moonId = moonId ? moonId[2] : null;
 
                         if (coords && planetId) {
