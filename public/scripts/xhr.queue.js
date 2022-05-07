@@ -4,8 +4,9 @@ window.queueXhr = function (method, url, data, callback) {
     xhrQueue.push({method, url, data, callback});
 
     if (xhrQueue.length === 1) {
+        const targetObj = $('content').length > 0 ? $('content') : $('body');
         const updateButton = '<button  id="update-button"style="background: none; border-radius: 3px; color: #fff; border: 1px solid #fff; padding: 5px 10px;" onclick="processXhrQueue()">Daten synchronisieren</button>';
-        $('content').prepend('<div id="update-bar" style="padding: 10px 15px; background: ' + getRgb(cRed) + '; color: ' + getRgb(cWhite) + '; z-index: 10000; top: 0; left: 0; right: 0;"><div style="display: flex"><div style="flex-basis: 25%">' + updateButton + '</div><div id="update-messages" style="flex-basis: 75%" class="text-right"></div></div></div>');
+        $(targetObj).prepend('<div id="update-bar" style="padding: 10px 15px; background: ' + getRgb(cRed) + '; color: ' + getRgb(cWhite) + '; z-index: 10000; top: 0; left: 0; right: 0;"><div style="display: flex"><div style="flex-basis: 25%">' + updateButton + '</div><div id="update-messages" style="flex-basis: 75%" class="text-right"></div></div></div>');
     }
 
     $('#update-messages').append('<div>' + url + '</div>')
