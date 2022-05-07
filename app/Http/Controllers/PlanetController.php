@@ -26,12 +26,6 @@ class PlanetController extends Controller
             $planet->type = 'PLANET';
         }
 
-        $activity = new PlanetActivity();
-        $activity->coordinates = $request->get('coordinates');
-        $activity->player_id = Planet::query()->where('coordinates', $request->get('coordinates'))->first()->player_id ?? null;
-        $activity->activity = $request->get('activity');
-        $activity->save();
-
         $planet->player_id = $request->get('player_id');
         $planet->external_id = $request->get('planet_id');
         $planet->save();
@@ -68,12 +62,6 @@ class PlanetController extends Controller
                 $planet->planet = $coordinates[2];
                 $planet->type = 'PLANET';
             }
-
-            $activity = new PlanetActivity();
-            $activity->coordinates = $requestPlanet->coordinates;
-            $activity->player_id = Planet::query()->where('coordinates', $requestPlanet->coordinates)->first()->player_id ?? null;
-            $activity->activity = $requestPlanet->activity;
-            $activity->save();
 
             $planet->player_id = $requestPlanet->player_id;
 
