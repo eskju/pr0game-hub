@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.12',
+        date_time: '2022-05-08 11PM',
+        changes: 'improved galaxy view (less buttons)'
+    },
+    {
         version: '1.1.11',
         date_time: '2022-05-08 01AM',
         changes: 'bugfixes'

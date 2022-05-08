@@ -18,7 +18,7 @@ window.PageGalaxy = function () {
             if (response.status === 200) {
                 const json = JSON.parse(response.responseText);
                 const payload = [];
-                let firstCell, planet;
+                let firstCell, planet, updateRequired = false;
                 let tooltipCell, tooltipSrc, playerId, coords, planetId, moonId, parent, parentParent;
 
                 // loop planets rows
@@ -46,6 +46,14 @@ window.PageGalaxy = function () {
                                 player_id: playerId,
                                 moon_id: moonId
                             });
+
+                            if (json[key - 1].external_id !== planetId) {
+                                updateRequired = true;
+                            }
+
+                            if (json[key - 1].moon_id !== moonId) {
+                                updateRequired = true;
+                            }
                         }
                     }
 
@@ -65,12 +73,14 @@ window.PageGalaxy = function () {
                 });
 
                 // queue update if necessary
-                postJSON('planets/new', {
-                    planets: payload,
-                    galaxy: parseInt($('input[name=galaxy]').val()),
-                    system: parseInt($('input[name=system]').val())
-                }, function (response) {
-                });
+                if (updateRequired) {
+                    postJSON('planets/new', {
+                        planets: payload,
+                        galaxy: parseInt($('input[name=galaxy]').val()),
+                        system: parseInt($('input[name=system]').val())
+                    }, function (response) {
+                    });
+                }
             }
         });
     };

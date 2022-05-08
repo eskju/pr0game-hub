@@ -44,11 +44,11 @@ class GalaxyController extends Controller
                 'planet',
                 'coordinates',
                 'external_id',
-                DB::raw('(SELECT created_at FROM battle_reports WHERE battle_reports.galaxy = planets.galaxy AND battle_reports.system = planets.system AND battle_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) as `last_battle_report`'),
-                DB::raw('(SELECT created_at FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) as `last_spy_report`'),
-                DB::raw('(SELECT metal FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_metal`'),
-                DB::raw('(SELECT crystal FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_crystal`'),
-                DB::raw('(SELECT deuterium FROM spy_reports WHERE spy_reports.galaxy = planets.galaxy AND spy_reports.system = planets.system AND spy_reports.planet = planets.planet ORDER BY created_at DESC LIMIT 1) AS `last_spy_deuterium`'),
+                DB::raw('(SELECT created_at FROM battle_reports WHERE battle_reports.coordinates = planets.coordinates ORDER BY created_at DESC LIMIT 1) as `last_battle_report`'),
+                DB::raw('(SELECT created_at FROM spy_reports WHERE spy_reports.coordinates = planets.coordinates ORDER BY created_at DESC LIMIT 1) as `last_spy_report`'),
+                DB::raw('(SELECT metal FROM spy_reports WHERE spy_reports.coordinates = planets.coordinates ORDER BY created_at DESC LIMIT 1) AS `last_spy_metal`'),
+                DB::raw('(SELECT crystal FROM spy_reports WHERE spy_reports.coordinates = planets.coordinates ORDER BY created_at DESC LIMIT 1) AS `last_spy_crystal`'),
+                DB::raw('(SELECT deuterium FROM spy_reports WHERE spy_reports.coordinates = planets.coordinates ORDER BY created_at DESC LIMIT 1) AS `last_spy_deuterium`'),
             ])
             ->where('galaxy', $galaxy)
             ->where('system', $system)

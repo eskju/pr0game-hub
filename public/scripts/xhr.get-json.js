@@ -11,6 +11,10 @@ window.getJSON = function (url, callback, queue = true) {
         url: url,
         onload: function (response) {
             callback(response);
+
+            if (debugMode) {
+                console.log(response.responseText);
+            }
         },
         onerror: function (response) {
             if (debugMode) {

@@ -1,4 +1,4 @@
-var xhrQueue = [];
+let xhrQueue = [];
 
 window.queueXhr = function (method, url, data, callback) {
     xhrQueue.push({method, url, data, callback});
