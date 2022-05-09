@@ -6,6 +6,9 @@ module.exports = {
         filename: 'script.js',
         path: path.resolve(__dirname, './public/scripts/dist'),
     },
+    /*optimization: {
+        minimize: false
+    },*/
     plugins: [
 
     ],
