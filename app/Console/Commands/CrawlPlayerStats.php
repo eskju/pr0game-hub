@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Alliance;
 use App\Models\LogPlayer;
-use App\Models\Planet;
 use App\Models\Player;
 use Illuminate\Console\Command;
 
@@ -33,6 +32,8 @@ class CrawlPlayerStats extends Command
 
     public function handle()
     {
+        ini_set('allow_url_fopen', true);
+
         $html = file_get_contents('https://pr0game.com/stats.json');
         $json = json_decode($html);
 
@@ -66,7 +67,7 @@ class CrawlPlayerStats extends Command
             $player->score_military = $row->fleetScore;
             $player->score_defense = $row->defensiveScore;
             $player->score_defense = $row->defensiveScore;
-            $player->combats_total  = $row->battlesWon + $row->battlesDraw + $row->battlesLost;
+            $player->combats_total = $row->battlesWon + $row->battlesDraw + $row->battlesLost;
             $player->combats_won = $row->battlesWon;
             $player->combats_draw = $row->battlesDraw;
             $player->combats_lost = $row->battlesLost;
@@ -88,7 +89,7 @@ class CrawlPlayerStats extends Command
             $player->score_military = $row->fleetScore;
             $player->score_defense = $row->defensiveScore;
             $player->score_defense = $row->defensiveScore;
-            $player->combats_total  = $row->battlesWon + $row->battlesDraw + $row->battlesLost;
+            $player->combats_total = $row->battlesWon + $row->battlesDraw + $row->battlesLost;
             $player->combats_won = $row->battlesWon;
             $player->combats_draw = $row->battlesDraw;
             $player->combats_lost = $row->battlesLost;
