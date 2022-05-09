@@ -30,6 +30,7 @@ class GalaxyController extends Controller
             )
             ->join('players', 'players.id', '=', 'planets.player_id')
             ->where('planets.galaxy', $galaxy)
+            ->where('planets.type', 'MOON')
             ->whereRaw('(' . $system . ' >= planets.system - (POW(planets.phalanx,2) - 1) AND ' . $system . ' <= planets.system + (POW(planets.phalanx,2) - 1))')
             ->get();
 
