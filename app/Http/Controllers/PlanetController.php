@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Planet;
-use App\Models\PlanetActivity;
 use App\Models\User;
 use App\Services\PlanetService;
 use App\Services\ResourceService;
@@ -73,8 +72,8 @@ class PlanetController extends Controller
 
             $planetIds[] = $planet->id;
 
-            if ($requestPlanet->moon_id && (int)$requestPlanet->moon_id > 0) {
-                if (!Planet::query()->where('coordinates', $requestPlanet->coordinates)->where('type', 'MOON')->first()) {
+            if ($requestPlanet->moon_id && (int)$requestPlanet->moon_id) {
+                if (!$planet = Planet::query()->where('coordinates', $requestPlanet->coordinates)->where('type', 'MOON')->first()) {
                     $planet = new Planet();
                     $planet->type = 'MOON';
                     $planet->external_id = $requestPlanet->moon_id;
@@ -85,6 +84,8 @@ class PlanetController extends Controller
                     $planet->planet = $coordinates[2];
                     $planet->save();
                 }
+
+                $planetIds[] = $planet->id;
             }
         }
 

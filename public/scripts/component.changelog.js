@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.13',
+        date_time: '2022-05-09 09AM',
+        changes: 'galaxy button fix, phalanx info in galaxy view'
+    },
+    {
         version: '1.1.12',
         date_time: '2022-05-08 11PM',
         changes: 'improved galaxy view (less buttons)'

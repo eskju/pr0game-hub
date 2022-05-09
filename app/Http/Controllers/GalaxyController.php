@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alliance;
 use App\Models\GalaxyView;
 use App\Models\Planet;
 use Carbon\Carbon;
@@ -17,12 +18,36 @@ class GalaxyController extends Controller
             $view->system = $system;
         }
 
+        $phalanxedBy = Planet::query()
+            ->select(
+                'planets.coordinates',
+                'planets.phalanx',
+                'planets.galaxy',
+                'planets.system',
+                'players.name',
+                'players.alliance_id'
+            )
+            ->join('players', 'players.id', '=', 'planets.player_id')
+            ->where('planets.galaxy', $galaxy)
+            ->whereRaw('(' . $system . ' >= planets.system - (POW(planets.phalanx,2) - 1) AND ' . $system . ' <= planets.system + (POW(planets.phalanx,2) - 1))')
+            ->get();
+
         $view->last_viewed_at = Carbon::now();
         $view->save();
 
-        $return = [];
+        $return = [
+            'planets' => [],
+            'phalanx' => $phalanxedBy->map(function ($item) {
+                $item->isFriendly = in_array($item->alliance_id, [12, 95]);
+                $item->alliance = Alliance::query()->find($item->alliance_id)->name ?? null;
+                $range = pow($item->phalanx,2) - 1;
+                $item->range = $item->galaxy . ':' . ($item->system - $range) . ' - ' . $item->galaxy . ':' . ($item->system + $range);
+
+                return $item;
+            })
+        ];
         for ($i = 1; $i <= 16; $i++) {
-            $return[$i] = [
+            $return['planets'][$i] = [
                 'planet' => $i,
                 'external_id' => null,
                 'player_id' => null,
@@ -59,12 +84,12 @@ class GalaxyController extends Controller
         foreach ($planets as $planet) {
             $planet = $planet->toArray();
 
-            $return[$planet['planet']] = [
+            $return['planets'][$planet['planet']] = [
                 'id' => $planet['id'],
                 'galaxy' => $planet['galaxy'],
                 'system' => $planet['system'],
                 'planet' => $planet['planet'],
-                'moon_id' => Planet::query()->where('coordinates', $planet['coordinates'])->where('type', 'MOON')->first()->id ?? null,
+                'moon_id' => Planet::query()->where('coordinates', $planet['coordinates'])->where('type', 'MOON')->first()->external_id ?? null,
                 'external_id' => $planet['external_id'],
                 'last_battle_report' => $planet['last_battle_report'] ? $this->getDateTime(Carbon::parse($planet['last_battle_report'])->subMinute()) : '',
                 'last_spy_report' => $planet['last_spy_report'] ? $this->getDateTime(Carbon::parse($planet['last_spy_report'])->subMinute()) : '',

@@ -21,6 +21,14 @@ window.PageGalaxy = function () {
                 let firstCell, planet, updateRequired = false;
                 let tooltipCell, tooltipSrc, playerId, coords, planetId, moonId, parent, parentParent;
 
+                if (json.phalanx.length > 0) {
+                    $('content').prepend('<div id="phalanxInfo" style="background: ' + getRgb(cBlack) + '; color: white; padding: 15px"><b>In Mondreichweite von:</b></div>')
+
+                    $.each(json.phalanx, function(key,obj) {
+                       $('#phalanxInfo').append('<div style="color: ' + getRgb(obj.isFriendly ? cGreen : cRed) + '">' + obj.name + ' (' + obj.alliance + ') ' + obj.range + ' (' + obj.coordinates + ')</div>');
+                    });
+                }
+
                 // loop planets rows
                 $('content > table tr').each(function (key, obj) {
                     firstCell = $($($(obj).find('td')[0]).find('a'))
@@ -47,11 +55,13 @@ window.PageGalaxy = function () {
                                 moon_id: moonId
                             });
 
-                            if (json[key - 1].external_id !== planetId) {
+                            if (json['planets'][key - 1].external_id !== parseInt(planetId)) {
+                                console.log('external id missing',key-1);
                                 updateRequired = true;
                             }
 
-                            if (json[key - 1].moon_id !== moonId) {
+                            if (json['planets'][key - 1].moon_id != moonId) {
+                                console.log('moon id missing',moonId);
                                 updateRequired = true;
                             }
                         }
@@ -63,12 +73,12 @@ window.PageGalaxy = function () {
 
                     planet = parseInt(firstCell.html());
 
-                    if (!isNaN(planet) && json[planet]) {
-                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_battle_report || '') + '</td>');
-                        $(obj).append('<td class="text-right" style="white-space: nowrap;" onclick="showSpyReportHistory(' + json[planet].galaxy + ', ' + json[planet].system + ', ' + json[planet].planet + ')">' + (json[planet].last_spy_report || '') + '</td>');
-                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_metal || '') + '</td>');
-                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_crystal || '') + '</td>');
-                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json[planet].last_spy_deuterium || '') + '</td>');
+                    if (!isNaN(planet) && json['planets'][planet]) {
+                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json['planets'][planet].last_battle_report || '') + '</td>');
+                        $(obj).append('<td class="text-right" style="white-space: nowrap;" onclick="showSpyReportHistory(' + json['planets'][planet].galaxy + ', ' + json['planets'][planet].system + ', ' + json['planets'][planet].planet + ')">' + (json['planets'][planet].last_spy_report || '') + '</td>');
+                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json['planets'][planet].last_spy_metal || '') + '</td>');
+                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json['planets'][planet].last_spy_crystal || '') + '</td>');
+                        $(obj).append('<td class="text-right" style="white-space: nowrap;">' + (json['planets'][planet].last_spy_deuterium || '') + '</td>');
                     }
                 });
 
