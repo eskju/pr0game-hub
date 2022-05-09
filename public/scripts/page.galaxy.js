@@ -56,15 +56,18 @@ window.PageGalaxy = function () {
                             });
 
                             if (json['planets'][key - 1].external_id !== parseInt(planetId)) {
+                                console.log('planet id', key - 1);
                                 updateRequired = true;
                             }
 
                             if (json['planets'][key - 1].moon_id != moonId) {
+                                console.log('new moon', key - 1);
                                 updateRequired = true;
                             }
                         } else {
                             if (json['planets'][key - 1] && json['planets'][key - 1].external_id !== null) {
                                 if ($($(obj).find('.galaxy-username')).html() !== json['ownName']) {
+                                    console.log('planet destroyed', key - 1);
                                     updateRequired = true;
                                 }
                             }
