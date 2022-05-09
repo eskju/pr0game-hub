@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Alliance;
 use App\Models\GalaxyView;
 use App\Models\Planet;
+use App\Models\Player;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -40,11 +41,12 @@ class GalaxyController extends Controller
             'phalanx' => $phalanxedBy->map(function ($item) {
                 $item->isFriendly = in_array($item->alliance_id, [12, 95]);
                 $item->alliance = Alliance::query()->find($item->alliance_id)->name ?? null;
-                $range = pow($item->phalanx,2) - 1;
+                $range = pow($item->phalanx, 2) - 1;
                 $item->range = $item->galaxy . ':' . ($item->system - $range) . ' - ' . $item->galaxy . ':' . ($item->system + $range);
 
                 return $item;
-            })
+            }),
+            'ownName' => Player::query()->find(auth()->user()->player_id)->name
         ];
         for ($i = 1; $i <= 16; $i++) {
             $return['planets'][$i] = [

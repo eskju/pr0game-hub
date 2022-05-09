@@ -24,8 +24,8 @@ window.PageGalaxy = function () {
                 if (json.phalanx.length > 0) {
                     $('form').append('<div id="phalanxInfo" style="background: ' + getRgb(cBlack) + '; color: white; padding: 15px"><b>In Mondreichweite von:</b></div>')
 
-                    $.each(json.phalanx, function(key,obj) {
-                       $('#phalanxInfo').append('<div style="color: ' + getRgb(obj.isFriendly ? cGreen : cRed) + '">' + obj.name + ' (' + obj.alliance + ') ' + obj.range + ' (' + obj.coordinates + ')</div>');
+                    $.each(json.phalanx, function (key, obj) {
+                        $('#phalanxInfo').append('<div style="color: ' + getRgb(obj.isFriendly ? cGreen : cRed) + '">' + obj.name + ' (' + obj.alliance + ') ' + obj.range + ' (' + obj.coordinates + ')</div>');
                     });
                 }
 
@@ -61,6 +61,12 @@ window.PageGalaxy = function () {
 
                             if (json['planets'][key - 1].moon_id != moonId) {
                                 updateRequired = true;
+                            }
+                        } else {
+                            if (json['planets'][key - 1] && json['planets'][key - 1].external_id !== null) {
+                                if ($($(obj).find('.galaxy-username')).html() !== json['ownName']) {
+                                    updateRequired = true;
+                                }
                             }
                         }
                     }
