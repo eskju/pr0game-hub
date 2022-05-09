@@ -32,9 +32,9 @@ class CrawlPlayerStats extends Command
 
     public function handle()
     {
-        ini_set('allow_url_fopen', true);
-
-        $html = file_get_contents('https://pr0game.com/stats.json');
+        $ch = curl_init('https://pr0game.com/stats.json');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $html = curl_exec($ch);
         $json = json_decode($html);
 
         $bar = $this->output->createProgressBar(count($json));
