@@ -75,6 +75,7 @@ window.PageMessages = function () {
             galaxy: parseInt(parseResult[2]),
             system: parseInt(parseResult[3]),
             planet: parseInt(parseResult[4]),
+            type: $(obj).html().match(/planettype\=([0-9]{1})/m)[1] === '3' ? 'MOON' : 'PLANET',
             timestamp: dateTime,
             resources: resources,
             resourcesVisible: $(obj).html().search(/Rohstoffe/) !== -1,
