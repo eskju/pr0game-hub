@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.15',
+        date_time: '2022-05-10 10AM',
+        changes: 'bugfix spy timestamp & expo parser'
+    },
+    {
         version: '1.1.14',
         date_time: '2022-05-10 10AM',
         changes: 'bugfix for spy reports (MOON/PLANET)'
