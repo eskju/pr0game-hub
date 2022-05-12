@@ -34,8 +34,10 @@ window.PageMessages = function () {
         postJSON('messages', {messageIds: ids}, function (unknownIds) {
             messages.each(function (key, obj) {
                 messageId = parseInt($(obj).attr('class')?.match(/message\_([0-9]+)/)[1]);
+                let sendData = false;
 
                 if (messageId && Array.from(JSON.parse(unknownIds.responseText)).indexOf(messageId) !== -1) {
+                    sendData = true;
                     // spy report
                     if ($(obj).find('.spyRaport').length > 0) {
                         $this.parseSpyReport(key, obj);
@@ -43,9 +45,11 @@ window.PageMessages = function () {
                         $this.parseEnemySpying(key, obj);
                     } else if ($(obj).find('.raportMessage').length > 0) {
                         $this.parseBattleReport(key, obj);
-                    } else if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().search(/Expeditionsbericht/) !== -1) {
-                        $this.parseExpedition(key, obj);
                     }
+                }
+
+                if ($(obj).hasClass('message_head') && $($(obj).find('td')[3]).html().search(/Expeditionsbericht/) !== -1) {
+                    $this.parseExpedition(key, obj, sendData);
                 }
             });
         }, false);
@@ -112,7 +116,7 @@ window.PageMessages = function () {
     this.parseEnemySpying = function (key, obj) {
         messageId = $(obj).attr('id').replace(/message\_/, '');
         dateTime = $(obj).hasClass('message_head') && $($(obj).find('td')[1]).html();
-        const coords = $($(messages[key - 1]).find('td')).html().match(/([0-9]+)\:([0-9]+)\:([0-9]+)/g);
+        const coords = $($(messages[key + 1]).find('td')).html().match(/([0-9]+)\:([0-9]+)\:([0-9]+)/g);
 
         postJSON('hostile-spying', {
             id: messageId,
@@ -124,7 +128,7 @@ window.PageMessages = function () {
         });
     };
 
-    this.parseExpedition = function (key, obj) {
+    this.parseExpedition = function (key, obj, sendData = false) {
         messageId = $(obj).attr('id').replace(/message\_/, '');
         dateTime = $(obj).hasClass('message_head') && $($(obj).find('td')[1]).html();
 
@@ -298,14 +302,16 @@ window.PageMessages = function () {
             expeditionSize = null;
         }
 
-        postJSON('expeditions', {
-            id: messageId,
-            external_id: messageId,
-            date_time: dateTime,
-            type: expeditionType,
-            size: expeditionSize,
-            message
-        }, function () {
-        });
+        if(sendData) {
+            postJSON('expeditions', {
+                id: messageId,
+                external_id: messageId,
+                date_time: dateTime,
+                type: expeditionType,
+                size: expeditionSize,
+                message
+            }, function () {
+            });
+        }
     }
 };
