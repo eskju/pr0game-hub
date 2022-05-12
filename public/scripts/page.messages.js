@@ -52,7 +52,7 @@ window.PageMessages = function () {
     }
 
     this.parseSpyReport = function (key, obj) {
-        dateTime = $(messages[key - 1]).find('td:nth-child(2)').html();
+        dateTime = $(messages[key + 1]).find('td:nth-child(2)').html();
 
         headerText = $(obj).find('.spyRaportHead a').html();
         parseResult = headerText.match(/Spionagebericht von (.*) \[([0-9]+)\:([0-9]+)\:([0-9]+)\] am (.*)/, headerText);
