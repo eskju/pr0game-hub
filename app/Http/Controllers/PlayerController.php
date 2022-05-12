@@ -97,7 +97,7 @@ class PlayerController extends Controller
             ->select(
                 DB::raw('planets.*'),
                 DB::raw('alliances.name AS alliance_name'),
-                DB::raw('(
+                DB::raw('score - (
                     SELECT day01
                     FROM player_scores
                     WHERE player_scores.id = planets.player_id
