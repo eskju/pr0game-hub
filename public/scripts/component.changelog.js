@@ -1,7 +1,12 @@
 window.changelog = [
     {
+        version: '1.1.16',
+        date_time: '2022-05-12 07PM',
+        changes: 'player score development in overview'
+    },
+    {
         version: '1.1.15',
-        date_time: '2022-05-10 10AM',
+        date_time: '2022-05-12 06PM',
         changes: 'bugfix spy timestamp & expo parser'
     },
     {
