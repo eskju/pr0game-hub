@@ -512,7 +512,7 @@ window.PageOverview = function () {
         html += '<span class="sortable" data-sort="system" title="System" data-direction="ASC" id="sortBySystem"><i class="fa fa-sort-numeric-down"></i></span>';
         html += '</th>';
         html += '<th class="sortable" data-sort="player.score" title="Punkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cBlue) + '" id="sortByScore"><i class="fa fa-chart-line"></i></th>';
-        html += '<th class="sortable" data-sort="diff" title="Punkteveränderung (1 Tag)" data-direction="ASC" style="text-align: center; color: ' + getRgb(cPink) + '" id="sortByScore"><i class="fa fa-analytics"></i></th>';
+        html += '<th class="sortable" data-sort="diff" title="Punkteveränderung (1 Tag)" data-direction="ASC" style="text-align: center; color: ' + getRgb(cBlue) + '" id="sortByScore"><i class="fa fa-analytics"></i></th>';
         html += '<th class="sortable" data-sort="score_building" title="Gebaeudepunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cGreen) + '" id="sortByScoreBuilding"><i class="fa fa-industry"></i></th>';
         html += '<th class="sortable" data-sort="player.score_science" title="Forschungspunkte" data-direction="DESC" style="text-align: center; color: ' + getRgb(cPink) + '" id="sortByScoreScience"><i class="fa fa-flask"></i></th>';
         html += '<th class="sortable" data-sort="score_military" title="Militaerpunkte" data-direction="DESC" style="text-align: center; color:' + getRgb(cRed) + '" id="sortByScoreMilitary"><i class="fa fa-fighter-jet"></i></th>';
