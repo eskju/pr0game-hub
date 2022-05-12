@@ -1,5 +1,10 @@
 window.changelog = [
     {
+        version: '1.1.18',
+        date_time: '2022-05-12 09PM',
+        changes: 'bugfix for building level'
+    },
+    {
         version: '1.1.17',
         date_time: '2022-05-12 09PM',
         changes: 'added custom expo fleets (by DeepNorth)'

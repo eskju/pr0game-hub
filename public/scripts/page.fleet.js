@@ -299,7 +299,7 @@ window.PageFleet = function () {
 
         $.each(planetResourceNotification.getNotifications(), function (key, obj) {
             $this.cargoOptions.push({
-                title: obj.coords + ' (' + obj.resource + ' Stufe ' + obj.level + ')',
+                title: obj.coords + ' (' + obj.resource + ' Stufe ' + (obj.level || 1) + ')',
                 metal: getInt(obj.metal),
                 crystal: getInt(obj.crystal),
                 deuterium: getInt(obj.deuterium),

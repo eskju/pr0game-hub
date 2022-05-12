@@ -232,7 +232,7 @@ class PlayerController extends Controller
                 ->where('is_inactive', 0)
                 ->get()
                 ->pluck('id'),
-            'version' => '1.1.17',
+            'version' => '1.1.18',
             'player' => auth()->user()->player,
             'live_score' => $score,
             'live_score_diff' => $score - $oldScore
