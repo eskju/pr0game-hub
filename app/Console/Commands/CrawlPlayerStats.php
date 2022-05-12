@@ -78,6 +78,8 @@ class CrawlPlayerStats extends Command
             $player->rubble_crystal = $row->debrisCrystal;
             $player->alliance_id = isset($alliance) ? $alliance->id : null;
             $player->save();
+            $isInactive = $player->is_inactive;
+            $onVacation = $player->on_vacation;
 
             $player = new LogPlayer();
             $player->external_id = $row->playerId;
@@ -101,19 +103,41 @@ class CrawlPlayerStats extends Command
             $player->alliance_id = isset($alliance) ? $alliance->id : null;
             $player->save();
 
-            $score = PlayerScore::query()->where('id', $row->playerId)->first() ?? new PlayerScore();
-            $score->id = $row->playerId;
-            $score->hour06 = $this->getScore($score->id, Carbon::now()->subHours(6));
-            $score->hour12 = $this->getScore($score->id, Carbon::now()->subHours(12));
-            $score->hour18 = $this->getScore($score->id, Carbon::now()->subHours(18));
-            $score->day01 = $this->getScore($score->id, Carbon::now()->subdays(1));
-            $score->day02 = $this->getScore($score->id, Carbon::now()->subdays(2));
-            $score->day03 = $this->getScore($score->id, Carbon::now()->subdays(3));
-            $score->day04 = $this->getScore($score->id, Carbon::now()->subdays(4));
-            $score->day05 = $this->getScore($score->id, Carbon::now()->subdays(5));
-            $score->day06 = $this->getScore($score->id, Carbon::now()->subdays(6));
-            $score->day07 = $this->getScore($score->id, Carbon::now()->subdays(7));
-            $score->save();
+            if (!$isInactive && !$onVacation) {
+                $score = PlayerScore::query()->where('id', $row->playerId)->first() ?? new PlayerScore();
+                $score->id = $row->playerId;
+                $score->hour06 = $this->getScore($score->id, Carbon::now()->subHours(6));
+                $score->hour12 = $this->getScore($score->id, Carbon::now()->subHours(12));
+                $score->hour18 = $this->getScore($score->id, Carbon::now()->subHours(18));
+                $score->day01 = $this->getScore($score->id, Carbon::now()->subdays(1));
+                $score->day02 = $this->getScore($score->id, Carbon::now()->subdays(2));
+                $score->day03 = $this->getScore($score->id, Carbon::now()->subdays(3));
+                $score->day04 = $this->getScore($score->id, Carbon::now()->subdays(4));
+                $score->day05 = $this->getScore($score->id, Carbon::now()->subdays(5));
+                $score->day06 = $this->getScore($score->id, Carbon::now()->subdays(6));
+                $score->day07 = $this->getScore($score->id, Carbon::now()->subdays(7));
+                $score->save();
+            }
+
+            /**
+             * CREATE VIEW Scores AS SELECT
+             * p.id,
+             * p.is_inactive,
+             * p.on_vacation,
+             * p.name,
+             * (SELECT GROUP_CONCAT(DISTINCT galaxy) FROM planets pl WHERE pl.player_id = p.id) as galas,
+             * p.score - hour06 AS `h06`,
+             * p.score - hour12 AS `h12`,
+             * p.score - hour18 AS `h18`,
+             * p.score - day01 AS `d01`,
+             * p.score - day02 AS `d02`,
+             * p.score - day03 AS `d03`,
+             * p.score - day04 AS `d04`,
+             * p.score - day05 AS `d05`,
+             * p.score - day06 AS `d06`,
+             * p.score - day07 AS `d07`
+             * FROM `player_scores` ps INNER JOIN players p ON p.id = ps.id;
+             */
         }
     }
 
