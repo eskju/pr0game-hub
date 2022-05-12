@@ -103,16 +103,16 @@ class CrawlPlayerStats extends Command
 
             $score = PlayerScore::query()->where('id', $row->playerId)->first() ?? new PlayerScore();
             $score->id = $row->playerId;
-            $score->hour06 = $row->score - $this->getScore($score->player_id, Carbon::now()->subHours(6));
-            $score->hour12 = $score->hour06 - $this->getScore($score->player_id, Carbon::now()->subHours(12));
-            $score->hour18 = $score->hour12 - $this->getScore($score->player_id, Carbon::now()->subHours(18));
-            $score->day01 = $row->score - $this->getScore($score->player_id, Carbon::now()->subdays(1));
-            $score->day02 = $score->day01 - $this->getScore($score->player_id, Carbon::now()->subdays(2));
-            $score->day03 = $score->day02 - $this->getScore($score->player_id, Carbon::now()->subdays(3));
-            $score->day04 = $score->day03 - $this->getScore($score->player_id, Carbon::now()->subdays(4));
-            $score->day05 = $score->day04 - $this->getScore($score->player_id, Carbon::now()->subdays(5));
-            $score->day06 = $score->day05 - $this->getScore($score->player_id, Carbon::now()->subdays(6));
-            $score->day07 = $score->day06 - $this->getScore($score->player_id, Carbon::now()->subdays(7));
+            $score->hour06 = $row->score - $this->getScore($score->id, Carbon::now()->subHours(6));
+            $score->hour12 = $score->hour06 - $this->getScore($score->id, Carbon::now()->subHours(12));
+            $score->hour18 = $score->hour12 - $this->getScore($score->id, Carbon::now()->subHours(18));
+            $score->day01 = $row->score - $this->getScore($score->id, Carbon::now()->subdays(1));
+            $score->day02 = $score->day01 - $this->getScore($score->id, Carbon::now()->subdays(2));
+            $score->day03 = $score->day02 - $this->getScore($score->id, Carbon::now()->subdays(3));
+            $score->day04 = $score->day03 - $this->getScore($score->id, Carbon::now()->subdays(4));
+            $score->day05 = $score->day04 - $this->getScore($score->id, Carbon::now()->subdays(5));
+            $score->day06 = $score->day05 - $this->getScore($score->id, Carbon::now()->subdays(6));
+            $score->day07 = $score->day06 - $this->getScore($score->id, Carbon::now()->subdays(7));
             $score->save();
         }
     }
