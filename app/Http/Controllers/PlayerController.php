@@ -98,6 +98,12 @@ class PlayerController extends Controller
                 DB::raw('planets.*'),
                 DB::raw('alliances.name AS alliance_name'),
                 DB::raw('(
+                    SELECT day01
+                    FROM player_scores
+                    WHERE player_scores.id = planets.player_id
+                    LIMIT 1
+                ) as `diff`'),
+                DB::raw('(
                     SELECT created_at
                     FROM battle_reports
                     WHERE battle_reports.galaxy = planets.galaxy
