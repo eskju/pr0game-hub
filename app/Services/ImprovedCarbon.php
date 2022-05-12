@@ -24,13 +24,9 @@ class ImprovedCarbon
             ' Dez 2022,' => '12.2022',
         ];
 
-        $stringBefore = $string;
-
         foreach ($replaceStrings as $search => $replace) {
             $string = str_replace($search, $replace, $string);
         }
-
-        Log::info($stringBefore . ' -> ' . $string . ' -> ' . Carbon::parse($string)->format('Y-m-d H:i:s'));
 
         return Carbon::parse($string);
     }
