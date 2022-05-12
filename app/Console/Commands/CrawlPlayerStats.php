@@ -83,7 +83,7 @@ class CrawlPlayerStats extends Command
             $player->name = $row->playerName;
             $player->main_coordinates = '';
             $player->score = $row->score;
-            $player->score_building = $row->score;
+            $player->score_building = $row->buildingScore;
             $player->score_science = $row->researchScore;
             $player->score_military = $row->fleetScore;
             $player->score_defense = $row->defensiveScore;
