@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\Alliance;
 use App\Models\LogPlayer;
 use App\Models\Player;
+use App\Models\PlayerScore;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class CrawlPlayerStats extends Command
@@ -98,6 +100,30 @@ class CrawlPlayerStats extends Command
             $player->rubble_crystal = $row->debrisCrystal;
             $player->alliance_id = isset($alliance) ? $alliance->id : null;
             $player->save();
+
+            $score = PlayerScore::query()->where('player_id', $row->playerId)->first() ?? new PlayerScore();
+            $score->player_id = $row->playerId;
+            $score->hour06 = $row->score - $this->getScore($score->player_id, Carbon::now()->subHours(6));
+            $score->hour12 = $row->score - $this->getScore($score->player_id, Carbon::now()->subHours(12));
+            $score->hour18 = $row->score - $this->getScore($score->player_id, Carbon::now()->subHours(18));
+            $score->day01 = $row->score - $this->getScore($score->player_id, Carbon::now()->subdays(1));
+            $score->day02 = $row->score - $this->getScore($score->player_id, Carbon::now()->subdays(2));
+            $score->day03 = $row->score - $this->getScore($score->player_id, Carbon::now()->subdays(3));
+            $score->day04 = $row->score - $this->getScore($score->player_id, Carbon::now()->subdays(4));
+            $score->day05 = $row->score - $this->getScore($score->player_id, Carbon::now()->subdays(5));
+            $score->day06 = $row->score - $this->getScore($score->player_id, Carbon::now()->subdays(6));
+            $score->day07 = $row->score - $this->getScore($score->player_id, Carbon::now()->subdays(7));
+            $score->save();
         }
+    }
+
+    private function getScore(int $playerId, Carbon $dateTime)
+    {
+        return LogPlayer::query()
+                ->where('external_id', $playerId)
+                ->where('created_at', '<=', $dateTime)
+                ->orderBy('created_at', 'DESC')
+                ->first()
+                ->score ?? 0;
     }
 }
