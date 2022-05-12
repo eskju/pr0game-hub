@@ -101,8 +101,8 @@ class CrawlPlayerStats extends Command
             $player->alliance_id = isset($alliance) ? $alliance->id : null;
             $player->save();
 
-            $score = PlayerScore::query()->where('player_id', $row->playerId)->first() ?? new PlayerScore();
-            $score->player_id = $row->playerId;
+            $score = PlayerScore::query()->where('id', $row->playerId)->first() ?? new PlayerScore();
+            $score->id = $row->playerId;
             $score->hour06 = $row->score - $this->getScore($score->player_id, Carbon::now()->subHours(6));
             $score->hour12 = $score->hour06 - $this->getScore($score->player_id, Carbon::now()->subHours(12));
             $score->hour18 = $score->hour12 - $this->getScore($score->player_id, Carbon::now()->subHours(18));
