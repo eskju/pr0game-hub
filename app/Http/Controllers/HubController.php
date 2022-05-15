@@ -101,8 +101,8 @@ class HubController extends Controller
             ])
             ->join('planets', 'planets.player_id', '=', 'players.id')
             ->whereIn('alliance_id', $this->getAllianceIds('getFleet'))
-            ->groupBy('players.name')
-            ->orderBy('players.name')
+            ->groupBy('players.id')
+            ->orderBy('players.id')
             ->get();
 
         $sumRow = [
