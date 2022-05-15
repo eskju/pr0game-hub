@@ -100,7 +100,7 @@ class CrawlPlayerStats extends Command
             $player->units_lost = $row->unitsLost;
             $player->rubble_metal = $row->debrisMetal;
             $player->rubble_crystal = $row->debrisCrystal;
-            $player->alliance_id = isset($alliance) ? $alliance->id : null;
+            $player->alliance_id = $row->allianceId || null;
             $player->save();
 
             if (!$isInactive && !$onVacation) {
